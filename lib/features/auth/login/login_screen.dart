@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/widgets/custom_text_field.dart';
+import 'package:bh_finder/widgets/custom_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 18),
 
                 // Email or Phone Number Label
                 const Text(
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 13),
 
                 // Password Label
                 const Text(
@@ -116,6 +117,59 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: 'Enter your password',
                   prefixIcon: Icons.lock_outline,
                   isPasswordField: true, // Hides the password input characters
+                ),
+
+                const SizedBox(height: 40),
+
+                // Login button
+                CustomButton(
+                  text: 'Login',
+                  onPressed: () {
+                    print("Email: ${_emailController.text}");
+                    print("Password: ${_passwordController.text}");
+                  },
+                ),
+
+                const SizedBox(height: 10),
+
+                // Divider lines
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: AppColors.tertiary.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'or continue with',
+                        style: TextStyle(
+                          color: AppColors.tertiary,
+                          fontSize: 13,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: AppColors.tertiary.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // Google sign-in button
+                CustomButton(
+                  text: 'Sign in with Google',
+                  isSecondary: true,
+                  onPressed: () {
+                    print("Google Login Tapped");
+                  },
                 ),
               ],
             ),
