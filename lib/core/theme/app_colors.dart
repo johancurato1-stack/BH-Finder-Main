@@ -7,6 +7,8 @@ class AppColors {
 
   static const Color secondary = Color(0xFF201D45);
 
+  static const Color tertiary = Color(0x50201D45);
+
   static const Color background = Color(0xFFF8FAFC);
 
   static const Color white = Colors.white;
