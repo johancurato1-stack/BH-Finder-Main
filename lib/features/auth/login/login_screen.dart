@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/widgets/custom_text_field.dart';
 import 'package:bh_finder/widgets/custom_button.dart';
+import 'package:bh_finder/features/auth/register/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text(
                   'Email or Phone Number',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,
                     color: AppColors.secondary,
@@ -87,12 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
 
                 //* Email or Phone Number Text Field
-                CustomTextField(
-                  controller: _emailController,
-                  labelText: 'Email or Phone Number',
-                  hintText: 'Enter your email or phone number',
-                  prefixIcon: Icons.person_outline,
-                  keyboardType: TextInputType.emailAddress,
+                SizedBox(
+                  height: 42,
+                  child: CustomTextField(
+                    controller: _emailController,
+                    hintText: 'Enter your email or phone number',
+                    prefixIcon: Icons.person_outline,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                 ),
 
                 const SizedBox(height: 13),
@@ -101,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text(
                   'Password',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,
                     color: AppColors.secondary,
@@ -111,12 +114,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
 
                 //* Password Text Field
-                CustomTextField(
-                  controller: _passwordController,
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  prefixIcon: Icons.lock_outline,
-                  isPasswordField: true, // Hides the password input characters
+                SizedBox(
+                  height: 42,
+                  child: CustomTextField(
+                    controller: _passwordController,
+                    hintText: 'Enter your password',
+                    prefixIcon: Icons.lock_outline,
+                    isPasswordField:
+                        true, // Hides the password input characters
+                  ),
                 ),
 
                 const SizedBox(height: 40),
@@ -130,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
 
                 //* Divider lines
                 Row(
@@ -188,7 +194,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("Register Link Tapped");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignupScreen(),
+                          ),
+                        );
                       },
                       child: const Text(
                         'Register',

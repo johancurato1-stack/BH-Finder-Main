@@ -32,12 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: const [
-              // Logo
+              //* Logo
               Icon(Icons.home_work_rounded, size: 80, color: AppColors.primary),
 
               SizedBox(height: 20),
 
-              // Title
+              //* Title
               Text(
                 'BH Finder',
                 style: TextStyle(
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
 
-              // Subtitle
+              //* Subtitle
               Text(
                 'Find your perfect boarding house',
                 textAlign: TextAlign.center,
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
               SizedBox(height: 25),
 
-              // Loading indicator
+              //* Loading indicator
               CircularProgressIndicator(color: AppColors.secondary),
             ],
           ),

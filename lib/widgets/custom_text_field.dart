@@ -3,7 +3,6 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
-  final String labelText;
   final String hintText;
   final IconData prefixIcon;
   final bool isPasswordField;
@@ -12,7 +11,6 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.labelText,
     required this.hintText,
     required this.prefixIcon,
     this.isPasswordField = false,
@@ -39,15 +37,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
       obscureText: obscureText,
       keyboardType: widget.keyboardType,
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         color: AppColors.secondary,
         fontFamily: 'Roboto',
       ),
       decoration: InputDecoration(
-        labelText: widget.labelText,
         hintText: widget.hintText,
 
         floatingLabelBehavior: FloatingLabelBehavior.never,
+
+        contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
 
         prefixIcon: Icon(widget.prefixIcon, color: AppColors.secondary),
 
@@ -74,13 +73,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
 
         labelStyle: const TextStyle(
-          fontSize: 15,
+          fontSize: 14,
           color: AppColors.tertiary,
           fontFamily: 'Roboto',
         ),
 
         hintStyle: const TextStyle(
-          fontSize: 15,
+          fontSize: 14,
           color: AppColors.tertiary,
           fontFamily: 'Roboto',
         ),
