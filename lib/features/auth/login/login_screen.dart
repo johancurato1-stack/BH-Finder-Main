@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
 
-                // Welcome Text
+                //* Welcome Text
                 const Text(
                   'Welcome Back! 👋',
                   style: TextStyle(
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Login Text
+                //* Login Text
                 const Text(
                   'Login to your account',
                   style: TextStyle(
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Subtitle Text
+                //* Subtitle Text
                 const Text(
                   'Continue to manage your properties \nor find your perfect room.',
                   style: TextStyle(
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 18),
 
-                // Email or Phone Number Label
+                //* Email or Phone Number Label
                 const Text(
                   'Email or Phone Number',
                   style: TextStyle(
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Email or Phone Number Text Field
+                //* Email or Phone Number Text Field
                 CustomTextField(
                   controller: _emailController,
                   labelText: 'Email or Phone Number',
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 13),
 
-                // Password Label
+                //* Password Label
                 const Text(
                   'Password',
                   style: TextStyle(
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Password Text Field
+                //* Password Text Field
                 CustomTextField(
                   controller: _passwordController,
                   labelText: 'Password',
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 40),
 
-                // Login button
+                //* Login button
                 CustomButton(
                   text: 'Login',
                   onPressed: () {
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Divider lines
+                //* Divider lines
                 Row(
                   children: [
                     Expanded(
@@ -163,13 +163,44 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                // Google sign-in button
+                //* Google sign-in button
                 CustomButton(
                   text: 'Sign in with Google',
                   isSecondary: true,
                   onPressed: () {
                     print("Google Login Tapped");
                   },
+                ),
+
+                const SizedBox(height: 50),
+
+                //*Sign up button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: 'Roboto',
+                        color: AppColors.tertiary,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        print("Register Link Tapped");
+                      },
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Roboto',
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
