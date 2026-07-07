@@ -4,6 +4,7 @@ import 'package:bh_finder/widgets/custom_text_field.dart';
 import 'package:bh_finder/widgets/custom_button.dart';
 import 'package:bh_finder/features/auth/register/signup_screen.dart';
 import 'package:bh_finder/features/home/home_screen.dart';
+import 'package:bh_finder/app.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
 
-                //*----------------------------------------------------------------------------------------------------------------- T O P  T E X T
+                //!----------------------------------------------------------------------------------------------------------------- T O P  T E X T
 
                 //* Welcome Text
                 const Text(
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 18),
 
-                //*----------------------------------------------------------------------------------------------------------------- E M A I L  &  P H O N E
+                //!----------------------------------------------------------------------------------------------------------------- E M A I L  &  P H O N E
 
                 //* Email or Phone Number Label
                 const Text(
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 13),
 
-                //*----------------------------------------------------------------------------------------------------------------- P A S S W O R D
+                //!----------------------------------------------------------------------------------------------------------------- P A S S W O R D
 
                 //* Password Label
                 const Text(
@@ -134,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 40),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- L O G I N  B U T T O N
 
                 //* Login button
                 CustomButton(
@@ -146,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
+                        builder: (context) => const MainNavigationWrapper(),
                       ),
                     );
                   },
@@ -154,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 30),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- D I V I D E R
 
                 //* Divider lines
                 Row(
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- G O O G L E  S I G N I N  B U T T O N
 
                 //* Google sign-in button
                 CustomButton(
@@ -200,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 50),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- S I G N U P  B U T T O N
 
                 //*Sign up button
                 Row(

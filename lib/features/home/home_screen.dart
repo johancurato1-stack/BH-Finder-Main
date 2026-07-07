@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- T O P  I C O N S
 
                 //* Top Logo
                 Row(
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 25),
 
-                //*-----------------------------------------------------------------------------------------------------------------
+                //!----------------------------------------------------------------------------------------------------------------- T O P  T E X T
 
                 //* Hero Typography Header
                 RichText(
@@ -105,9 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
 
-                //*----------------------------------------------------------------------------------------------------------------- S E A R C H  B A R
+                //!----------------------------------------------------------------------------------------------------------------- S E A R C H  B A R
 
                 //* Background
                 GestureDetector(
@@ -175,6 +175,88 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 25),
+
+                //!----------------------------------------------------------------------------------------------------------------- N E A R  Y O U  H E A D E R
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Near You',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.secondary,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          print("See all listings clicked");
+                        },
+                        child: const Text(
+                          'See all',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.primary,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                //!----------------------------------------------------------------------------------------------------------------- S C R O L L A B L E  R O O M  C A R D S
+                SizedBox(
+                  height: 255,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 0.5),
+                    physics: const BouncingScrollPhysics(),
+
+                    //* Room #1
+                    children: [
+                      SizedBox(
+                        width: 175,
+                        child: RoomCard(
+                          imageUrl:
+                              'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=500&auto=format&fit=crop',
+                          price: '2,800',
+                          title: 'Green Haven Boarding House',
+                          distanceText:
+                              '5 minute walk to Caraga State University',
+                          genderRules: 'Female Only',
+                          availabilityCount: '4/6',
+                        ),
+                      ),
+                      SizedBox(width: 16),
+
+                      //* Room #2
+                      SizedBox(
+                        width: 175,
+                        child: RoomCard(
+                          imageUrl:
+                              'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=500&auto=format&fit=crop',
+                          price: '3,200',
+                          title: 'Blessed Home Boarding House',
+                          distanceText:
+                              '8 minute walk to Caraga State University',
+                          genderRules: 'Female Only',
+                          availabilityCount: '5/8',
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
