@@ -68,7 +68,7 @@ class RoomCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
-                      vertical: 4,
+                      vertical: 3,
                     ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF00E676),
@@ -101,7 +101,7 @@ class RoomCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 6,
+                    vertical: 4,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.black.withOpacity(0.75),
@@ -161,11 +161,12 @@ class RoomCard extends StatelessWidget {
                   height: 1,
                   thickness: 0.5,
                 ),
+
+                //!----------------------------------------------------------------------------------------------------------------- G E N D E R
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //!----------------------------------------------------------------------------------------------------------------- G E N D E R
                     Row(
                       children: [
                         const Icon(
@@ -191,7 +192,7 @@ class RoomCard extends StatelessWidget {
                         const Icon(
                           Icons.group_outlined,
                           size: 14,
-                          color: AppColors.tertiary,
+                          color: AppColors.secondary,
                         ),
                         const SizedBox(width: 4),
                         Text(

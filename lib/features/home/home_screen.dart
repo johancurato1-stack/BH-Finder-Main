@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
 
                 //!----------------------------------------------------------------------------------------------------------------- S C R O L L A B L E  R O O M  C A R D S
                 SizedBox(

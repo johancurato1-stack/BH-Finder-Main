@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/splash/splash_screen.dart';
 import 'package:bh_finder/features/home/home_screen.dart';
+import 'package:bh_finder/features/messages/messages_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -35,7 +36,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     const HomeScreen(),
     const Scaffold(body: Center(child: Text('Search Screen Workspace'))),
     const Scaffold(body: Center(child: Text('Saved Screen Workspace'))),
-    const Scaffold(body: Center(child: Text('Messages Screen Workspace'))),
+    const MessagesScreen(),
     const Scaffold(body: Center(child: Text('Profile Screen Workspace'))),
   ];
 
