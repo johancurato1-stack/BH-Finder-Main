@@ -41,6 +41,8 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 const SizedBox(height: 60),
 
+                //*----------------------------------------------------------------------------------------------------------------- T O P  T E X T
+
                 //* Create Account Text
                 const Text(
                   'Create your account',
@@ -80,6 +82,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 18),
 
+                //*----------------------------------------------------------------------------------------------------------------- F U L L  N A M E
+
                 //* Full Name Input Label
                 const Text(
                   'Full Name',
@@ -104,6 +108,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
 
                 const SizedBox(height: 13),
+
+                //*----------------------------------------------------------------------------------------------------------------- E M A I L  &  P H O N E
 
                 //* Email or Phone Number Label
                 const Text(
@@ -131,6 +137,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 13),
 
+                //*----------------------------------------------------------------------------------------------------------------- P A S S W O R D
+
                 //* Password Label
                 const Text(
                   'Password',
@@ -157,6 +165,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 13),
 
+                //*----------------------------------------------------------------------------------------------------------------- C O N F I R M  P A S S W O R D
+
                 //* Confirm Password Label
                 const Text(
                   'Confirm Password',
@@ -182,6 +192,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
 
                 const SizedBox(height: 18),
+
+                //*----------------------------------------------------------------------------------------------------------------- T E R M S  &  P O L I C Y
 
                 //* Terms of Service Checkbox Row
                 Row(
@@ -250,6 +262,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 23),
 
+                //*-----------------------------------------------------------------------------------------------------------------
+
                 //* Create an Account Button
                 CustomButton(
                   text: 'Create an account',
@@ -260,6 +274,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
 
                 const SizedBox(height: 23),
+
+                //*-----------------------------------------------------------------------------------------------------------------
 
                 //* Login Button
                 Row(
