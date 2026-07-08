@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                //!----------------------------------------------------------------------------------------------------------------- T O P  I C O N S
+                //!======================================================================================================================================== T O P  I C O N S
 
                 //* Top Logo
                 Row(
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: const Icon(
                         Icons.notifications_none_rounded,
                         color: AppColors.secondary,
-                        size: 25,
+                        size: 28,
                       ),
                       onPressed: () {
                         print("Notification bell clicked");
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 25),
 
-                //!----------------------------------------------------------------------------------------------------------------- T O P  T E X T
+                //!======================================================================================================================================== T O P  T E X T
 
                 //* Hero Typography Header
                 RichText(
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                //!----------------------------------------------------------------------------------------------------------------- S E A R C H  B A R
+                //!======================================================================================================================================== S E A R C H  B A R
 
                 //* Background
                 GestureDetector(
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 15,
                           offset: const Offset(0, 4),
                         ),
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 25),
 
-                //!----------------------------------------------------------------------------------------------------------------- N E A R  Y O U  H E A D E R
+                //!======================================================================================================================================== N E A R  Y O U  H E A D E R
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 13),
                   child: Row(
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 5),
 
-                //!----------------------------------------------------------------------------------------------------------------- S C R O L L A B L E  R O O M  C A R D S
+                //!======================================================================================================================================== S C R O L L A B L E  R O O M  C A R D S
                 SizedBox(
                   height: 255,
                   child: ListView(

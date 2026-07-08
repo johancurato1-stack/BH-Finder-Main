@@ -14,7 +14,7 @@ class ChatTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       leading: CircleAvatar(
         radius: 26,
-        backgroundColor: AppColors.tertiary.withOpacity(0.2),
+        backgroundColor: AppColors.tertiary.withValues(alpha: 0.2),
         backgroundImage: NetworkImage(chat.avatarUrl),
       ),
 

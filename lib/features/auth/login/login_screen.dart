@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
 
-                //!----------------------------------------------------------------------------------------------------------------- T O P  T E X T
+                //!======================================================================================================================================== T O P  T E X T
 
                 //* Welcome Text
                 const Text(
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 18),
 
-                //!----------------------------------------------------------------------------------------------------------------- E M A I L  &  P H O N E
+                //!======================================================================================================================================== E M A I L  &  P H O N E
 
                 //* Email or Phone Number Label
                 const Text(
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 13),
 
-                //!----------------------------------------------------------------------------------------------------------------- P A S S W O R D
+                //!======================================================================================================================================== P A S S W O R D
 
                 //* Password Label
                 const Text(
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 40),
 
-                //!----------------------------------------------------------------------------------------------------------------- L O G I N  B U T T O N
+                //!======================================================================================================================================== L O G I N  B U T T O N
 
                 //* Login button
                 CustomButton(
@@ -154,14 +154,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 30),
 
-                //!----------------------------------------------------------------------------------------------------------------- D I V I D E R
+                //!======================================================================================================================================== D I V I D E R
 
                 //* Divider lines
                 Row(
                   children: [
                     Expanded(
                       child: Divider(
-                        color: AppColors.tertiary.withOpacity(0.3),
+                        color: AppColors.tertiary.withValues(alpha: 0.3),
                         thickness: 1,
                       ),
                     ),
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Expanded(
                       child: Divider(
-                        color: AppColors.tertiary.withOpacity(0.3),
+                        color: AppColors.tertiary.withValues(alpha: 0.3),
                         thickness: 1,
                       ),
                     ),
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 10),
 
-                //!----------------------------------------------------------------------------------------------------------------- G O O G L E  S I G N I N  B U T T O N
+                //!======================================================================================================================================== G O O G L E  S I G N I N  B U T T O N
 
                 //* Google sign-in button
                 CustomButton(
@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 50),
 
-                //!----------------------------------------------------------------------------------------------------------------- S I G N U P  B U T T O N
+                //!======================================================================================================================================== S I G N U P  B U T T O N
 
                 //*Sign up button
                 Row(

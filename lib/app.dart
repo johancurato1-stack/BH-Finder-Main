@@ -1,3 +1,4 @@
+import 'package:bh_finder/features/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/splash/splash_screen.dart';
@@ -20,7 +21,7 @@ class App extends StatelessWidget {
   }
 }
 
-//!//!----------------------------------------------------------------------------------------------------------------- B O T T O M  N A V I G A T I O N  H O S T
+//!======================================================================================================================================== B O T T O M  N A V I G A T I O N  H O S T
 class MainNavigationWrapper extends StatefulWidget {
   const MainNavigationWrapper({super.key});
 
@@ -34,7 +35,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   //* View Screens
   final List<Widget> _screens = [
     const HomeScreen(),
-    const Scaffold(body: Center(child: Text('Search Screen Workspace'))),
+    const SearchScreen(),
     const Scaffold(body: Center(child: Text('Saved Screen Workspace'))),
     const MessagesScreen(),
     const Scaffold(body: Center(child: Text('Profile Screen Workspace'))),
@@ -49,7 +50,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           color: AppColors.white,
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, -4),
             ),

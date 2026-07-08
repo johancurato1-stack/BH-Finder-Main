@@ -29,7 +29,7 @@ class RoomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -38,7 +38,7 @@ class RoomCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //!----------------------------------------------------------------------------------------------------------------- I M A G E  &  T E X T  S T A C K
+          //!======================================================================================================================================== I M A G E  &  T E X T  S T A C K
           Stack(
             children: [
               ClipRRect(
@@ -52,7 +52,7 @@ class RoomCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 140,
-                    color: AppColors.tertiary.withOpacity(0.2),
+                    color: AppColors.tertiary.withValues(alpha: 0.2),
                     child: const Icon(
                       Icons.broken_image,
                       color: AppColors.secondary,
@@ -60,7 +60,7 @@ class RoomCard extends StatelessWidget {
                   ),
                 ),
               ),
-              //!----------------------------------------------------------------------------------------------------------------- S T A T U S  T A G
+              //!======================================================================================================================================== S T A T U S  T A G
               if (isAvailable)
                 Positioned(
                   top: 10,
@@ -94,7 +94,7 @@ class RoomCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              //!----------------------------------------------------------------------------------------------------------------- P R I C I N G  T A G
+              //!======================================================================================================================================== P R I C I N G  T A G
               Positioned(
                 bottom: 10,
                 left: 10,
@@ -104,7 +104,7 @@ class RoomCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.black.withOpacity(0.75),
+                    color: AppColors.black.withValues(alpha: 0.75),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -121,7 +121,7 @@ class RoomCard extends StatelessWidget {
             ],
           ),
 
-          //!----------------------------------------------------------------------------------------------------------------- T I T L E
+          //!======================================================================================================================================== T I T L E
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -141,7 +141,7 @@ class RoomCard extends StatelessWidget {
 
                 const SizedBox(height: 3),
 
-                //!----------------------------------------------------------------------------------------------------------------- D I S T A N C E
+                //!======================================================================================================================================== D I S T A N C E
                 Text(
                   distanceText,
                   maxLines: 1,
@@ -155,14 +155,14 @@ class RoomCard extends StatelessWidget {
 
                 const SizedBox(height: 5),
 
-                //!----------------------------------------------------------------------------------------------------------------- D I V I D E R
+                //!======================================================================================================================================== D I V I D E R
                 Divider(
-                  color: AppColors.tertiary.withOpacity(0.2),
+                  color: AppColors.tertiary.withValues(alpha: 0.2),
                   height: 1,
                   thickness: 0.5,
                 ),
 
-                //!----------------------------------------------------------------------------------------------------------------- G E N D E R
+                //!======================================================================================================================================== G E N D E R
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,7 +186,7 @@ class RoomCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    //!----------------------------------------------------------------------------------------------------------------- R O O M  C A P A C I T Y
+                    //!======================================================================================================================================== R O O M  C A P A C I T Y
                     Row(
                       children: [
                         const Icon(

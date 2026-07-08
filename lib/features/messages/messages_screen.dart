@@ -8,7 +8,7 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //!//!-----------------------------------------------------------------------------------------------------------------
+    //!========================================================================================================================================
 
     //* List View Data
     final List<ChatModel> activeConversations = [
@@ -35,7 +35,7 @@ class MessagesScreen extends StatelessWidget {
       ),
     ];
 
-    //!-----------------------------------------------------------------------------------------------------------------
+    //!========================================================================================================================================
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -48,9 +48,13 @@ class MessagesScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                //* Back Icon
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      print("Back Pressed");
+                    },
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,
@@ -82,7 +86,7 @@ class MessagesScreen extends StatelessWidget {
               ),
             ),
 
-            //!-----------------------------------------------------------------------------------------------------------------
+            //!======================================================================================================================================== S E A R C H  B A R
 
             //* Search Bar
             Padding(
@@ -93,7 +97,8 @@ class MessagesScreen extends StatelessWidget {
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: AppColors.tertiary.withOpacity(0.3),
+                    color: AppColors.tertiary.withValues(alpha: 0.3),
+                    width: 0.5,
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -122,7 +127,7 @@ class MessagesScreen extends StatelessWidget {
 
             const SizedBox(height: 1),
 
-            //!-----------------------------------------------------------------------------------------------------------------
+            //!========================================================================================================================================
 
             //* List View
             Expanded(
@@ -132,7 +137,7 @@ class MessagesScreen extends StatelessWidget {
                         'No conversations yet.',
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.tertiary.withOpacity(0.8),
+                          color: AppColors.tertiary.withValues(alpha: 0.8),
                           fontFamily: 'Roboto',
                         ),
                       ),
@@ -143,7 +148,7 @@ class MessagesScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       physics: const BouncingScrollPhysics(),
                       separatorBuilder: (context, index) => Divider(
-                        color: AppColors.tertiary.withOpacity(0.1),
+                        color: AppColors.tertiary.withValues(alpha: 0.1),
                         height: 1,
                         indent: 0,
                       ),
