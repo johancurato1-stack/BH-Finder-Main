@@ -1,4 +1,5 @@
 import 'package:bh_finder/features/search/search_screen.dart';
+import 'package:bh_finder/saved/saved_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/splash/splash_screen.dart';
@@ -32,14 +33,26 @@ class MainNavigationWrapper extends StatefulWidget {
 class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   int _currentIndex = 0;
 
-  //* View Screens
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const Scaffold(body: Center(child: Text('Saved Screen Workspace'))),
-    const MessagesScreen(),
-    const Scaffold(body: Center(child: Text('Profile Screen Workspace'))),
-  ];
+  // FIXED: Added the state variable declaration right here so IndexedStack can read it!
+  late List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(
+        onSearchPressed: () {
+          setState(() {
+            _currentIndex = 1;
+          });
+        },
+      ),
+      const SearchScreen(),
+      const SavedScreen(),
+      const MessagesScreen(),
+      const Scaffold(body: Center(child: Text('Profile Screen Workspace'))),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,24 +92,33 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           ),
           elevation: 0,
           items: const [
+            //* Home Icon
             BottomNavigationBarItem(
               icon: Icon(Icons.home_filled),
               label: 'Home',
             ),
+
+            //* Search Icon
             BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded),
               label: 'Search',
             ),
+
+            //* Saved Icon
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite_border_rounded),
               activeIcon: Icon(Icons.favorite_rounded),
               label: 'Saved',
             ),
+
+            //* Messages Icon
             BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble_outline_rounded),
               activeIcon: Icon(Icons.chat_bubble_rounded),
               label: 'Messages',
             ),
+
+            //* Profile Icon
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline_rounded),
               activeIcon: Icon(Icons.person_rounded),

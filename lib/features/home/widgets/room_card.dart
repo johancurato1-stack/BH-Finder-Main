@@ -2,27 +2,279 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 class RoomCard extends StatelessWidget {
+  final String title;
   final String imageUrl;
   final String price;
-  final String title;
   final String distanceText;
   final String genderRules;
   final String availabilityCount;
-  final bool isAvailable;
+  final String status;
+  final double rating;
+  final int reviewCount;
+  final bool isSaved;
+  final VoidCallback onHeartPressed;
+  final bool isHorizontalVariant;
+  final List<String> amenities;
 
   const RoomCard({
     super.key,
+    required this.title,
     required this.imageUrl,
     required this.price,
-    required this.title,
     required this.distanceText,
     required this.genderRules,
     required this.availabilityCount,
-    this.isAvailable = true,
+    required this.status,
+    required this.rating,
+    required this.reviewCount,
+    required this.isSaved,
+    required this.onHeartPressed,
+    required this.amenities,
+    this.isHorizontalVariant = false,
   });
+
+  //!======================================================================================================================================== R O O M  S T A T U S  C O L O R
+  Color _getStatusColor() {
+    switch (status.toLowerCase()) {
+      case 'occupied':
+        return const Color(0xFFEF5350);
+      case 'pending':
+        return const Color(0xFFFFB300);
+      case 'available':
+      default:
+        return const Color(0xFF00E676);
+    }
+  }
+
+  //!========================================================================================================================================
+
+  IconData _getAmenityIcon(String amenity) {
+    switch (amenity.toLowerCase()) {
+      case 'wifi':
+        return Icons.wifi;
+      case 'aircon':
+        return Icons.ac_unit;
+      case 'own cr':
+        return Icons.bathroom;
+      case 'parking':
+        return Icons.local_parking;
+      case 'laundry':
+        return Icons.local_laundry_service;
+      case 'kitchen':
+        return Icons.countertops;
+      case 'study area':
+        return Icons.menu_book;
+      case 'cctv':
+        return Icons.videocam;
+      default:
+        return Icons.star_border_rounded;
+    }
+  }
+
+  //!======================================================================================================================================== V E R T I C A L  L I S T  ( S A V E D  S C R E E N )
 
   @override
   Widget build(BuildContext context) {
+    if (isHorizontalVariant) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imageUrl,
+                    height: 110,
+                    width: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 6,
+                  left: 6,
+                  child: Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.white, width: 2),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    //* Title
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1A1F36),
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ),
+
+                      //* Heart Icon
+                      GestureDetector(
+                        onTap: onHeartPressed,
+                        child: Icon(
+                          isSaved ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.red,
+                          size: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 2),
+
+                  //* Price
+                  Text(
+                    '₱ $price / month',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blueAccent,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  //* Distance
+                  Text(
+                    distanceText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.tertiary,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  //* Amenities
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 5,
+                    children: amenities.map((amenity) {
+                      return Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Icon(
+                          _getAmenityIcon(amenity),
+                          size: 11,
+                          color: Colors.grey.shade600,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  //* Gender
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.person_outline,
+                        size: 12,
+                        color: AppColors.secondary,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        genderRules,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      //* Capacity
+                      const Icon(
+                        Icons.group_outlined,
+                        size: 12,
+                        color: AppColors.secondary,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        availabilityCount,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                      const Spacer(),
+
+                      //* Room Rate
+                      const Icon(Icons.star, size: 12, color: Colors.amber),
+                      const SizedBox(width: 2),
+                      Text(
+                        '$rating ',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '($reviewCount)',
+                        style: const TextStyle(
+                          fontSize: 9,
+                          color: AppColors.tertiary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    //!======================================================================================================================================== H O R I Z O N T A L  L I S T  ( H O M E  S C R E E N )
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -38,7 +290,6 @@ class RoomCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //!======================================================================================================================================== I M A G E  &  T E X T  S T A C K
           Stack(
             children: [
               ClipRRect(
@@ -50,51 +301,40 @@ class RoomCard extends StatelessWidget {
                   height: 140,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 140,
-                    color: AppColors.tertiary.withValues(alpha: 0.2),
-                    child: const Icon(
-                      Icons.broken_image,
-                      color: AppColors.secondary,
-                    ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 3,
+                        backgroundColor: AppColors.white,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        status,
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              //!======================================================================================================================================== S T A T U S  T A G
-              if (isAvailable)
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF00E676),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 3,
-                          backgroundColor: AppColors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          'Available',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              //!======================================================================================================================================== P R I C I N G  T A G
               Positioned(
                 bottom: 10,
                 left: 10,
@@ -120,8 +360,6 @@ class RoomCard extends StatelessWidget {
               ),
             ],
           ),
-
-          //!======================================================================================================================================== T I T L E
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -129,7 +367,7 @@ class RoomCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  maxLines: 2,
+                  maxLines: 2, // FIXED: Wraps to 2 lines cleanly
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
@@ -138,10 +376,7 @@ class RoomCard extends StatelessWidget {
                     fontFamily: 'Roboto',
                   ),
                 ),
-
                 const SizedBox(height: 3),
-
-                //!======================================================================================================================================== D I S T A N C E
                 Text(
                   distanceText,
                   maxLines: 1,
@@ -152,17 +387,12 @@ class RoomCard extends StatelessWidget {
                     fontFamily: 'Roboto',
                   ),
                 ),
-
                 const SizedBox(height: 5),
-
-                //!======================================================================================================================================== D I V I D E R
                 Divider(
                   color: AppColors.tertiary.withValues(alpha: 0.2),
                   height: 1,
                   thickness: 0.5,
                 ),
-
-                //!======================================================================================================================================== G E N D E R
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,12 +411,10 @@ class RoomCard extends StatelessWidget {
                             fontSize: 10,
                             color: AppColors.secondary,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Roboto',
                           ),
                         ),
                       ],
                     ),
-                    //!======================================================================================================================================== R O O M  C A P A C I T Y
                     Row(
                       children: [
                         const Icon(
@@ -201,7 +429,6 @@ class RoomCard extends StatelessWidget {
                             fontSize: 10,
                             color: AppColors.secondary,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Roboto',
                           ),
                         ),
                       ],
