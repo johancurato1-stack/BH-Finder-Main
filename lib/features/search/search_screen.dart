@@ -5,7 +5,9 @@ import 'package:bh_finder/features/search/widgets/filter_button.dart';
 import 'package:bh_finder/features/search/search_results_screen.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final VoidCallback onBackPressed;
+
+  const SearchScreen({super.key, required this.onBackPressed});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -70,9 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 //* Back Icon
                 children: [
                   IconButton(
-                    onPressed: () {
-                      print("Back pressed");
-                    },
+                    onPressed: widget.onBackPressed,
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,

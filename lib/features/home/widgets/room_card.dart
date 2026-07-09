@@ -303,6 +303,8 @@ class RoomCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+
+              //* Status
               Positioned(
                 top: 10,
                 left: 10,
@@ -335,6 +337,8 @@ class RoomCard extends StatelessWidget {
                   ),
                 ),
               ),
+
+              //* Price Tag
               Positioned(
                 bottom: 10,
                 left: 10,
@@ -364,10 +368,12 @@ class RoomCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+
+              //* Title
               children: [
                 Text(
                   title,
-                  maxLines: 2, // FIXED: Wraps to 2 lines cleanly
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
@@ -377,6 +383,8 @@ class RoomCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 3),
+
+                //* Distance
                 Text(
                   distanceText,
                   maxLines: 1,
@@ -388,6 +396,8 @@ class RoomCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
+
+                //* Divider
                 Divider(
                   color: AppColors.tertiary.withValues(alpha: 0.2),
                   height: 1,
@@ -396,6 +406,8 @@ class RoomCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                  //* Gender
                   children: [
                     Row(
                       children: [
@@ -415,6 +427,8 @@ class RoomCard extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    //* Capacity
                     Row(
                       children: [
                         const Icon(

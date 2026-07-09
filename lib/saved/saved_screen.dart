@@ -4,7 +4,9 @@ import 'package:bh_finder/features/home/widgets/room_card.dart';
 import 'package:bh_finder/core/data/mock_rooms.dart';
 
 class SavedScreen extends StatefulWidget {
-  const SavedScreen({super.key});
+  final VoidCallback onBackPressed;
+
+  const SavedScreen({super.key, required this.onBackPressed});
 
   @override
   State<SavedScreen> createState() => _SavedScreenState();
@@ -31,9 +33,7 @@ class _SavedScreenState extends State<SavedScreen> {
                 //* Back icon
                 children: [
                   IconButton(
-                    onPressed: () {
-                      Navigator.maybePop(context);
-                    },
+                    onPressed: widget.onBackPressed,
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,

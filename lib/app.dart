@@ -1,4 +1,5 @@
 import 'package:bh_finder/features/search/search_screen.dart';
+import 'package:bh_finder/profile/profile_screen.dart';
 import 'package:bh_finder/saved/saved_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -47,10 +48,22 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           });
         },
       ),
-      const SearchScreen(),
-      const SavedScreen(),
-      const MessagesScreen(),
-      const Scaffold(body: Center(child: Text('Profile Screen Workspace'))),
+      SearchScreen(
+        onBackPressed: () {
+          setState(() => _currentIndex = 0);
+        },
+      ),
+      SavedScreen(
+        onBackPressed: () {
+          setState(() => _currentIndex = 0);
+        },
+      ),
+      MessagesScreen(
+        onBackPressed: () {
+          setState(() => _currentIndex = 0);
+        },
+      ),
+      const ProfileScreen(),
     ];
   }
 

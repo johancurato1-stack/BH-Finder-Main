@@ -4,7 +4,9 @@ import 'package:bh_finder/features/messages/models/chat_model.dart';
 import 'package:bh_finder/features/messages/widgets/chat_tile.dart';
 
 class MessagesScreen extends StatelessWidget {
-  const MessagesScreen({super.key});
+  final VoidCallback onBackPressed;
+
+  const MessagesScreen({super.key, required this.onBackPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,8 @@ class MessagesScreen extends StatelessWidget {
                 //* Back Icon
                 children: [
                   IconButton(
-                    onPressed: () {
-                      print("Back Pressed");
-                    },
+                    onPressed:
+                        onBackPressed, // 3. Bound directly to the parameter
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,
