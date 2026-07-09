@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/messages/models/chat_model.dart';
 import 'package:bh_finder/features/messages/widgets/chat_tile.dart';
+import 'package:bh_finder/features/messages/notification_chat_screen.dart';
+import 'package:bh_finder/features/messages/data/mock_chat.dart';
+import 'package:bh_finder/features/messages/new_message_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
   final VoidCallback onBackPressed;
@@ -10,60 +12,26 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //!========================================================================================================================================
-
-    //* List View Data
-    final List<ChatModel> activeConversations = [
-      const ChatModel(
-        id: '1',
-        landlordName: 'Maria Santos',
-        propertyTitle: 'Green Haven Boarding House',
-        lastMessage:
-            'Hello! Yes, the female slot is still available for viewing tomorrow.',
-        timeStamp: '9:41 AM',
-        avatarUrl:
-            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=150&auto=format&fit=crop',
-        isUnread: true,
-      ),
-      const ChatModel(
-        id: '2',
-        landlordName: 'Juan Dela Cruz',
-        propertyTitle: 'Blessed Home Boarding House',
-        lastMessage:
-            'The reservation fee is non-refundable, but it deducts from your first month.',
-        timeStamp: 'Yesterday',
-        avatarUrl:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop',
-      ),
-    ];
-
-    //!========================================================================================================================================
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //* Back Icon
+            //* Fixed Header (Doesn't Scroll)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                //* Back Icon
                 children: [
                   IconButton(
-                    onPressed:
-                        onBackPressed, // 3. Bound directly to the parameter
+                    onPressed: onBackPressed,
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,
                       size: 24,
                     ),
                   ),
-
-                  //* Page Header
                   const Text(
                     'Messages',
                     style: TextStyle(
@@ -73,10 +41,15 @@ class MessagesScreen extends StatelessWidget {
                       fontFamily: 'Roboto',
                     ),
                   ),
-
-                  //* Write a Message Icon
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NewMessageScreen(),
+                        ),
+                      );
+                    },
                     icon: const Icon(
                       Icons.add_to_photos_outlined,
                       color: AppColors.primary,
@@ -87,9 +60,7 @@ class MessagesScreen extends StatelessWidget {
               ),
             ),
 
-            //!======================================================================================================================================== S E A R C H  B A R
-
-            //* Search Bar
+            //* Fixed Search Bar (Doesn't Scroll)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Container(
@@ -103,8 +74,8 @@ class MessagesScreen extends StatelessWidget {
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Icon(Icons.search, color: AppColors.tertiary, size: 20),
                     SizedBox(width: 10),
                     Expanded(
@@ -128,43 +99,104 @@ class MessagesScreen extends StatelessWidget {
 
             const SizedBox(height: 1),
 
-            //!========================================================================================================================================
+            //!======================================================================================================================================== S C R O L L A B L E  A R E A
 
-            //* List View
+            //* Only the items inside this Expanded will scroll
             Expanded(
-              child: activeConversations.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No conversations yet.',
+              child: ListView.separated(
+                // Add 1 extra count to layout the special Notifications Tile at the top
+                itemCount: landlordConversations.length + 1,
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                physics: const BouncingScrollPhysics(),
+                separatorBuilder: (context, index) => Divider(
+                  color: AppColors.tertiary.withValues(alpha: 0.1),
+                  height: 1,
+                ),
+                itemBuilder: (context, index) {
+                  // Index 0 is reserved exclusively for your read-only Notifications feed
+                  if (index == 0) {
+                    return ListTile(
+                      leading: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 26,
+                            backgroundColor: AppColors.primary.withValues(
+                              alpha: 0.1,
+                            ),
+                            child: const Icon(
+                              Icons.notifications_active_rounded,
+                              color: AppColors.primary,
+                              size: 24,
+                            ),
+                          ),
+                          // The notification badge indicator dot
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 14,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.white,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      title: const Text(
+                        'System Updates & Notifications',
                         style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.tertiary.withValues(alpha: 0.8),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.secondary,
                           fontFamily: 'Roboto',
                         ),
                       ),
-                    )
-                  //* Divider
-                  : ListView.separated(
-                      itemCount: activeConversations.length,
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      physics: const BouncingScrollPhysics(),
-                      separatorBuilder: (context, index) => Divider(
-                        color: AppColors.tertiary.withValues(alpha: 0.1),
-                        height: 1,
-                        indent: 0,
+                      subtitle: const Text(
+                        'Your application for Green Haven Boarding House has been approved!',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.secondary,
+                          fontWeight:
+                              FontWeight.bold, // Bold means unread status
+                        ),
                       ),
-
-                      itemBuilder: (context, index) {
-                        return ChatTile(
-                          chat: activeConversations[index],
-                          onTap: () {
-                            print(
-                              "Opened centralized chat ID: ${activeConversations[index].id}",
-                            );
-                          },
+                      trailing: const Text(
+                        'Just now',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.tertiary,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const NotificationChatScreen(),
+                          ),
                         );
                       },
-                    ),
+                    );
+                  }
+
+                  // Standard landlord rows offset by -1 to adjust for our top tile position
+                  final chatItem = landlordConversations[index - 1];
+                  return ChatTile(
+                    chat: chatItem,
+                    onTap: () {
+                      print("Opened regular chat ID: ${chatItem.id}");
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

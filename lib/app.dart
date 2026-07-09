@@ -1,6 +1,6 @@
 import 'package:bh_finder/features/search/search_screen.dart';
-import 'package:bh_finder/profile/profile_screen.dart';
-import 'package:bh_finder/saved/saved_screen.dart';
+import 'package:bh_finder/features/profile/profile_screen.dart';
+import 'package:bh_finder/features/saved/saved_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/splash/splash_screen.dart';
@@ -13,11 +13,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Debug Banner
       debugShowCheckedModeBanner: false,
-
       theme: ThemeData(scaffoldBackgroundColor: AppColors.background),
-
       home: const SplashScreen(),
     );
   }
@@ -34,14 +31,26 @@ class MainNavigationWrapper extends StatefulWidget {
 class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   int _currentIndex = 0;
 
-  // FIXED: Added the state variable declaration right here so IndexedStack can read it!
-  late List<Widget> _screens;
+  // Real-time local state flags for tracking red dots
+  bool _hasUnreadNotifications = true;
+  bool _hasUnreadLandlordMessages = true;
+
+  // Helper logic: Tab turns red if either system updates or landlord messages are unread
+  bool get _showMessagesTabBadge =>
+      _hasUnreadNotifications || _hasUnreadLandlordMessages;
 
   @override
-  void initState() {
-    super.initState();
-    _screens = [
+  Widget build(BuildContext context) {
+    // Dynamic screens list rebuilt with current states on every widget refresh
+    final List<Widget> screens = [
       HomeScreen(
+        hasNotification: _hasUnreadNotifications, // Pass the boolean state down
+        onNotificationsRead: () {
+          setState(() {
+            _hasUnreadNotifications =
+                false; // Turns off the red dot when clicked!
+          });
+        },
         onSearchPressed: () {
           setState(() {
             _currentIndex = 1;
@@ -65,12 +74,9 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
       ),
       const ProfileScreen(),
     ];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
+      body: IndexedStack(index: _currentIndex, children: screens),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -104,35 +110,79 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
             fontFamily: 'Roboto',
           ),
           elevation: 0,
-          items: const [
+          items: [
             //* Home Icon
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home_filled),
               label: 'Home',
             ),
 
             //* Search Icon
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded),
               label: 'Search',
             ),
 
             //* Saved Icon
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.favorite_border_rounded),
               activeIcon: Icon(Icons.favorite_rounded),
               label: 'Saved',
             ),
 
-            //* Messages Icon
+            //* Messages Icon (Wrapped in a Stack to dynamically render the badge overlay)
             BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline_rounded),
-              activeIcon: Icon(Icons.chat_bubble_rounded),
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.chat_bubble_outline_rounded),
+                  if (_showMessagesTabBadge)
+                    Positioned(
+                      right: -2,
+                      top: -2,
+                      child: Container(
+                        width: 9,
+                        height: 9,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.white,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              activeIcon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.chat_bubble_rounded),
+                  if (_showMessagesTabBadge)
+                    Positioned(
+                      right: -2,
+                      top: -2,
+                      child: Container(
+                        width: 9,
+                        height: 9,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.white,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               label: 'Messages',
             ),
 
             //* Profile Icon
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.person_outline_rounded),
               activeIcon: Icon(Icons.person_rounded),
               label: 'Profile',

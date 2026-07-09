@@ -1,7 +1,7 @@
 import 'package:bh_finder/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/search/widgets/filter_button.dart';
+import 'package:bh_finder/widgets/filter_button.dart';
 import 'package:bh_finder/features/search/search_results_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -142,9 +142,45 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
 
                   //!======================================================================================================================================== F I L T E R S
+                  Padding(
+                    padding: const EdgeInsets.only(top: 22, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Budget Range',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.secondary,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _searchController.clear();
+                              _selectedBudget = 'Any';
+                              _selectedDistance = 'Any';
+                              _selectedGender = 'Mixed';
+                              _selectedStatus = 'Available';
+                              _selectedAmenities.clear();
+                            });
+                          },
+                          child: const Text(
+                            'Reset',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                   //* Budget Section
-                  _buildSectionTitle('Budget Range'),
                   _buildStaticGrid(
                     _budgets,
                     _selectedBudget,
@@ -214,7 +250,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
             //!======================================================================================================================================== A P P L Y  B U T T O N
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 15, 20, 46),
               child: CustomButton(
                 text: 'Show Results',
                 onPressed: () {

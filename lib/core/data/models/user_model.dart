@@ -19,13 +19,3 @@ class UserModel {
     required this.inquiriesCount,
   });
 }
-
-const mockUser = UserModel(
-  name: 'Johan Garcia Curato',
-  email: 'johancurato1@gmail.com',
-  avatarUrl: '',
-  verificationStatus: VerificationStatus.verified,
-  favoritesCount: 0,
-  recentlyViewedCount: 0,
-  inquiriesCount: 2,
-);

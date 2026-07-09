@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/home/widgets/room_card.dart';
-import 'package:bh_finder/core/data/mock_rooms.dart';
+import 'package:bh_finder/widgets/room_card_vertical.dart';
+import 'package:bh_finder/core/data/mock_room.dart';
+import 'package:bh_finder/widgets/filter_bottom_sheet.dart';
 
 class SavedScreen extends StatefulWidget {
   final VoidCallback onBackPressed;
@@ -55,7 +56,7 @@ class _SavedScreenState extends State<SavedScreen> {
                   //* Filter Icon
                   IconButton(
                     onPressed: () {
-                      print("Filter Pressed");
+                      FilterBottomSheet.show(context);
                     },
                     icon: const Icon(
                       Icons.tune_rounded,
@@ -85,7 +86,7 @@ class _SavedScreenState extends State<SavedScreen> {
                       itemCount: savedRooms.length,
                       itemBuilder: (context, index) {
                         final room = savedRooms[index];
-                        return RoomCard(
+                        return RoomCardVertical(
                           title: room.title,
                           amenities: room.amenities,
                           imageUrl: room.imageUrl,
@@ -97,7 +98,6 @@ class _SavedScreenState extends State<SavedScreen> {
                           rating: room.rating,
                           reviewCount: room.reviewCount,
                           isSaved: room.isSaved,
-                          isHorizontalVariant: true,
                           onHeartPressed: () {
                             setState(() {
                               room.isSaved = false;

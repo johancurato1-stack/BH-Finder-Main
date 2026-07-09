@@ -1,4 +1,4 @@
-import 'package:bh_finder/core/models/room_model.dart';
+import 'package:bh_finder/core/data/models/room_model.dart';
 
 //!======================================================================================================================================== G L O B A L  R O O M  L I S T  D A T A
 List<RoomModel> mockRooms = [

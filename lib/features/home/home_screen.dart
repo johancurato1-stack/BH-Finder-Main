@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/home/widgets/room_card.dart';
-import 'package:bh_finder/core/data/mock_rooms.dart'; // Import central dataset
+import 'package:bh_finder/features/home/widgets/room_card_horizontal.dart';
+import 'package:bh_finder/core/data/mock_room.dart';
+import 'package:bh_finder/features/messages/notification_chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onSearchPressed;
+  final bool hasNotification;
+  final VoidCallback onNotificationsRead;
 
-  const HomeScreen({super.key, required this.onSearchPressed});
+  const HomeScreen({
+    super.key,
+    required this.onSearchPressed,
+    required this.hasNotification, // Add this parameter
+    required this.onNotificationsRead,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -58,15 +66,47 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         //* Notification Button
-                        IconButton(
-                          icon: const Icon(
-                            Icons.notifications_none_rounded,
-                            color: AppColors.secondary,
-                            size: 28,
-                          ),
-                          onPressed: () {
-                            print("Notification bell clicked");
-                          },
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.notifications_none_rounded,
+                                color: AppColors.secondary,
+                                size: 28,
+                              ),
+                              onPressed: () {
+                                // 1. Push the screen open
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationChatScreen(),
+                                  ),
+                                );
+                                // 2. Call the parent function to turn off the red dot
+                                widget.onNotificationsRead();
+                              },
+                            ),
+                            // 3. Render the red dot overlay if true
+                            if (widget.hasNotification)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  width: 9,
+                                  height: 9,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.background,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),
@@ -218,24 +258,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Container(
                       width: 175,
                       margin: const EdgeInsets.only(right: 16),
-                      child: RoomCard(
+                      child: RoomCardHorizontal(
                         title: room.title,
-                        amenities: room.amenities,
                         imageUrl: room.imageUrl,
                         price: room.price,
                         distanceText: room.distanceText,
                         genderRules: room.genderRules,
                         availabilityCount: room.availabilityCount,
                         status: room.status,
-                        rating: room.rating,
-                        reviewCount: room.reviewCount,
-                        isSaved: room.isSaved,
-                        isHorizontalVariant: false,
-                        onHeartPressed: () {
-                          setState(() {
-                            room.isSaved = !room.isSaved;
-                          });
-                        },
                       ),
                     );
                   },
