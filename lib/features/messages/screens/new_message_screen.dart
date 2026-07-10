@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/data/mock_contact.dart';
+import 'package:bh_finder/core/data/mock_data/mock_contact.dart';
 
 class NewMessageScreen extends StatefulWidget {
   const NewMessageScreen({super.key});

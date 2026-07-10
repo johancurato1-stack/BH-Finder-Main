@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/messages/widgets/chat_tile.dart';
-import 'package:bh_finder/features/messages/notification_chat_screen.dart';
-import 'package:bh_finder/features/messages/data/mock_chat.dart';
-import 'package:bh_finder/features/messages/new_message_screen.dart';
+import 'package:bh_finder/features/messages/screens/notification_chat_screen.dart';
+import 'package:bh_finder/features/messages/mock_data/mock_chat.dart';
+import 'package:bh_finder/features/messages/screens/new_message_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
   final VoidCallback onBackPressed;

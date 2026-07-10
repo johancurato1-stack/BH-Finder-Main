@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/widgets/filter_button.dart';
-import 'package:bh_finder/widgets/custom_button.dart';
+import 'filter_button.dart';
+import 'custom_button.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({super.key});
@@ -119,9 +119,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   child: const Text(
                     'Reset',
                     style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Roboto',
                     ),
                   ),
                 ),

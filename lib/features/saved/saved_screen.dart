@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/widgets/room_card_vertical.dart';
-import 'package:bh_finder/core/data/mock_room.dart';
-import 'package:bh_finder/widgets/filter_bottom_sheet.dart';
+import '../../../shared/widgets/bh_card_vertical.dart';
+import 'package:bh_finder/core/data/mock_data/mock_bh.dart';
+import '../../../shared/widgets/filter_bottom_sheet.dart';
 
 class SavedScreen extends StatefulWidget {
   final VoidCallback onBackPressed;
@@ -86,7 +86,7 @@ class _SavedScreenState extends State<SavedScreen> {
                       itemCount: savedRooms.length,
                       itemBuilder: (context, index) {
                         final room = savedRooms[index];
-                        return RoomCardVertical(
+                        return BhCardVertical(
                           title: room.title,
                           amenities: room.amenities,
                           imageUrl: room.imageUrl,

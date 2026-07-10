@@ -1,8 +1,8 @@
-import 'package:bh_finder/widgets/custom_button.dart';
+import '../../../shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/widgets/filter_button.dart';
-import 'package:bh_finder/features/search/search_results_screen.dart';
+import '../../../shared/widgets/filter_button.dart';
+import 'package:bh_finder/features/search/screens/search_results_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final VoidCallback onBackPressed;
@@ -171,8 +171,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             'Reset',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.blueAccent,
-                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Roboto',
                             ),
                           ),
                         ),

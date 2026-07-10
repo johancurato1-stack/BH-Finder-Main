@@ -1,4 +1,4 @@
-class RoomModel {
+class BhModel {
   final String id;
   final String title;
   final String imageUrl;
@@ -12,7 +12,7 @@ class RoomModel {
   final List<String> amenities;
   bool isSaved;
 
-  RoomModel({
+  BhModel({
     required this.id,
     required this.title,
     required this.imageUrl,

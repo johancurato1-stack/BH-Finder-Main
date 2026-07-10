@@ -1,9 +1,9 @@
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/data/models/bh_model.dart';
 
 //!======================================================================================================================================== G L O B A L  R O O M  L I S T  D A T A
-List<RoomModel> mockRooms = [
+List<BhModel> mockRooms = [
   //* Room #1
-  RoomModel(
+  BhModel(
     id: '1',
     title: 'Green Haven Boarding House',
     imageUrl:
@@ -28,7 +28,7 @@ List<RoomModel> mockRooms = [
   ),
 
   //* Room #2
-  RoomModel(
+  BhModel(
     id: '2',
     title: 'Blessed Home Boarding House',
     imageUrl:
@@ -54,7 +54,7 @@ List<RoomModel> mockRooms = [
   ),
 
   //*Room #3
-  RoomModel(
+  BhModel(
     id: '3',
     title: "Juanito's Boarding House",
     imageUrl:

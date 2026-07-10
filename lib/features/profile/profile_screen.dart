@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/profile/widgets/menu_list_tile.dart';
 import 'package:bh_finder/core/data/models/user_model.dart';
-import 'package:bh_finder/core/data/mock_user.dart';
+import 'package:bh_finder/core/data/mock_data/mock_user.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

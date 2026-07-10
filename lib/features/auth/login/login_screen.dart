@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/widgets/custom_text_field.dart';
-import 'package:bh_finder/widgets/custom_button.dart';
-import 'package:bh_finder/features/auth/register/signup_screen.dart';
+import '../../../../shared/widgets/custom_text_field.dart';
+import '../../../../shared/widgets/custom_button.dart';
+import 'package:bh_finder/features/auth/signup/signup_screen.dart';
 import 'package:bh_finder/app.dart';
 
 class LoginScreen extends StatefulWidget {

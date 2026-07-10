@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class RoomCardHorizontal extends StatelessWidget {
+class BhCardHorizontal extends StatelessWidget {
   final String title;
   final String imageUrl;
   final String price;
@@ -10,7 +10,7 @@ class RoomCardHorizontal extends StatelessWidget {
   final String availabilityCount;
   final String status;
 
-  const RoomCardHorizontal({
+  const BhCardHorizontal({
     super.key,
     required this.title,
     required this.imageUrl,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class RoomCardVertical extends StatelessWidget {
+class BhCardVertical extends StatelessWidget {
   final String title;
   final String imageUrl;
   final String price;
@@ -15,7 +15,7 @@ class RoomCardVertical extends StatelessWidget {
   final VoidCallback onHeartPressed;
   final List<String> amenities;
 
-  const RoomCardVertical({
+  const BhCardVertical({
     super.key,
     required this.title,
     required this.imageUrl,

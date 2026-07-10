@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/home/widgets/room_card_horizontal.dart';
-import 'package:bh_finder/core/data/mock_room.dart';
-import 'package:bh_finder/features/messages/notification_chat_screen.dart';
+import 'package:bh_finder/features/home/widgets/bh_card_horizontal.dart';
+import 'package:bh_finder/core/data/mock_data/mock_bh.dart';
+import 'package:bh_finder/features/messages/screens/notification_chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onSearchPressed;
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Container(
                       width: 175,
                       margin: const EdgeInsets.only(right: 16),
-                      child: RoomCardHorizontal(
+                      child: BhCardHorizontal(
                         title: room.title,
                         imageUrl: room.imageUrl,
                         price: room.price,
