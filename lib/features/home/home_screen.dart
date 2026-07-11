@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/features/home/widgets/bh_card_horizontal.dart';
-import 'package:bh_finder/core/data/mock_data/mock_bh.dart';
+import 'package:bh_finder/core/provider/bh_provider.dart';
 import 'package:bh_finder/features/messages/screens/notification_chat_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onSearchPressed;
@@ -23,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<BhProvider>(context);
+    final rooms = provider.rooms;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -247,26 +250,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //!======================================================================================================================================== R O O M  L I S T
               SizedBox(
-                height: 255,
+                height:
+                    270, // Increase this height slightly if your card feels "cut off"
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   physics: const BouncingScrollPhysics(),
-                  itemCount: mockRooms.length,
+                  // This adds space at the start and end of the WHOLE list
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: rooms.length,
                   itemBuilder: (context, index) {
-                    final room = mockRooms[index];
-                    return Container(
-                      width: 175,
-                      margin: const EdgeInsets.only(right: 16),
-                      child: BhCardHorizontal(
-                        title: room.title,
-                        imageUrl: room.imageUrl,
-                        price: room.price,
-                        distanceText: room.distanceText,
-                        genderRules: room.genderRules,
-                        availabilityCount: room.availabilityCount,
-                        status: room.status,
-                      ),
+                    final room = rooms[index];
+                    // Use a Row here to keep the Card and the Spacing together without breaking the alignment
+                    return Row(
+                      children: [
+                        SizedBox(
+                          height: 255,
+                          width: 160,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: BhCardHorizontal(boardingHouse: room),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ), // This creates the gap BETWEEN cards
+                      ],
                     );
                   },
                 ),

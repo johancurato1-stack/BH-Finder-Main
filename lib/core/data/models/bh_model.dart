@@ -1,4 +1,18 @@
-class BhModel {
+import 'package:flutter/material.dart';
+
+class Landlord {
+  final String name;
+  final String responseTime;
+  final String imageUrl;
+
+  Landlord({
+    required this.name,
+    required this.responseTime,
+    required this.imageUrl,
+  });
+}
+
+class BhModel extends ChangeNotifier {
   final String id;
   final String title;
   final String imageUrl;
@@ -6,11 +20,15 @@ class BhModel {
   final String distanceText;
   final String genderRules;
   final String availabilityCount;
+  final int totalRooms;
   final String status;
   final double rating;
   final int reviewCount;
   final List<String> amenities;
-  bool isSaved;
+  final String description;
+  final Landlord landlord;
+
+  bool _isSaved;
 
   BhModel({
     required this.id,
@@ -20,10 +38,22 @@ class BhModel {
     required this.distanceText,
     required this.genderRules,
     required this.availabilityCount,
+    required this.totalRooms,
     required this.status,
     required this.rating,
     required this.reviewCount,
     required this.amenities,
-    this.isSaved = false,
-  });
+    required this.description,
+    required this.landlord,
+    bool isSaved = false,
+  }) : _isSaved = isSaved;
+
+  bool get isSaved => _isSaved;
+
+  set isSaved(bool value) {
+    if (_isSaved != value) {
+      _isSaved = value;
+      notifyListeners(); // This tells the UI to rebuild instantly!
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import '../../../shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import '../../../shared/widgets/filter_button.dart';
+import '../../shared/widgets/filter/filter_button.dart';
 import 'package:bh_finder/features/search/screens/search_results_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -35,11 +35,14 @@ class _SearchScreenState extends State<SearchScreen> {
     {'label': 'Wi-Fi', 'icon': Icons.wifi},
     {'label': 'Aircon', 'icon': Icons.ac_unit},
     {'label': 'Own CR', 'icon': Icons.bathroom},
-    {'label': 'Parking', 'icon': Icons.local_parking},
-    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
     {'label': 'Kitchen', 'icon': Icons.countertops},
-    {'label': 'Study Area', 'icon': Icons.menu_book},
+    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
+    {'label': 'Study', 'icon': Icons.menu_book},
+    {'label': 'Desk', 'icon': Icons.desk},
+    {'label': 'Cabinet', 'icon': Icons.shelves},
     {'label': 'CCTV', 'icon': Icons.videocam},
+    {'label': 'Security', 'icon': Icons.security},
+    {'label': 'Parking', 'icon': Icons.directions_car},
   ];
 
   final List<String> _distances = [
