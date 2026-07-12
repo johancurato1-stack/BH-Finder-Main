@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/shared/widgets/bh_detail_screen.dart';
+import 'package:bh_finder/shared/widgets/screens/bh_detail_screen.dart';
 import 'package:bh_finder/core/data/models/bh_model.dart';
 
 class BhCardHorizontal extends StatelessWidget {

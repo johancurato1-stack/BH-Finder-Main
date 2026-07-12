@@ -5,6 +5,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/bh_model.dart';
 import 'package:bh_finder/core/provider/bh_provider.dart';
 import 'package:bh_finder/shared/widgets/custom_button.dart';
+import 'package:bh_finder/shared/widgets/screens/view_rooms_screen.dart';
 
 class BhDetailScreen extends StatefulWidget {
   final BhModel boardingHouse;
@@ -343,7 +344,28 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
               ),
               child: CustomButton(
                 text: 'View Rooms (${bh.totalRooms})',
-                onPressed: () {},
+                onPressed: () {
+                  final provider = Provider.of<BhProvider>(
+                    context,
+                    listen: false,
+                  );
+                  final filteredRooms = provider.getRoomsForBh(bh.id);
+
+                  // LOGGING TO VERIFY
+                  debugPrint(
+                    "BH ID: ${bh.id} | Found Rooms: ${filteredRooms.length}",
+                  );
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewRoomsScreen(
+                        bhName: bh.title,
+                        rooms: filteredRooms,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

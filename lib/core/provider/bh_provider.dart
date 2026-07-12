@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/data/models/bh_model.dart';
+import 'package:bh_finder/core/data/mock_data/mock_room.dart';
+import 'package:bh_finder/core/data/models/room_model.dart';
 
 final landlordA = Landlord(
   name: "Robert Gomez",
@@ -119,5 +121,9 @@ class BhProvider extends ChangeNotifier {
   void toggleSaved(BhModel room) {
     room.isSaved = !room.isSaved;
     notifyListeners(); // This notifies the SavedScreen to refresh!
+  }
+
+  List<RoomModel> getRoomsForBh(String bhId) {
+    return RoomDataSource.allRooms.where((room) => room.bhId == bhId).toList();
   }
 }

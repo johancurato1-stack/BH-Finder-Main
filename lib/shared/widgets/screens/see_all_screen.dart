@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/bh_model.dart';
 import 'package:bh_finder/core/provider/bh_provider.dart';
 import 'package:bh_finder/shared/widgets/bh_card_vertical.dart';
-import 'package:bh_finder/shared/widgets/bh_detail_screen.dart';
+import 'package:bh_finder/shared/widgets/screens/bh_detail_screen.dart';
 import 'package:bh_finder/shared/widgets/filter/filter_bottom_sheet.dart';
 
 class SeeAllScreen extends StatelessWidget {

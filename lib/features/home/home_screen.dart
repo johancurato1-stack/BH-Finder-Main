@@ -4,7 +4,7 @@ import 'package:bh_finder/features/home/widgets/bh_card_horizontal.dart';
 import 'package:bh_finder/core/provider/bh_provider.dart';
 import 'package:bh_finder/features/messages/screens/notification_chat_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:bh_finder/shared/widgets/see_all_screen.dart';
+import 'package:bh_finder/shared/widgets/screens/see_all_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onSearchPressed;
