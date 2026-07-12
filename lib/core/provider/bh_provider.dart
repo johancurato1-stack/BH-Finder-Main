@@ -111,6 +111,8 @@ class BhProvider extends ChangeNotifier {
 
   List<BhModel> get rooms => _rooms;
 
+  List<BhModel> get nearYouList => _rooms;
+
   // This provides only the saved ones to your SavedScreen
   List<BhModel> get savedRooms => _rooms.where((r) => r.isSaved).toList();
 

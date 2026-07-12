@@ -4,6 +4,7 @@ import 'package:bh_finder/features/home/widgets/bh_card_horizontal.dart';
 import 'package:bh_finder/core/provider/bh_provider.dart';
 import 'package:bh_finder/features/messages/screens/notification_chat_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:bh_finder/shared/widgets/see_all_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onSearchPressed;
@@ -229,7 +230,43 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            print("See all listings clicked");
+                            final provider = Provider.of<BhProvider>(
+                              context,
+                              listen: false,
+                            );
+
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        SeeAllScreen(
+                                          title: 'Near You',
+                                          boardingHouses: provider.nearYouList,
+                                        ),
+                                transitionsBuilder:
+                                    (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                      child,
+                                    ) {
+                                      return SlideTransition(
+                                        position:
+                                            Tween<Offset>(
+                                              begin: const Offset(0, 1),
+                                              end: Offset.zero,
+                                            ).animate(
+                                              CurvedAnimation(
+                                                parent: animation,
+                                                curve: Curves.easeOut,
+                                              ),
+                                            ),
+                                        child: child,
+                                      );
+                                    },
+                              ),
+                            );
                           },
                           child: const Text(
                             'See all',

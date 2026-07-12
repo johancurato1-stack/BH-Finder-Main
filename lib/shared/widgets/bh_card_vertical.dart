@@ -153,7 +153,10 @@ class BhCardVertical extends StatelessWidget {
                           boardingHouse.isSaved
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color: Colors.red,
+                          // Change color based on the saved state
+                          color: boardingHouse.isSaved
+                              ? Colors.red
+                              : AppColors.tertiary,
                           size: 18,
                         ),
                       ),

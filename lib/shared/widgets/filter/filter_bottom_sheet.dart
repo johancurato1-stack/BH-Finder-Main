@@ -39,11 +39,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     {'label': 'Wi-Fi', 'icon': Icons.wifi},
     {'label': 'Aircon', 'icon': Icons.ac_unit},
     {'label': 'Own CR', 'icon': Icons.bathroom},
-    {'label': 'Parking', 'icon': Icons.local_parking},
-    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
     {'label': 'Kitchen', 'icon': Icons.countertops},
-    {'label': 'Study Area', 'icon': Icons.menu_book},
+    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
+    {'label': 'Study', 'icon': Icons.menu_book},
+    {'label': 'Desk', 'icon': Icons.desk},
+    {'label': 'Cabinet', 'icon': Icons.shelves},
     {'label': 'CCTV', 'icon': Icons.videocam},
+    {'label': 'Security', 'icon': Icons.security},
+    {'label': 'Parking', 'icon': Icons.directions_car},
   ];
 
   final List<String> _distances = [
