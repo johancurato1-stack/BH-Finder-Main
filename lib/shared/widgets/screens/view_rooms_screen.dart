@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/room_model.dart';
-import 'package:bh_finder/shared/widgets/room_card.dart';
-import 'package:bh_finder/shared/widgets/filter_button_2.dart';
-import 'package:bh_finder/shared/widgets/filter_bottom_sheet_2.dart';
+import 'package:bh_finder/shared/widgets/cards/room_card.dart';
+import 'package:bh_finder/shared/widgets/filters/filter_button_2.dart';
+import 'package:bh_finder/shared/widgets/filters/filter_bottom_sheet_2.dart';
 import 'package:bh_finder/shared/widgets/screens/room_detail_screen.dart';
 
 class ViewRoomsScreen extends StatefulWidget {

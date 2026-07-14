@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/shared/widgets/filter/filter_button.dart';
-import 'package:bh_finder/shared/widgets/custom_button.dart';
+import 'package:bh_finder/shared/widgets/filters/filter_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 
 class FilterBottomSheet2 extends StatefulWidget {
   const FilterBottomSheet2({super.key});

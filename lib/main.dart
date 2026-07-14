@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'app.dart';
-import 'package:bh_finder/core/provider/bh_provider.dart'; // Make sure this path is correct
+
+import 'package:bh_finder/app.dart';
+import 'package:bh_finder/core/providers/bh_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => BhProvider(),
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => BhProvider())],
+
       child: const App(),
     ),
   );

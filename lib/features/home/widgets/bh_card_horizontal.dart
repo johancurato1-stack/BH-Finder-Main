@@ -8,41 +8,51 @@ class BhCardHorizontal extends StatelessWidget {
 
   const BhCardHorizontal({super.key, required this.boardingHouse});
 
+  //============================================================================
+  //! STATUS COLOR
+  //============================================================================
+
+  /// Returns the appropriate color based on the boarding house availability.
   Color _getStatusColor() {
     switch (boardingHouse.status.toLowerCase()) {
       case 'occupied':
         return const Color(0xFFEF5350);
+
       case 'pending':
         return const Color(0xFFFFB300);
+
       case 'available':
       default:
         return const Color(0xFF00E676);
     }
   }
 
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Navigate to the boarding house details screen
       onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                BhDetailScreen(
-                  boardingHouse: boardingHouse,
-                  // ERROR FIXED: Removed onSavedStatusChanged: () {}
-                ),
+                BhDetailScreen(boardingHouse: boardingHouse),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
                   const end = Offset.zero;
                   const curve = Curves.easeOut;
 
-                  var tween = Tween(
-                    begin: begin,
-                    end: end,
-                  ).chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
+                  final offsetAnimation = animation.drive(
+                    Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve)),
+                  );
 
                   return SlideTransition(
                     position: offsetAnimation,
@@ -52,23 +62,29 @@ class BhCardHorizontal extends StatelessWidget {
           ),
         );
       },
+
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.04),
+              color: AppColors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
         ),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //============================================================================
+            //! IMAGE SECTION
+            //============================================================================
             Stack(
               children: [
+                // Boarding house cover image
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(16),
@@ -80,6 +96,8 @@ class BhCardHorizontal extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+
+                // Availability status badge
                 Positioned(
                   top: 10,
                   left: 10,
@@ -112,6 +130,8 @@ class BhCardHorizontal extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                // Monthly rental price overlay
                 Positioned(
                   bottom: 10,
                   left: 10,
@@ -121,7 +141,7 @@ class BhCardHorizontal extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.black.withOpacity(0.75),
+                      color: AppColors.black.withValues(alpha: 0.75),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -137,11 +157,16 @@ class BhCardHorizontal extends StatelessWidget {
                 ),
               ],
             ),
+
+            //============================================================================
+            //! CARD INFORMATION
+            //============================================================================
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Boarding house title
                   Text(
                     boardingHouse.title,
                     maxLines: 2,
@@ -153,7 +178,10 @@ class BhCardHorizontal extends StatelessWidget {
                       fontFamily: 'Roboto',
                     ),
                   ),
+
                   const SizedBox(height: 3),
+
+                  // Distance from the selected school or location
                   Text(
                     boardingHouse.distanceText,
                     maxLines: 1,
@@ -164,16 +192,25 @@ class BhCardHorizontal extends StatelessWidget {
                       fontFamily: 'Roboto',
                     ),
                   ),
+
                   const SizedBox(height: 5),
+
+                  // Divider separating the main information from the footer details
                   Divider(
-                    color: AppColors.tertiary.withOpacity(0.2),
+                    color: AppColors.tertiary.withValues(alpha: 0.2),
                     height: 1,
                     thickness: 0.5,
                   ),
+
                   const SizedBox(height: 8),
+
+                  //============================================================================
+                  //! BOTTOM INFORMATION ROW
+                  //============================================================================
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Gender preference
                       Row(
                         children: [
                           const Icon(
@@ -192,6 +229,8 @@ class BhCardHorizontal extends StatelessWidget {
                           ),
                         ],
                       ),
+
+                      // Available room count
                       Row(
                         children: [
                           const Icon(

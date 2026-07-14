@@ -1,85 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:bh_finder/core/data/models/bh_model.dart';
+import 'package:bh_finder/core/providers/bh_provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/shared/widgets/screens/bh_detail_screen.dart';
-import 'package:bh_finder/core/data/models/bh_model.dart';
-import 'package:bh_finder/core/provider/bh_provider.dart';
 
 class BhCardVertical extends StatelessWidget {
   final BhModel boardingHouse;
 
-  // Removed onHeartPressed, as we now use context.read<BhProvider>()
   const BhCardVertical({super.key, required this.boardingHouse});
 
+  //============================================================================
+  //! STATUS COLOR
+  //============================================================================
+
+  /// Returns the corresponding color based on the boarding house status.
   Color _getStatusColor() {
     switch (boardingHouse.status.toLowerCase()) {
       case 'occupied':
         return const Color(0xFFEF5350);
+
       case 'pending':
         return const Color(0xFFFFB300);
+
       case 'available':
       default:
         return const Color(0xFF00E676);
     }
   }
 
+  //============================================================================
+  //! AMENITY ICON
+  //============================================================================
+
+  /// Returns the appropriate icon for each boarding house amenity.
   IconData _getAmenityIcon(String amenity) {
     switch (amenity.toLowerCase()) {
       case 'wi-fi':
         return Icons.wifi;
+
       case 'aircon':
         return Icons.ac_unit;
+
       case 'own cr':
         return Icons.bathroom;
+
       case 'kitchen':
         return Icons.countertops;
+
       case 'laundry':
         return Icons.local_laundry_service;
+
       case 'study area':
         return Icons.menu_book;
+
       case 'desk':
         return Icons.desk;
+
       case 'cabinet':
         return Icons.shelves;
+
       case 'cctv':
         return Icons.videocam;
+
       case 'security':
         return Icons.security;
+
       case 'parking':
         return Icons.directions_car;
+
       default:
         return Icons.star_border_rounded;
     }
   }
 
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Navigate to the boarding house details screen.
       onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                BhDetailScreen(
-                  boardingHouse: boardingHouse,
-                ), // Fixed: Removed onSavedStatusChanged
+                BhDetailScreen(boardingHouse: boardingHouse),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
                   const end = Offset.zero;
                   const curve = Curves.easeOut;
-                  var tween = Tween(
-                    begin: begin,
-                    end: end,
-                  ).chain(CurveTween(curve: curve));
+
+                  final offsetAnimation = animation.drive(
+                    Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve)),
+                  );
+
                   return SlideTransition(
-                    position: animation.drive(tween),
+                    position: offsetAnimation,
                     child: child,
                   );
                 },
           ),
         );
       },
+
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(10),
@@ -88,17 +119,22 @@ class BhCardVertical extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
+              color: AppColors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
         ),
+
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //============================================================================
+            //! IMAGE SECTION
+            //============================================================================
             Stack(
               children: [
+                // Boarding house cover image.
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
@@ -108,6 +144,8 @@ class BhCardVertical extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+
+                // Availability status indicator.
                 Positioned(
                   top: 6,
                   left: 6,
@@ -123,11 +161,17 @@ class BhCardVertical extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(width: 12),
+
+            //============================================================================
+            //! CARD INFORMATION
+            //============================================================================
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Boarding house title and save button.
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -144,7 +188,8 @@ class BhCardVertical extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // The heart icon now talks directly to the Provider
+
+                      // Toggle saved state using Provider.
                       GestureDetector(
                         onTap: () => context.read<BhProvider>().toggleSaved(
                           boardingHouse,
@@ -153,7 +198,6 @@ class BhCardVertical extends StatelessWidget {
                           boardingHouse.isSaved
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          // Change color based on the saved state
                           color: boardingHouse.isSaved
                               ? Colors.red
                               : AppColors.tertiary,
@@ -162,7 +206,10 @@ class BhCardVertical extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 2),
+
+                  // Monthly rental price.
                   Text(
                     '₱ ${boardingHouse.price} / month',
                     style: const TextStyle(
@@ -172,7 +219,10 @@ class BhCardVertical extends StatelessWidget {
                       fontFamily: 'Roboto',
                     ),
                   ),
+
                   const SizedBox(height: 4),
+
+                  // Distance from the selected school/location.
                   Text(
                     boardingHouse.distanceText,
                     maxLines: 1,
@@ -182,7 +232,14 @@ class BhCardVertical extends StatelessWidget {
                       color: AppColors.tertiary,
                     ),
                   ),
+
                   const SizedBox(height: 6),
+
+                  //============================================================================
+                  //! AMENITIES
+                  //============================================================================
+
+                  // Display the available amenities for this boarding house.
                   Wrap(
                     spacing: 6,
                     runSpacing: 5,
@@ -197,6 +254,8 @@ class BhCardVertical extends StatelessWidget {
                             width: 0.5,
                           ),
                         ),
+
+                        // Amenity icon.
                         child: Icon(
                           _getAmenityIcon(amenity),
                           size: 11,
@@ -205,15 +264,23 @@ class BhCardVertical extends StatelessWidget {
                       );
                     }).toList(),
                   ),
+
                   const SizedBox(height: 6),
+
+                  //============================================================================
+                  //! BOTTOM INFORMATION ROW
+                  //============================================================================
                   Row(
                     children: [
+                      // Gender preference.
                       const Icon(
                         Icons.person_outline,
                         size: 12,
                         color: AppColors.secondary,
                       ),
+
                       const SizedBox(width: 2),
+
                       Text(
                         boardingHouse.genderRules,
                         style: const TextStyle(
@@ -222,13 +289,18 @@ class BhCardVertical extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+
                       const SizedBox(width: 8),
+
+                      // Available room count.
                       const Icon(
                         Icons.group_outlined,
                         size: 12,
                         color: AppColors.secondary,
                       ),
+
                       const SizedBox(width: 2),
+
                       Text(
                         boardingHouse.availabilityCount,
                         style: const TextStyle(
@@ -237,9 +309,14 @@ class BhCardVertical extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+
                       const Spacer(),
+
+                      // Boarding house rating.
                       const Icon(Icons.star, size: 12, color: Colors.amber),
+
                       const SizedBox(width: 2),
+
                       Text(
                         '${boardingHouse.rating} ',
                         style: const TextStyle(
@@ -247,6 +324,8 @@ class BhCardVertical extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
+                      // Number of reviews.
                       Text(
                         '(${boardingHouse.reviewCount})',
                         style: const TextStyle(

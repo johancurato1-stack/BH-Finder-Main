@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/bh_model.dart';
-import 'package:bh_finder/core/provider/bh_provider.dart';
-import 'package:bh_finder/shared/widgets/custom_button.dart';
+import 'package:bh_finder/core/providers/bh_provider.dart';
+import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 import 'package:bh_finder/shared/widgets/screens/view_rooms_screen.dart';
 
 class BhDetailScreen extends StatefulWidget {
