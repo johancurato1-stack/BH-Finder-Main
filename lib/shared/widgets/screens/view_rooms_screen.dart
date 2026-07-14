@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/room_model.dart';
 import 'package:bh_finder/shared/widgets/room_card.dart';
-import 'package:bh_finder/shared/widgets/filter/filter_button.dart';
+import 'package:bh_finder/shared/widgets/filter_button_2.dart';
+import 'package:bh_finder/shared/widgets/filter_bottom_sheet_2.dart';
+import 'package:bh_finder/shared/widgets/screens/room_detail_screen.dart';
 
 class ViewRoomsScreen extends StatefulWidget {
   final String bhName;
@@ -54,7 +56,7 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => FilterBottomSheet2.show(context),
                     icon: const Icon(Icons.tune_rounded),
                     color: AppColors.primary,
                     iconSize: 26,
@@ -71,7 +73,7 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                     .map(
                       (label) => Padding(
                         padding: const EdgeInsets.only(right: 8),
-                        child: FilterButton(
+                        child: FilterButton2(
                           label: label,
                           isSelected: _selectedFilter == label,
                           onTap: () => setState(() => _selectedFilter = label),
@@ -85,39 +87,47 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
             Expanded(
               child: Column(
                 children: [
-                  // This holds the list and takes up available space
                   Expanded(
                     child: _filteredRooms.isEmpty
                         ? const Center(child: Text("No rooms available."))
                         : ListView.builder(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             itemCount: _filteredRooms.length,
-                            itemBuilder: (context, index) => RoomCard(
-                              room: _filteredRooms[index],
-                              onTap: () {},
-                            ),
+                            itemBuilder: (context, index) {
+                              final room = _filteredRooms[index];
+                              return RoomCard(
+                                room: room,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          RoomDetailScreen(room: room),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                   ),
-                  // THIS IS YOUR BOTTOM SIGN
+                  // Bottom Sign
                   Container(
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(
-                        0xFFEBEBFA,
-                      ), // Matches your light purple background
+                      color: const Color(0xFFEBEBFA),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: const Color(0xFFD1D1E9),
                         width: 0.5,
-                      ), // Subtle border
+                      ),
                     ),
                     child: Row(
                       children: [
                         const SizedBox(width: 16),
                         const Icon(
                           Icons.info,
-                          color: Color(0xFF4B4B9A), // Matches your icon color
+                          color: Color(0xFF4B4B9A),
                           size: 20,
                         ),
                         const SizedBox(width: 50),

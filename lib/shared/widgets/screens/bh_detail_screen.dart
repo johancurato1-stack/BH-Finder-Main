@@ -397,14 +397,21 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppColors.tertiary.withOpacity(0.3),
-          width: 0.5,
-        ),
+        color: Colors.white, // The background color
+        borderRadius: BorderRadius.circular(
+          8,
+        ), // Shadows look best with rounded corners
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1), // Shadow color
+            blurRadius: 3, // How soft the shadow is
+            offset: const Offset(0, 0), // Changes position of shadow (x, y)
+          ),
+        ],
       ),
       child: Row(
+        mainAxisSize:
+            MainAxisSize.min, // Added to keep the chip width tight to content
         children: [
           Icon(icon, size: 14, color: AppColors.tertiary),
           const SizedBox(width: 4),
@@ -466,10 +473,14 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.tertiary.withOpacity(0.3),
-          width: 0.5,
-        ),
+        // Add this shadow block
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1), // Very light shadow
+            blurRadius: 3,
+            offset: const Offset(0, 0),
+          ),
+        ],
       ),
       child: Column(
         children: [

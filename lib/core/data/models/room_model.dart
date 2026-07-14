@@ -7,6 +7,7 @@ class RoomModel {
   final String genderRules;
   final String capacity;
   final String imageUrl;
+  final String description;
 
   RoomModel({
     required this.id,
@@ -17,5 +18,6 @@ class RoomModel {
     required this.genderRules,
     required this.capacity,
     required this.imageUrl,
+    required this.description,
   });
 }

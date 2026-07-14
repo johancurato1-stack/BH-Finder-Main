@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/data/models/room_model.dart'; // Ensure this matches your file location
+import 'package:bh_finder/core/data/models/room_model.dart';
 
 class RoomCard extends StatelessWidget {
   final RoomModel room;
@@ -8,7 +8,6 @@ class RoomCard extends StatelessWidget {
 
   const RoomCard({super.key, required this.room, required this.onTap});
 
-  // Reusing your logic for status colors
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'occupied':
@@ -24,7 +23,7 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap, // Directly calling the function passed from the parent
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
@@ -38,7 +37,7 @@ class RoomCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Room Image (Placeholder)
+            // Room Image
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
@@ -78,7 +77,7 @@ class RoomCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        "${room.genderRules}",
+                        room.genderRules,
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.tertiary,
@@ -92,7 +91,7 @@ class RoomCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        "${room.capacity}",
+                        room.capacity,
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.tertiary,
@@ -112,14 +111,14 @@ class RoomCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(room.status).withOpacity(0.1),
+                    color: _getStatusColor(room.status),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    room.status,
-                    style: TextStyle(
+                    room.status.toUpperCase(),
+                    style: const TextStyle(
                       fontSize: 10,
-                      color: _getStatusColor(room.status),
+                      color: AppColors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -13,6 +13,7 @@ class RoomDataSource {
       capacity: "1/1",
       imageUrl:
           "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=300",
+      description: "This room is very good!",
     ),
     RoomModel(
       id: "r2",
@@ -24,6 +25,7 @@ class RoomDataSource {
       capacity: "1/2",
       imageUrl:
           "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600",
+      description: "This room is very good!",
     ),
     RoomModel(
       id: "r3",
@@ -35,6 +37,7 @@ class RoomDataSource {
       capacity: "2/2",
       imageUrl:
           "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600",
+      description: "This room is very good!",
     ),
     // Rooms for "Modern Zen" (ID: 16)
     RoomModel(
@@ -47,6 +50,7 @@ class RoomDataSource {
       capacity: "1/2",
       imageUrl:
           "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600",
+      description: "This room is very good!",
     ),
     // Rooms for "Pacific View" (ID: 18)
     RoomModel(
@@ -59,6 +63,7 @@ class RoomDataSource {
       capacity: "2/2",
       imageUrl:
           "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600",
+      description: "This room is very good!",
     ),
   ];
 }
