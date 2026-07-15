@@ -161,12 +161,16 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                             onPressed: () {},
                             child: const Text(
                               "View All",
-                              style: TextStyle(color: AppColors.primary),
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 3),
                       SizedBox(
                         height: 80,
                         child: ListView.separated(

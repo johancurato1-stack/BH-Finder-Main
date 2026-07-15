@@ -57,7 +57,9 @@ class ChatTile extends StatelessWidget {
                 fontFamily: 'Roboto',
               ),
             ),
+
             const SizedBox(height: 2),
+
             Text(
               chat.lastMessage,
               maxLines: 1,

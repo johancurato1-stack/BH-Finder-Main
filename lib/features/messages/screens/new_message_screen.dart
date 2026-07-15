@@ -43,7 +43,7 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
                       fontFamily: 'Roboto',
                     ),
                   ),
-                  const SizedBox(width: 48), // Keeps title perfectly centered
+                  const SizedBox(width: 48),
                 ],
               ),
             ),
@@ -80,7 +80,6 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 children: [
-                  // Group Chat Entry Option Row
                   ListTile(
                     leading: const CircleAvatar(
                       backgroundColor: Color(0xFF2C2C2C),
@@ -95,12 +94,9 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
                         color: AppColors.secondary,
                       ),
                     ),
-                    onTap: () {
-                      // Handled later
-                    },
+                    onTap: () {},
                   ),
 
-                  // Suggested Header Divider Label
                   const Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
                     child: Text(
@@ -113,7 +109,6 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
                     ),
                   ),
 
-                  // Suggested Contacts mapping directly from your core centralized array
                   ...suggestedContacts.map((String contactName) {
                     return ListTile(
                       leading: const CircleAvatar(
@@ -133,9 +128,7 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
                           color: AppColors.secondary,
                         ),
                       ),
-                      onTap: () {
-                        // Handled later
-                      },
+                      onTap: () {},
                     );
                   }),
                 ],
