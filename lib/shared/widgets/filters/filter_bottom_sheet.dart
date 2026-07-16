@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'filter_button.dart';
+
 import '../buttons/custom_button.dart';
+import 'filter_button.dart';
+import 'filter_constants.dart';
+import 'filter_models.dart';
 
 class FilterBottomSheet extends StatefulWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const FilterBottomSheet({super.key});
+
+  //============================================================================
+  //! SHOW
+  //============================================================================
 
   static void show(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const FilterBottomSheet(),
+      builder: (_) => const FilterBottomSheet(),
     );
   }
 
@@ -20,59 +32,45 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  // * State Trackers (Matching your exact SearchScreen defaults)
+  //============================================================================
+  //! STATE
+  //============================================================================
+
   String _selectedBudget = 'Any';
   final List<String> _selectedAmenities = [];
+
   String _selectedDistance = 'Any';
   String _selectedGender = 'Mixed';
   String _selectedStatus = 'Available';
 
-  // * Config Lists (Directly mapped from your SearchScreen)
-  final List<String> _budgets = [
-    'Any',
-    '₱1,500 - ₱3,000',
-    '₱3,000 - ₱5,000',
-    '₱5,000+',
-  ];
+  //============================================================================
+  //! METHODS
+  //============================================================================
 
-  final List<Map<String, dynamic>> _amenities = [
-    {'label': 'Wi-Fi', 'icon': Icons.wifi},
-    {'label': 'Aircon', 'icon': Icons.ac_unit},
-    {'label': 'Own CR', 'icon': Icons.bathroom},
-    {'label': 'Kitchen', 'icon': Icons.countertops},
-    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
-    {'label': 'Study', 'icon': Icons.menu_book},
-    {'label': 'Desk', 'icon': Icons.desk},
-    {'label': 'Cabinet', 'icon': Icons.shelves},
-    {'label': 'CCTV', 'icon': Icons.videocam},
-    {'label': 'Security', 'icon': Icons.security},
-    {'label': 'Parking', 'icon': Icons.directions_car},
-  ];
+  void _resetFilters() {
+    setState(() {
+      _selectedBudget = 'Any';
+      _selectedDistance = 'Any';
+      _selectedGender = 'Mixed';
+      _selectedStatus = 'Available';
+      _selectedAmenities.clear();
+    });
+  }
 
-  final List<String> _distances = [
-    'Any',
-    'Within 5 min walk',
-    'Within 10 min walk',
-    'Within 15 min walk',
-  ];
+  void _applyFilters() {
+    Navigator.pop(context);
+  }
 
-  final List<String> _genders = ['Male', 'Female', 'Mixed'];
-
-  final List<Map<String, dynamic>> _statuses = [
-    {'label': 'Available', 'color': Colors.green},
-    {'label': 'Occupied', 'color': Colors.red},
-    {'label': 'Pending', 'color': Colors.amber},
-  ];
-
+  //============================================================================
+  //! BUILD
+  //============================================================================
   @override
   Widget build(BuildContext context) {
-    // Draggable/scrollable height management wrapper
     return Container(
       constraints: BoxConstraints(
-        maxHeight:
-            MediaQuery.of(context).size.height *
-            0.85, // Limits sheet from covering status bar
+        maxHeight: MediaQuery.of(context).size.height * .85,
       ),
+
       decoration: const BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
@@ -80,25 +78,35 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           topRight: Radius.circular(24),
         ),
       ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
+
         children: [
-          // Drag Handle Pill
+          //==========================================================================
+          //! DRAG HANDLE
+          //==========================================================================
           const SizedBox(height: 14),
+
           Container(
             width: 50,
             height: 4,
+
             decoration: BoxDecoration(
               color: Colors.grey.shade300,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
 
-          // Header Element Row
+          //==========================================================================
+          //! HEADER
+          //==========================================================================
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
               children: [
                 const Text(
                   'Filter Listings',
@@ -109,16 +117,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     fontFamily: 'Roboto',
                   ),
                 ),
+
                 TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedBudget = 'Any';
-                      _selectedDistance = 'Any';
-                      _selectedGender = 'Mixed';
-                      _selectedStatus = 'Available';
-                      _selectedAmenities.clear();
-                    });
-                  },
+                  onPressed: _resetFilters,
+
                   child: const Text(
                     'Reset',
                     style: TextStyle(
@@ -133,72 +135,103 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ),
 
-          // Scrollable Context Form
+          //==========================================================================
+          //! FILTER CONTENT
+          //==========================================================================
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+
               children: [
-                // 1. Budget Range Section (Wrapped)
+                //==============================================================
+                //! BUDGET
+                //==============================================================
                 _buildSectionTitle('Budget Range'),
-                _buildStaticGrid(
-                  _budgets,
+
+                _buildFilterOptions(
+                  FilterConstants.budgets,
                   _selectedBudget,
-                  (val) => setState(() => _selectedBudget = val),
+                  (value) => setState(() => _selectedBudget = value),
                 ),
 
-                // 2. Amenities Section (Wrapped with Icons!)
+                //==============================================================
+                //! AMENITIES
+                //==============================================================
                 _buildSectionTitle('Amenities'),
+
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _amenities.map((amenity) {
-                    final label = amenity['label'] as String;
+
+                  children: FilterConstants.amenities.map((
+                    AmenityFilter amenity,
+                  ) {
+                    final label = amenity.label;
                     final isSelected = _selectedAmenities.contains(label);
+
                     return FilterButton(
                       label: label,
-                      icon: amenity['icon'] as IconData,
+                      icon: amenity.icon,
                       isSelected: isSelected,
+
                       onTap: () {
                         setState(() {
-                          isSelected
-                              ? _selectedAmenities.remove(label)
-                              : _selectedAmenities.add(label);
+                          if (isSelected) {
+                            _selectedAmenities.remove(label);
+                          } else {
+                            _selectedAmenities.add(label);
+                          }
                         });
                       },
                     );
                   }).toList(),
                 ),
 
-                // 3. Distance Section (Wrapped)
+                //==============================================================
+                //! DISTANCE
+                //==============================================================
                 _buildSectionTitle('Distance from School'),
-                _buildStaticGrid(
-                  _distances,
+
+                _buildFilterOptions(
+                  FilterConstants.distances,
                   _selectedDistance,
-                  (val) => setState(() => _selectedDistance = val),
+                  (value) => setState(() => _selectedDistance = value),
                 ),
 
-                // 4. Gender Preference Section (Wrapped: Male, Female, Mixed)
+                //==============================================================
+                //! GENDER
+                //==============================================================
                 _buildSectionTitle('Gender Preference'),
-                _buildStaticGrid(
-                  _genders,
+
+                _buildFilterOptions(
+                  FilterConstants.genders,
                   _selectedGender,
-                  (val) => setState(() => _selectedGender = val),
+                  (value) => setState(() => _selectedGender = value),
                 ),
 
-                // 5. Room Status Section (Wrapped with Status Colored Dots!)
+                //==============================================================
+                //! STATUS
+                //==============================================================
                 _buildSectionTitle('Room Status'),
+
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _statuses.map((status) {
-                    final isSelected = _selectedStatus == status['label'];
+                  spacing: 5,
+                  runSpacing: 5,
+
+                  children: FilterConstants.statuses.map((StatusFilter status) {
+                    final isSelected = _selectedStatus == status.label;
+
                     return FilterButton(
-                      label: status['label'],
+                      label: status.label,
                       isSelected: isSelected,
                       isStatusType: true,
-                      statusColor: status['color'],
-                      onTap: () =>
-                          setState(() => _selectedStatus = status['label']),
+                      statusColor: status.color,
+
+                      onTap: () {
+                        setState(() {
+                          _selectedStatus = status.label;
+                        });
+                      },
                     );
                   }).toList(),
                 ),
@@ -206,7 +239,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ),
 
-          // Sticky Core Bottom Button
+          //==========================================================================
+          //! APPLY BUTTON
+          //==========================================================================
           Padding(
             padding: EdgeInsets.only(
               left: 20,
@@ -214,12 +249,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               top: 20,
               bottom: MediaQuery.of(context).padding.bottom + 78,
             ),
+
             child: CustomButton(
               text: 'Apply Filters',
-              onPressed: () {
-                // Closes panel downwards and can pass back choices if needed later
-                Navigator.pop(context);
-              },
+              onPressed: _applyFilters,
             ),
           ),
         ],
@@ -227,9 +260,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
+  //============================================================================
+  //! WIDGETS
+  //============================================================================
+
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 18, bottom: 10),
+
       child: Text(
         title,
         style: const TextStyle(
@@ -241,19 +279,20 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildStaticGrid(
+  Widget _buildFilterOptions(
     List<String> options,
     String selectedValue,
-    Function(String) onSelect,
+    ValueChanged<String> onSelected,
   ) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
+
       children: options.map((option) {
         return FilterButton(
           label: option,
           isSelected: selectedValue == option,
-          onTap: () => onSelect(option),
+          onTap: () => onSelected(option),
         );
       }).toList(),
     );

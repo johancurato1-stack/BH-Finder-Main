@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/data/mock_data/mock_contact.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/theme/app_text_styles.dart';
+
+import 'package:bh_finder/core/data/mock_data/mock_contacts.dart';
+import 'package:bh_finder/core/data/models/contact_model.dart';
 
 class NewMessageScreen extends StatefulWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const NewMessageScreen({super.key});
 
   @override
@@ -10,63 +19,90 @@ class NewMessageScreen extends StatefulWidget {
 }
 
 class _NewMessageScreenState extends State<NewMessageScreen> {
+  //============================================================================
+  //! CONTROLLER
+  //============================================================================
+
   final TextEditingController _searchController = TextEditingController();
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
-            //!========================================================================= HEADER
+            //==========================================================================
+            //! HEADER
+            //==========================================================================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                 children: [
                   IconButton(
                     onPressed: () => Navigator.pop(context),
+
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: AppColors.secondary,
                       size: 24,
                     ),
                   ),
-                  const Text(
-                    'New message',
-                    style: TextStyle(
-                      fontSize: 22,
+
+                  Text(
+                    'New Message',
+                    style: AppTextStyles.heading2.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.secondary,
-                      fontFamily: 'Roboto',
                     ),
                   ),
+
                   const SizedBox(width: 48),
                 ],
               ),
             ),
 
-            //!========================================================================= "TO:" SEARCH FIELD
+            //==========================================================================
+            //! RECIPIENT SEARCH
+            //==========================================================================
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.screenPadding,
+                vertical: AppSpacing.md,
+              ),
+
               child: Row(
                 children: [
-                  const Text(
-                    'To:',
-                    style: TextStyle(fontSize: 16, color: AppColors.tertiary),
-                  ),
+                  const Text('To:', style: AppTextStyles.bodyMedium),
+
                   const SizedBox(width: 16),
+
                   Expanded(
                     child: TextField(
                       controller: _searchController,
+
                       decoration: const InputDecoration(
                         hintText: 'Type a name or a group',
-                        hintStyle: TextStyle(
-                          color: AppColors.tertiary,
-                          fontSize: 16,
-                        ),
+                        hintStyle: AppTextStyles.subtitle,
                         border: InputBorder.none,
                       ),
                     ),
@@ -75,59 +111,57 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
               ),
             ),
 
-            //!========================================================================= MAIN CONTENT LIST
+            //==========================================================================
+            //! CONTACT LIST
+            //==========================================================================
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 2),
+
                 children: [
+                  //==============================================================
+                  //! GROUP CHAT
+                  //==============================================================
                   ListTile(
                     leading: const CircleAvatar(
-                      backgroundColor: Color(0xFF2C2C2C),
                       radius: 17,
+                      backgroundColor: Color(0xFF2C2C2C),
+
                       child: Icon(Icons.group, color: Colors.white, size: 17),
                     ),
-                    title: const Text(
-                      'Group chat',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.secondary,
-                      ),
-                    ),
+
+                    title: Text('Group Chat', style: AppTextStyles.bodyMedium),
+
                     onTap: () {},
                   ),
 
+                  //==============================================================
+                  //! SUGGESTED CONTACTS
+                  //==============================================================
                   const Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                    child: Text(
-                      'Suggested',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.tertiary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+
+                    child: Text('Suggested', style: AppTextStyles.bodyMedium),
                   ),
 
-                  ...suggestedContacts.map((String contactName) {
+                  ...mockContacts.map((ContactModel contact) {
                     return ListTile(
                       leading: const CircleAvatar(
-                        backgroundColor: Color(0xFF2C2C2C),
                         radius: 17,
+                        backgroundColor: Color(0xFF2C2C2C),
+
                         child: Icon(
                           Icons.person,
                           color: Colors.white,
                           size: 17,
                         ),
                       ),
+
                       title: Text(
-                        contactName,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.secondary,
-                        ),
+                        contact.name,
+                        style: AppTextStyles.bodyMedium,
                       ),
+
                       onTap: () {},
                     );
                   }),

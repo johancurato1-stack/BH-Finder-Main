@@ -70,7 +70,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                // 1. Top Image Carousel with Auto-Scroll
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.40,
                   child: Stack(
@@ -104,7 +103,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   ),
                 ),
 
-                // 2. Info Section
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -145,7 +143,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         color: AppColors.tertiary,
                       ),
 
-                      // 3. Room Photos with Physics and View All button
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -195,7 +192,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         color: AppColors.tertiary,
                       ),
 
-                      // 4. Description
                       const Text(
                         'Description',
                         style: TextStyle(
@@ -279,9 +275,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
       borderRadius: BorderRadius.circular(8),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1), // Shadow color
-          blurRadius: 3, // How soft the shadow is
-          offset: const Offset(0, 0), // Changes position of shadow (x, y)
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 3,
+          offset: const Offset(0, 0),
         ),
       ],
     ),

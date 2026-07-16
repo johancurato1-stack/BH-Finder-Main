@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/features/home/screens/home_screen.dart';
 import 'package:bh_finder/features/messages/screens/messages_screen.dart';
-import 'package:bh_finder/features/profile/profile_screen.dart';
+import 'package:bh_finder/features/profile/screens/profile_screen.dart';
 import 'package:bh_finder/features/saved/screens/saved_screen.dart';
 import 'package:bh_finder/features/search/screens/search_screen.dart';
 import 'package:bh_finder/features/splash/screens/splash_screen.dart';

@@ -1,8 +1,10 @@
 import 'package:bh_finder/core/data/models/room_model.dart';
 
-class RoomDataSource {
-  static final List<RoomModel> allRooms = [
-    // Rooms for "Green Valley" (ID: 13)
+class MockRoomData {
+  static final List<RoomModel> rooms = [
+    //============================================================================
+    //! ROOMS FOR GREEN VALLEY
+    //============================================================================
     RoomModel(
       id: "r1",
       bhId: "13",
@@ -13,8 +15,9 @@ class RoomDataSource {
       capacity: "1/1",
       imageUrl:
           "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=300",
-      description: "This room is very good!",
+      description: "Description 1",
     ),
+
     RoomModel(
       id: "r2",
       bhId: "13",
@@ -25,8 +28,9 @@ class RoomDataSource {
       capacity: "1/2",
       imageUrl:
           "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600",
-      description: "This room is very good!",
+      description: "Description 2",
     ),
+
     RoomModel(
       id: "r3",
       bhId: "13",
@@ -37,33 +41,39 @@ class RoomDataSource {
       capacity: "2/2",
       imageUrl:
           "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600",
-      description: "This room is very good!",
+      description: "Description 3",
     ),
-    // Rooms for "Modern Zen" (ID: 16)
+
+    //============================================================================
+    //! ROOMS FOR MODERN ZEN
+    //============================================================================
     RoomModel(
       id: "r2",
       bhId: "16",
-      title: "Standard Shared",
+      title: "Room 1B",
       price: "2,200",
       status: "Available",
       genderRules: "Female",
       capacity: "1/2",
       imageUrl:
           "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600",
-      description: "This room is very good!",
+      description: "Description 1",
     ),
-    // Rooms for "Pacific View" (ID: 18)
+
+    //============================================================================
+    //! ROOMS FOR PACIFIC VIEW
+    //============================================================================
     RoomModel(
       id: "r3",
       bhId: "18",
-      title: "Budget Bed Space",
+      title: "Room 1C",
       price: "1,500",
       status: "Occupied",
       genderRules: "Mixed",
       capacity: "2/2",
       imageUrl:
           "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600",
-      description: "This room is very good!",
+      description: "Description 1",
     ),
   ];
 }

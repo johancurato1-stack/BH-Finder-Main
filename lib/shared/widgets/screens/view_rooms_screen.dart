@@ -34,7 +34,6 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -64,7 +63,6 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                 ],
               ),
             ),
-            // Text-Only Filter Buttons
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(left: 16, bottom: 16),
@@ -83,7 +81,6 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                     .toList(),
               ),
             ),
-            // Room List
             Expanded(
               child: Column(
                 children: [
@@ -110,7 +107,6 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                             },
                           ),
                   ),
-                  // Bottom Sign
                   Container(
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(16),

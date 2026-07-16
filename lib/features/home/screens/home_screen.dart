@@ -1,7 +1,8 @@
+import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bh_finder/core/providers/bh_provider.dart';
+import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/features/home/widgets/bh_horizontal_list.dart';
@@ -30,7 +31,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<BhProvider>();
+    final provider = context.watch<BoardingHouseProvider>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -41,12 +42,14 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.cardPadding,
+                ),
 
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xl),
 
                     //============================================================================
                     //! HOME HEADER
@@ -56,21 +59,21 @@ class HomeScreen extends StatelessWidget {
                       onNotificationsRead: onNotificationsRead,
                     ),
 
-                    const SizedBox(height: 25),
+                    const SizedBox(height: AppSpacing.xxl),
 
                     //============================================================================
                     //! HERO SECTION
                     //============================================================================
                     const HeroSection(),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xl),
 
                     //============================================================================
                     //! SEARCH BAR
                     //============================================================================
                     HomeSearchBar(onTap: onSearchPressed),
 
-                    const SizedBox(height: 25),
+                    const SizedBox(height: AppSpacing.xxl),
 
                     //============================================================================
                     //! NEAR YOU HEADER
@@ -113,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                       },
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.md),
                   ],
                 ),
               ),
@@ -123,7 +126,7 @@ class HomeScreen extends StatelessWidget {
               //============================================================================
               BhHorizontalList(boardingHouses: provider.rooms),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxxl),
             ],
           ),
         ),

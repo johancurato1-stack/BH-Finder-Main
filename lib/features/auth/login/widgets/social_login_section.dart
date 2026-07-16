@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 
@@ -36,7 +37,7 @@ class SocialLoginSection extends StatelessWidget {
             ),
 
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Text(
                 'or continue with',
                 style: TextStyle(
@@ -56,7 +57,7 @@ class SocialLoginSection extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
 
         //============================================================================
         //! GOOGLE BUTTON
@@ -67,7 +68,7 @@ class SocialLoginSection extends StatelessWidget {
           onPressed: _googleLogin,
         ),
 
-        const SizedBox(height: 50),
+        const SizedBox(height: AppSpacing.massive),
       ],
     );
   }

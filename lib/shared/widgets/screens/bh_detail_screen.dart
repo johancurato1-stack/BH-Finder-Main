@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/data/models/bh_model.dart';
-import 'package:bh_finder/core/providers/bh_provider.dart';
+import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 import 'package:bh_finder/shared/widgets/screens/view_rooms_screen.dart';
 
 class BhDetailScreen extends StatefulWidget {
-  final BhModel boardingHouse;
+  final BoardingHouseModel boardingHouse;
 
   const BhDetailScreen({super.key, required this.boardingHouse});
 
@@ -78,7 +78,6 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: ClipRRect(
-        // <--- ADD THIS
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
         child: Column(
           children: [
@@ -111,7 +110,7 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
                               iconColor: AppColors.secondary,
                               () => Navigator.pop(context),
                             ),
-                            Consumer<BhProvider>(
+                            Consumer<BoardingHouseProvider>(
                               builder: (context, provider, child) {
                                 return Row(
                                   children: [
@@ -345,13 +344,12 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
               child: CustomButton(
                 text: 'View Rooms (${bh.totalRooms})',
                 onPressed: () {
-                  final provider = Provider.of<BhProvider>(
+                  final provider = Provider.of<BoardingHouseProvider>(
                     context,
                     listen: false,
                   );
                   final filteredRooms = provider.getRoomsForBh(bh.id);
 
-                  // LOGGING TO VERIFY
                   debugPrint(
                     "BH ID: ${bh.id} | Found Rooms: ${filteredRooms.length}",
                   );
@@ -398,28 +396,26 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white, // The background color
-        borderRadius: BorderRadius.circular(
-          8,
-        ), // Shadows look best with rounded corners
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1), // Shadow color
-            blurRadius: 3, // How soft the shadow is
-            offset: const Offset(0, 0), // Changes position of shadow (x, y)
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 3,
+            offset: const Offset(0, 0),
           ),
         ],
       ),
       child: Row(
-        mainAxisSize:
-            MainAxisSize.min, // Added to keep the chip width tight to content
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: AppColors.tertiary),
           const SizedBox(width: 4),
           Text(
             label,
             style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Roboto',
               color: AppColors.tertiary,
             ),
           ),
@@ -473,10 +469,9 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        // Add this shadow block
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1), // Very light shadow
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 3,
             offset: const Offset(0, 0),
           ),

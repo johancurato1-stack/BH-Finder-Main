@@ -21,8 +21,8 @@ class StatusGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: 5,
+      runSpacing: 5,
       children: statuses.map((status) {
         return FilterButton(
           label: status['label'] as String,

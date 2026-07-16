@@ -20,7 +20,6 @@ class FilterBottomSheet2 extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet2> {
-  // State variables - using String for single selection
   String _selectedBudget = 'Any';
   String _selectedGender = 'Any';
 
@@ -51,7 +50,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet2> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Drag Handle
           const SizedBox(height: 14),
           Container(
             width: 50,
@@ -62,7 +60,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet2> {
             ),
           ),
 
-          // Header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: Row(
@@ -114,7 +111,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet2> {
             ),
           ),
 
-          // Apply Button
           Padding(
             padding: EdgeInsets.fromLTRB(
               20,
@@ -125,7 +121,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet2> {
             child: CustomButton(
               text: 'Apply Filters',
               onPressed: () {
-                // Pass back selected values if needed here
                 Navigator.pop(context);
               },
             ),

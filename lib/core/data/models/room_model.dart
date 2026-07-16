@@ -1,6 +1,9 @@
+//============================================================================
+//! VARIABLES
+//============================================================================
 class RoomModel {
   final String id;
-  final String bhId; // Foreign Key: Connects this room to a specific BH
+  final String bhId;
   final String title;
   final String price;
   final String status;
@@ -9,7 +12,10 @@ class RoomModel {
   final String imageUrl;
   final String description;
 
-  RoomModel({
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+  const RoomModel({
     required this.id,
     required this.bhId,
     required this.title,

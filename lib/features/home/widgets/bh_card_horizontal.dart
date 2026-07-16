@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/shared/widgets/screens/bh_detail_screen.dart';
-import 'package:bh_finder/core/data/models/bh_model.dart';
+import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 
 class BhCardHorizontal extends StatelessWidget {
-  final BhModel boardingHouse;
+  final BoardingHouseModel boardingHouse;
 
   const BhCardHorizontal({super.key, required this.boardingHouse});
 

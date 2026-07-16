@@ -1,10 +1,16 @@
+//============================================================================
+//! VARIABLES
+//============================================================================
 class ContactModel {
   final String id;
   final String name;
   final String? avatarUrl;
   final bool isOnline;
 
-  ContactModel({
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+  const ContactModel({
     required this.id,
     required this.name,
     this.avatarUrl,

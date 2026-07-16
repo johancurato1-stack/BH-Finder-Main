@@ -1,7 +1,8 @@
+import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/app.dart';
-import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 import 'package:bh_finder/shared/widgets/textfields/custom_text_field.dart';
@@ -43,17 +44,9 @@ class LoginForm extends StatelessWidget {
         //============================================================================
         //! EMAIL
         //============================================================================
-        const Text(
-          'Email or Phone Number',
-          style: TextStyle(
-            fontSize: 14,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Email or Phone Number', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.sm),
 
         SizedBox(
           height: 42,
@@ -65,22 +58,14 @@ class LoginForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 13),
+        const SizedBox(height: AppSpacing.sm),
 
         //============================================================================
         //! PASSWORD
         //============================================================================
-        const Text(
-          'Password',
-          style: TextStyle(
-            fontSize: 14,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Password', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.sm),
 
         SizedBox(
           height: 42,
@@ -92,14 +77,14 @@ class LoginForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 40),
+        const SizedBox(height: AppSpacing.huge),
 
         //============================================================================
         //! LOGIN BUTTON
         //============================================================================
         CustomButton(text: 'Login', onPressed: () => _login(context)),
 
-        const SizedBox(height: 30),
+        const SizedBox(height: AppSpacing.xxxl),
       ],
     );
   }

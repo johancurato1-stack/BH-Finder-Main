@@ -1,18 +1,41 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/theme/app_text_styles.dart';
+
 import 'package:bh_finder/features/messages/data/mock_notif.dart';
 
 class NotificationChatScreen extends StatelessWidget {
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
   final VoidCallback? onRead;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const NotificationChatScreen({super.key, this.onRead});
 
-  @override
-  Widget build(BuildContext context) {
+  //============================================================================
+  //! METHODS
+  //============================================================================
+
+  void _markNotificationsAsRead() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       onRead?.call();
     });
+  }
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
+  @override
+  Widget build(BuildContext context) {
+    _markNotificationsAsRead();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -22,6 +45,9 @@ class NotificationChatScreen extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
 
+        //======================================================================
+        //! BOTTOM DIVIDER
+        //======================================================================
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Divider(
@@ -30,6 +56,9 @@ class NotificationChatScreen extends StatelessWidget {
           ),
         ),
 
+        //======================================================================
+        //! BACK BUTTON
+        //======================================================================
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
 
@@ -42,6 +71,9 @@ class NotificationChatScreen extends StatelessWidget {
 
         titleSpacing: 0,
 
+        //======================================================================
+        //! HEADER
+        //======================================================================
         title: Row(
           children: [
             CircleAvatar(
@@ -55,24 +87,22 @@ class NotificationChatScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.md),
 
-            const Expanded(
+            Expanded(
               child: Text(
                 'BH Finder',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.secondary,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Roboto',
-                ),
+                style: AppTextStyles.bodyBold.copyWith(fontSize: 17),
               ),
             ),
           ],
         ),
 
+        //======================================================================
+        //! ACTIONS
+        //======================================================================
         actions: [
           IconButton(
             onPressed: () {
@@ -87,29 +117,38 @@ class NotificationChatScreen extends StatelessWidget {
         ],
       ),
 
+      //========================================================================
+      //! BODY
+      //========================================================================
       body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
 
         itemCount: notifications.length,
 
         itemBuilder: (context, index) {
-          final notif = notifications[index];
+          final notification = notifications[index];
 
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
+                //==============================================================
+                //! NOTIFICATION BUBBLE
+                //==============================================================
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * .82,
                   ),
 
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.md,
                   ),
 
                   decoration: BoxDecoration(
@@ -132,28 +171,22 @@ class NotificationChatScreen extends StatelessWidget {
                   ),
 
                   child: Text(
-                    notif['message']!,
-                    style: const TextStyle(
-                      color: AppColors.secondary,
-                      fontSize: 14,
-                      height: 1.4,
-                      fontFamily: 'Roboto',
-                    ),
+                    notification['message']!,
+                    style: AppTextStyles.body.copyWith(height: 1.4),
                   ),
                 ),
 
-                const SizedBox(height: 4),
+                //==============================================================
+                //! TIMESTAMP
+                //==============================================================
+                const SizedBox(height: AppSpacing.xs),
 
                 Padding(
-                  padding: const EdgeInsets.only(left: 4),
+                  padding: const EdgeInsets.only(left: AppSpacing.xs),
 
                   child: Text(
-                    notif['time']!,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.tertiary,
-                      fontFamily: 'Roboto',
-                    ),
+                    notification['time']!,
+                    style: AppTextStyles.caption.copyWith(fontSize: 11),
                   ),
                 ),
               ],

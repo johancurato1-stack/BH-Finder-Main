@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/bh_model.dart';
+import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/features/home/widgets/bh_card_horizontal.dart';
 
 class BhHorizontalList extends StatelessWidget {
-  final List<BhModel> boardingHouses;
+  final List<BoardingHouseModel> boardingHouses;
 
   const BhHorizontalList({super.key, required this.boardingHouses});
 

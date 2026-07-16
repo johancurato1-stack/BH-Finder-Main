@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
+import 'landlord_model.dart';
 
-class Landlord {
-  final String name;
-  final String responseTime;
-  final String imageUrl;
-
-  Landlord({
-    required this.name,
-    required this.responseTime,
-    required this.imageUrl,
-  });
-}
-
-class BhModel extends ChangeNotifier {
+//============================================================================
+//! VARIABLES
+//============================================================================
+class BoardingHouseModel extends ChangeNotifier {
   final String id;
   final String title;
   final String imageUrl;
@@ -30,7 +22,10 @@ class BhModel extends ChangeNotifier {
 
   bool _isSaved;
 
-  BhModel({
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+  BoardingHouseModel({
     required this.id,
     required this.title,
     required this.imageUrl,
@@ -53,7 +48,7 @@ class BhModel extends ChangeNotifier {
   set isSaved(bool value) {
     if (_isSaved != value) {
       _isSaved = value;
-      notifyListeners(); // This tells the UI to rebuild instantly!
+      notifyListeners();
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bh_finder/core/providers/bh_provider.dart';
+import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 
 import 'package:bh_finder/shared/widgets/cards/bh_card_vertical.dart';
 
@@ -18,7 +18,7 @@ class SavedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BhProvider>(
+    return Consumer<BoardingHouseProvider>(
       builder: (context, provider, child) {
         final savedRooms = provider.savedRooms;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
 
 import 'package:bh_finder/features/auth/login/widgets/login_form.dart';
 import 'package:bh_finder/features/auth/login/widgets/register_prompt.dart';
@@ -46,7 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenPadding,
+            ),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

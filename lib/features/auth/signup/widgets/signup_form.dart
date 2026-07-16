@@ -1,6 +1,7 @@
+import 'package:bh_finder/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
 import 'package:bh_finder/shared/widgets/textfields/custom_text_field.dart';
@@ -42,17 +43,9 @@ class SignupForm extends StatelessWidget {
         //============================================================================
         //! FULL NAME
         //============================================================================
-        const Text(
-          'Full Name',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Full Name', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
 
         SizedBox(
           height: 42,
@@ -63,22 +56,14 @@ class SignupForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 13),
+        const SizedBox(height: AppSpacing.md),
 
         //============================================================================
         //! EMAIL
         //============================================================================
-        const Text(
-          'Email or Phone Number',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Email or Phone Number', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
 
         SizedBox(
           height: 42,
@@ -90,22 +75,14 @@ class SignupForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 13),
+        const SizedBox(height: AppSpacing.md),
 
         //============================================================================
         //! PASSWORD
         //============================================================================
-        const Text(
-          'Password',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Password', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
 
         SizedBox(
           height: 42,
@@ -117,22 +94,14 @@ class SignupForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 13),
+        const SizedBox(height: AppSpacing.md),
 
         //============================================================================
         //! CONFIRM PASSWORD
         //============================================================================
-        const Text(
-          'Confirm Password',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            color: AppColors.secondary,
-          ),
-        ),
+        const Text('Confirm Password', style: AppTextStyles.label),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
 
         SizedBox(
           height: 42,
@@ -144,14 +113,14 @@ class SignupForm extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 23),
+        const SizedBox(height: AppSpacing.xxl),
 
         //============================================================================
         //! CREATE ACCOUNT BUTTON
         //============================================================================
         CustomButton(text: 'Create an account', onPressed: _createAccount),
 
-        const SizedBox(height: 23),
+        const SizedBox(height: AppSpacing.xxl),
       ],
     );
   }

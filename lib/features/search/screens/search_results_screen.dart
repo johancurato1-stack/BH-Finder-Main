@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/bh_model.dart';
+import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/features/search/models/search_filter_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -11,7 +11,7 @@ import 'package:bh_finder/features/search/widgets/empty_search_results.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   final SearchFilterModel filter;
-  final List<BhModel> boardingHouses;
+  final List<BoardingHouseModel> boardingHouses;
 
   const SearchResultsScreen({
     super.key,

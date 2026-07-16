@@ -51,6 +51,8 @@ class TermsSection extends StatelessWidget {
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    fontSize: 12,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
@@ -65,6 +67,8 @@ class TermsSection extends StatelessWidget {
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    fontSize: 12,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {

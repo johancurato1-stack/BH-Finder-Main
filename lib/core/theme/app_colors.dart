@@ -15,7 +15,7 @@ class AppColors {
   static const Color background = Color(0xFFF8FAFC);
 
   //============================================================================
-  //! OTHERS
+  //! NEUTRAL COLORS
   //============================================================================
   static const Color tertiary = Color(0x50201D45);
 

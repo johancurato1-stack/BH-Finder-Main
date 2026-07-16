@@ -1,5 +1,11 @@
+//============================================================================
+//! VERIFICATION STATUS
+//============================================================================
 enum VerificationStatus { verified, pending, unverified }
 
+//============================================================================
+//! VARIABLES
+//============================================================================
 class UserModel {
   final String name;
   final String email;
@@ -9,6 +15,9 @@ class UserModel {
   final int recentlyViewedCount;
   final int inquiriesCount;
 
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
   const UserModel({
     required this.name,
     required this.email,

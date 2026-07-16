@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -58,7 +59,9 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenPadding,
+            ),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,14 +100,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
 
-                const SizedBox(height: 23),
+                const SizedBox(height: AppSpacing.xxl),
 
                 //============================================================================
                 //! LOGIN PROMPT
                 //============================================================================
                 const LoginPrompt(),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: AppSpacing.xxxl),
               ],
             ),
           ),

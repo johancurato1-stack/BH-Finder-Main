@@ -1,29 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/features/profile/widgets/menu_list_tile.dart';
-import 'package:bh_finder/core/data/models/user_model.dart';
+
 import 'package:bh_finder/core/data/mock_data/mock_user.dart';
+import 'package:bh_finder/core/data/models/user_model.dart';
+
+import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_radius.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/theme/app_text_styles.dart';
+
+import 'package:bh_finder/features/profile/screens/settings_screen.dart';
+import 'package:bh_finder/features/profile/widgets/menu_list_tile.dart';
 
 class ProfileScreen extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const ProfileScreen({super.key});
+
+  //============================================================================
+  //! METHODS
+  //============================================================================
+
+  void _openSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+    );
+  }
 
   Widget _buildVerificationBadge(VerificationStatus status) {
     IconData icon;
     String label;
     Color color;
 
-    //* Verification Properties
     switch (status) {
       case VerificationStatus.verified:
         icon = Icons.verified;
         label = 'Verified';
         color = Colors.greenAccent;
         break;
+
       case VerificationStatus.pending:
         icon = Icons.hourglass_top_rounded;
         label = 'Pending';
         color = Colors.amberAccent;
         break;
+
       case VerificationStatus.unverified:
         icon = Icons.dangerous_rounded;
         label = 'Not Verified';
@@ -35,14 +58,17 @@ class ProfileScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: color, size: 16),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
-        ),
+
+        const SizedBox(width: AppSpacing.xs),
+
+        Text(label, style: AppTextStyles.bodyMedium.copyWith(color: color)),
       ],
     );
   }
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
 
   @override
   Widget build(BuildContext context) {
@@ -50,21 +76,32 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.primary,
+
       body: SafeArea(
         bottom: false,
+
         child: Column(
           children: [
-            //!======================================================================================================================================== H E A D E R
+            //==========================================================================
+            //! HEADER
+            //==========================================================================
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxl,
+                vertical: AppSpacing.xl,
+              ),
+
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
 
-                //* Circle Avatar
                 children: [
+                  //==============================================================
+                  //! PROFILE AVATAR
+                  //==============================================================
                   const CircleAvatar(
                     radius: 35,
                     backgroundColor: AppColors.white,
+
                     child: Icon(
                       Icons.person,
                       size: 45,
@@ -72,147 +109,162 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.lg),
 
-                  //* User Info Column
+                  //==============================================================
+                  //! USER INFORMATION
+                  //==============================================================
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
                         Text(
                           user.name,
-                          style: const TextStyle(
-                            color: AppColors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            height:
-                                1.1, // Added this to snap the first and last name closer together
-                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
+
+                          style: AppTextStyles.heading2.copyWith(
+                            color: AppColors.white,
+                            height: 1.1,
+                          ),
                         ),
+
                         Text(
                           user.email,
-                          style: const TextStyle(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+
+                          style: AppTextStyles.caption.copyWith(
                             color: Colors.white70,
                             fontSize: 13,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
 
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSpacing.sm),
 
-                        //* Verification Status
                         _buildVerificationBadge(user.verificationStatus),
                       ],
                     ),
                   ),
 
-                  //* Settings Icon
+                  //==============================================================
+                  //! SETTINGS BUTTON
+                  //==============================================================
                   IconButton(
+                    onPressed: () => _openSettings(context),
+
                     icon: const Icon(
                       Icons.settings_outlined,
                       color: AppColors.white,
                     ),
-                    onPressed: () {
-                      print("Settings Gear Clicked");
-                    },
                   ),
                 ],
               ),
             ),
 
-            //!======================================================================================================================================== M E N U  B O D Y
+            //==========================================================================
+            //! MENU
+            //==========================================================================
             Expanded(
               child: Container(
                 width: double.infinity,
+
                 decoration: const BoxDecoration(
                   color: AppColors.background,
+
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(AppRadius.xl),
+                    topRight: Radius.circular(AppRadius.xl),
                   ),
                 ),
+
                 child: ListView(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
+                    horizontal: AppSpacing.xxl,
                     vertical: 18,
                   ),
 
                   children: [
-                    //* My Favorites
+                    //==========================================================
+                    //! SAVED
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.favorite_rounded,
-                      title: 'My Favorites',
+                      title: 'Saved',
                       subtitle: '${user.favoritesCount} listings',
+
                       onTap: () {
-                        print("Favorites Tile Tapped");
+                        // TODO: Navigate to Saved Listings
                       },
                     ),
 
-                    //* Recently Viewed
+                    //==========================================================
+                    //! RECENTLY VIEWED
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.history_rounded,
                       title: 'Recently Viewed',
                       subtitle: '${user.recentlyViewedCount} listings',
+
                       onTap: () {
-                        print("Recently Viewed Tile Tapped");
+                        // TODO: Navigate to Recently Viewed
                       },
                     ),
 
-                    //* My Inquires
+                    //==========================================================
+                    //! MY INQUIRIES
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.email_rounded,
                       title: 'My Inquiries',
-                      subtitle: '${user.inquiriesCount} Inquiries',
+                      subtitle: '${user.inquiriesCount} inquiries',
+
                       onTap: () {
-                        print("Inquiries Tile Tapped");
+                        // TODO: Navigate to My Inquiries
                       },
                     ),
 
-                    //* Divider
                     const Divider(height: 30, color: Colors.black12),
 
-                    //* Account Settings
-                    MenuListTile(
-                      icon: Icons.person_rounded,
-                      title: 'Account Settings',
-                      onTap: () {
-                        print("Account Settings Tapped");
-                      },
-                    ),
-
-                    //* Help Center
+                    //==========================================================
+                    //! HELP CENTER
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.help_center_rounded,
                       title: 'Help Center',
+
                       onTap: () {
-                        print("Help Center Tapped");
+                        // TODO: Navigate to Help Center
                       },
                     ),
 
-                    //* About the App
+                    //==========================================================
+                    //! ABOUT BH FINDER
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.info_rounded,
-                      title: 'About the App',
+                      title: 'About BH Finder',
+
                       onTap: () {
-                        print("About App Tapped");
+                        // TODO: Navigate to About Screen
                       },
                     ),
 
-                    //* Divider
                     const Divider(height: 34, color: Colors.black12),
 
-                    //* Logout
+                    //==========================================================
+                    //! LOG OUT
+                    //==========================================================
                     MenuListTile(
                       icon: Icons.logout_rounded,
                       title: 'Log Out',
                       textColor: Colors.red,
                       iconColor: Colors.red,
                       hideArrow: true,
+
                       onTap: () {
-                        print("Log Out Action Dispatched");
+                        // TODO: Implement Logout
                       },
                     ),
                   ],

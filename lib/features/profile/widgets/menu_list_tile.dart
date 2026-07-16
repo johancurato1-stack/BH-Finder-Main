@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 class MenuListTile extends StatelessWidget {
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
   final IconData icon;
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
+
   final Color? iconColor;
   final Color? iconBgColor;
   final Color textColor;
+
   final bool hideArrow;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const MenuListTile({
     super.key,
@@ -23,38 +36,65 @@ class MenuListTile extends StatelessWidget {
     this.hideArrow = false,
   });
 
+  //============================================================================
+  //! GETTERS
+  //============================================================================
+
+  Color get _effectiveIconColor => iconColor ?? AppColors.primary;
+
+  Color get _effectiveBackgroundColor =>
+      iconBgColor ?? _effectiveIconColor.withValues(alpha: .10);
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
   @override
   Widget build(BuildContext context) {
-    final effectiveIconColor = iconColor ?? AppColors.primary;
-    final effectiveBgColor =
-        iconBgColor ?? effectiveIconColor.withValues(alpha: 0.1);
-
     return ListTile(
       onTap: onTap,
       dense: true,
-      contentPadding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 3,
+      ),
+
+      //========================================================================
+      //! LEADING ICON
+      //========================================================================
       leading: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(AppSpacing.sm),
+
         decoration: BoxDecoration(
-          color: effectiveBgColor,
+          color: _effectiveBackgroundColor,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: effectiveIconColor, size: 25),
+
+        child: Icon(icon, size: 25, color: _effectiveIconColor),
       ),
+
+      //========================================================================
+      //! TITLE
+      //========================================================================
       title: Text(
         title,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
+        style: AppTextStyles.bodyBold.copyWith(color: textColor, fontSize: 15),
       ),
-      subtitle: subtitle != null
-          ? Text(
+
+      //========================================================================
+      //! SUBTITLE
+      //========================================================================
+      subtitle: subtitle == null
+          ? null
+          : Text(
               subtitle!,
-              style: const TextStyle(color: AppColors.tertiary, fontSize: 13),
-            )
-          : null,
+              style: AppTextStyles.caption.copyWith(fontSize: 13),
+            ),
+
+      //========================================================================
+      //! TRAILING
+      //========================================================================
       trailing: hideArrow
           ? null
           : const Icon(

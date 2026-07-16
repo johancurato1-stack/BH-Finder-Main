@@ -22,7 +22,7 @@ flutter:
   assets:
     - assets/
   fonts:
-    - family: Inter
+    - family: Roboto
       fonts:
         - asset: assets/fonts/inter/Inter_18pt-Regular.ttf
         - asset: assets/fonts/inter/Inter_18pt-Medium.ttf
