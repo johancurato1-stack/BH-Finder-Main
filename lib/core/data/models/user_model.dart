@@ -14,6 +14,7 @@ class UserModel {
   final int favoritesCount;
   final int recentlyViewedCount;
   final int inquiriesCount;
+  final String firstname;
 
   //============================================================================
   //! CONSTRUCTOR
@@ -26,5 +27,6 @@ class UserModel {
     required this.favoritesCount,
     required this.recentlyViewedCount,
     required this.inquiriesCount,
+    required this.firstname,
   });
 }

@@ -8,4 +8,5 @@ const mockUser = UserModel(
   favoritesCount: 0,
   recentlyViewedCount: 0,
   inquiriesCount: 2,
+  firstname: 'Johan',
 );

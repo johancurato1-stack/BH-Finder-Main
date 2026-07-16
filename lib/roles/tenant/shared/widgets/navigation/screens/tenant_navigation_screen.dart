@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+
+import 'package:bh_finder/roles/tenant/features/home/screens/home_screen.dart';
+import 'package:bh_finder/roles/tenant/features/messages/screens/messages_screen.dart';
+import 'package:bh_finder/roles/tenant/features/profile/screens/profile_screen.dart';
+import 'package:bh_finder/roles/tenant/features/saved/screens/saved_screen.dart';
+import 'package:bh_finder/roles/tenant/features/search/screens/search_screen.dart';
+
+import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/app_bottom_navigation_bar.dart';
+
+class TenantNavigationScreen extends StatefulWidget {
+  const TenantNavigationScreen({super.key});
+
+  //============================================================================
+  //! MAIN NAVIGATION WRAPPER
+  //============================================================================
+  @override
+  State<TenantNavigationScreen> createState() =>
+      _TenantNavigationWrapperState();
+}
+
+class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
+  //============================================================================
+  //! STATE
+  //============================================================================
+
+  int _currentIndex = 0;
+
+  bool _hasUnreadNotifications = true;
+  bool _hasUnreadLandlordMessages = true;
+
+  bool get _showMessagesTabBadge =>
+      _hasUnreadNotifications || _hasUnreadLandlordMessages;
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
+  @override
+  Widget build(BuildContext context) {
+    final screens = [
+      HomeScreen(
+        hasNotification: _hasUnreadNotifications,
+
+        onNotificationsRead: () {
+          setState(() {
+            _hasUnreadNotifications = false;
+          });
+        },
+
+        onSearchPressed: () {
+          setState(() {
+            _currentIndex = 1;
+          });
+        },
+      ),
+
+      SearchScreen(
+        onBackPressed: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
+
+      SavedScreen(
+        onBackPressed: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
+
+      MessagesScreen(
+        onBackPressed: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
+
+      const ProfileScreen(),
+    ];
+
+    return Scaffold(
+      body: IndexedStack(index: _currentIndex, children: screens),
+
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: _currentIndex,
+
+        showMessagesBadge: _showMessagesTabBadge,
+
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+    );
+  }
+}
