@@ -8,10 +8,10 @@ import 'package:bh_finder/roles/tenant/features/messages/models/message_model.da
 
 import 'package:bh_finder/roles/tenant/features/messages/repositories/chat_repository.dart';
 
-import 'package:bh_finder/roles/tenant/features/messages/widgets/chat/chat_app_bar.dart';
-import 'package:bh_finder/roles/tenant/features/messages/widgets/inquiry/inquiry_card.dart';
-import 'package:bh_finder/roles/tenant/features/messages/widgets/message/message_bubble.dart';
-import 'package:bh_finder/roles/tenant/features/messages/widgets/message/message_input.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/chat/chat_app_bar.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/inquiry/inquiry_card.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/message/message_bubble.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/message/message_input.dart';
 
 class ChatScreen extends StatefulWidget {
   //============================================================================

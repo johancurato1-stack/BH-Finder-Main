@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/roles/tenant/features/auth/login/widgets/login_form.dart';
-import 'package:bh_finder/roles/tenant/features/auth/login/widgets/register_prompt.dart';
-import 'package:bh_finder/roles/tenant/features/auth/login/widgets/social_login_section.dart';
+import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/login_screen_form.dart';
+import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/login_screen_register_prompt.dart';
+import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/social_login_section.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/auth/auth_header.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //============================================================================
                 //! LOGIN FORM
                 //============================================================================
-                LoginForm(
+                LoginScreenForm(
                   emailController: _emailController,
                   passwordController: _passwordController,
                 ),
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //============================================================================
                 //! REGISTER PROMPT
                 //============================================================================
-                const RegisterPrompt(),
+                const LoginScreenRegisterPrompt(),
               ],
             ),
           ),

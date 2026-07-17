@@ -9,8 +9,8 @@ import 'package:bh_finder/core/theme/app_radius.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/roles/tenant/features/profile/screens/settings_screen.dart';
-import 'package:bh_finder/roles/tenant/features/profile/widgets/menu_list_tile.dart';
+import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
+import 'package:bh_finder/shared/widgets/menu_list_tile.dart';
 
 class ProfileScreen extends StatelessWidget {
   //============================================================================

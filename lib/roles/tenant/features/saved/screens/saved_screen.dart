@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/saved/widgets/saved_header.dart';
-import 'package:bh_finder/roles/tenant/features/saved/widgets/saved_list.dart';
+import 'package:bh_finder/roles/tenant/features/saved/shared/widgets/saved_screen_header.dart';
+import 'package:bh_finder/roles/tenant/features/saved/shared/widgets/saved_screen_list.dart';
 
 class SavedScreen extends StatelessWidget {
   final VoidCallback onBackPressed;
@@ -27,12 +27,12 @@ class SavedScreen extends StatelessWidget {
             //============================================================================
             //! HEADER
             //============================================================================
-            SavedHeader(onBackPressed: onBackPressed),
+            SavedScreenHeader(onBackPressed: onBackPressed),
 
             //============================================================================
             //! SAVED LIST
             //============================================================================
-            const Expanded(child: SavedList()),
+            const Expanded(child: SavedScreenList()),
           ],
         ),
       ),

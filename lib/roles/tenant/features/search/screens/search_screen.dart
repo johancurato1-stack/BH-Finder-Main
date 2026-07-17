@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/widgets/search_header.dart';
-import 'package:bh_finder/roles/tenant/features/search/widgets/search_filters_body.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_header.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_filters_body.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
@@ -92,13 +92,13 @@ class _SearchScreenState extends State<SearchScreen> {
             //============================================================================
             //! HEADER
             //============================================================================
-            SearchHeader(onBackPressed: widget.onBackPressed),
+            SearchScreenHeader(onBackPressed: widget.onBackPressed),
 
             //============================================================================
             //! FILTERS
             //============================================================================
             Expanded(
-              child: SearchFiltersBody(
+              child: SearchScreenFiltersBody(
                 controller: _searchController,
                 filter: _filter,
                 onReset: _resetFilters,

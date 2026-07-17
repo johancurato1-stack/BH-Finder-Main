@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/landlord/features/properties/widgets/properties_header.dart';
-import 'package:bh_finder/roles/landlord/features/properties/widgets/properties_list.dart';
+import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/properties_screen_header.dart';
+import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/properties_screen_list.dart';
 
 class PropertiesScreen extends StatelessWidget {
   //==========================================================================
@@ -29,9 +29,9 @@ class PropertiesScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            PropertiesHeader(onBackPressed: onBackPressed),
+            PropertiesScreenHeader(onBackPressed: onBackPressed),
 
-            const Expanded(child: PropertiesList()),
+            const Expanded(child: PropertiesScreenList()),
           ],
         ),
       ),

@@ -5,9 +5,9 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/auth/auth_header.dart';
 
-import 'package:bh_finder/roles/tenant/features/auth/signup/widgets/signup_form.dart';
-import 'package:bh_finder/roles/tenant/features/auth/signup/widgets/terms_section.dart';
-import 'package:bh_finder/roles/tenant/features/auth/signup/widgets/login_prompt.dart';
+import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_form.dart';
+import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_terms_section.dart';
+import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_login_prompt.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -81,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 //============================================================================
                 //! SIGN UP FORM
                 //============================================================================
-                SignupForm(
+                SignupScreenForm(
                   nameController: _nameController,
                   emailController: _emailController,
                   passwordController: _passwordController,
@@ -91,7 +91,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 //============================================================================
                 //! TERMS
                 //============================================================================
-                TermsSection(
+                SignupScreenTermsSection(
                   agreedToTerms: _agreedToTerms,
                   onChanged: (value) {
                     setState(() {
@@ -105,7 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 //============================================================================
                 //! LOGIN PROMPT
                 //============================================================================
-                const LoginPrompt(),
+                const SignupScreenLoginPrompt(),
 
                 const SizedBox(height: AppSpacing.xxxl),
               ],

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/features/splash/services/splash_service.dart';
-import 'package:bh_finder/roles/tenant/features/splash/widgets/splash_loading.dart';
-import 'package:bh_finder/roles/tenant/features/splash/widgets/splash_logo.dart';
+import 'package:bh_finder/roles/tenant/features/splash/shared/widgets/splash_screen_loading.dart';
+import 'package:bh_finder/roles/tenant/features/splash/shared/widgets/splash_screen_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -49,12 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
               //============================================================================
               //! LOGO
               //============================================================================
-              SplashLogo(),
+              SplashScreenLogo(),
 
               //============================================================================
               //! LOADING
               //============================================================================
-              SplashLoading(),
+              SplashScreenLoading(),
             ],
           ),
         ),

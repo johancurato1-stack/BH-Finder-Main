@@ -4,10 +4,10 @@ import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/cards/bh_card_vertical.dart';
-import 'package:bh_finder/roles/tenant/features/search/widgets/search_results_header.dart';
-import 'package:bh_finder/roles/tenant/features/search/widgets/search_results_summary.dart';
-import 'package:bh_finder/roles/tenant/features/search/widgets/empty_search_results.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_header.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_summary.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/empty_search_results_screen.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   final SearchFilterModel filter;
@@ -36,12 +36,12 @@ class SearchResultsScreen extends StatelessWidget {
             //============================================================================
             //! HEADER
             //============================================================================
-            const SearchResultsHeader(),
+            const SearchResultsScreenHeader(),
 
             //============================================================================
             //! SUMMARY
             //============================================================================
-            SearchResultsSummary(
+            SearchResultsScreenSummary(
               filter: filter,
               resultCount: boardingHouses.length,
             ),
@@ -60,7 +60,7 @@ class SearchResultsScreen extends StatelessWidget {
                       itemCount: boardingHouses.length,
 
                       itemBuilder: (context, index) {
-                        return BhCardVertical(
+                        return PropertyCardVertical(
                           boardingHouse: boardingHouses[index],
                         );
                       },

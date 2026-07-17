@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/home/widgets/bh_horizontal_list.dart';
-import 'package:bh_finder/roles/tenant/features/home/widgets/hero_section.dart';
-import 'package:bh_finder/roles/tenant/features/home/widgets/home_header.dart';
-import 'package:bh_finder/roles/tenant/features/home/widgets/home_search_bar.dart';
-import 'package:bh_finder/roles/tenant/features/home/widgets/section_header.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_%20property_horizontal_list.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_hero_section.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_header.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_search_bar.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_section_header.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/see_all_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final VoidCallback onSearchPressed;
@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                     //============================================================================
                     //! HOME HEADER
                     //============================================================================
-                    HomeHeader(
+                    HomeScreenHeader(
                       hasNotification: hasNotification,
                       onNotificationsRead: onNotificationsRead,
                     ),
@@ -62,21 +62,21 @@ class HomeScreen extends StatelessWidget {
                     //============================================================================
                     //! HERO SECTION
                     //============================================================================
-                    const HeroSection(),
+                    const HomeScreenHeroSection(),
 
                     const SizedBox(height: AppSpacing.xl),
 
                     //============================================================================
                     //! SEARCH BAR
                     //============================================================================
-                    HomeSearchBar(onTap: onSearchPressed),
+                    HomeScreenSearchBar(onTap: onSearchPressed),
 
                     const SizedBox(height: AppSpacing.xxl),
 
                     //============================================================================
                     //! NEAR YOU HEADER
                     //============================================================================
-                    SectionHeader(
+                    HomeScreenSectionHeader(
                       title: 'Near You',
                       onSeeAll: () {
                         Navigator.push(
@@ -122,7 +122,9 @@ class HomeScreen extends StatelessWidget {
               //============================================================================
               //! BOARDING HOUSE LIST
               //============================================================================
-              BhHorizontalList(boardingHouses: provider.boardingHouses),
+              HomeScreenPropertyHorizontalList(
+                boardingHouses: provider.boardingHouses,
+              ),
 
               const SizedBox(height: AppSpacing.xxxl),
             ],

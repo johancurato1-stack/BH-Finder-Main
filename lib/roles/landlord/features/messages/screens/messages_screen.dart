@@ -11,8 +11,8 @@ import 'package:bh_finder/roles/landlord/features/messages/screens/chat_room_scr
 import 'package:bh_finder/roles/landlord/features/messages/screens/new_message_screen.dart';
 import 'package:bh_finder/roles/landlord/features/messages/screens/notification_chat_screen.dart';
 
-import 'package:bh_finder/roles/tenant/features/messages/widgets/chat/chat_tile.dart';
-import 'package:bh_finder/roles/tenant/features/messages/widgets/notification/notification_tile.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/chat/chat_tile.dart';
+import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/notification/notification_tile.dart';
 
 class MessagesScreen extends StatefulWidget {
   //============================================================================
