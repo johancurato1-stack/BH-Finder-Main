@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/room_model.dart';
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
 class RoomDetailScreen extends StatefulWidget {
   final RoomModel room;
@@ -226,7 +226,10 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             ),
             child: Column(
               children: [
-                CustomButton(text: 'Inquire About This Room', onPressed: () {}),
+                PrimaryButton(
+                  text: 'Inquire About This Room',
+                  onPressed: () {},
+                ),
                 const SizedBox(height: 8),
                 const Text(
                   "We'll connect you with the owner.",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
 class SocialLoginSection extends StatelessWidget {
   const SocialLoginSection({super.key});
@@ -62,7 +62,7 @@ class SocialLoginSection extends StatelessWidget {
         //============================================================================
         //! GOOGLE BUTTON
         //============================================================================
-        CustomButton(
+        PrimaryButton(
           text: 'Sign in with Google',
           isSecondary: true,
           onPressed: _googleLogin,

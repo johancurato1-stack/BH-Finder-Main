@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
-import 'package:bh_finder/shared/widgets/textfields/custom_text_field.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+import 'package:bh_finder/shared/widgets/textfields/primary_text_field.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -50,7 +50,7 @@ class LoginForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: emailController,
             hintText: 'Enter your email or phone number',
             prefixIcon: Icons.person_outline,
@@ -69,7 +69,7 @@ class LoginForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: passwordController,
             hintText: 'Enter your password',
             prefixIcon: Icons.lock_outline,
@@ -82,7 +82,7 @@ class LoginForm extends StatelessWidget {
         //============================================================================
         //! LOGIN BUTTON
         //============================================================================
-        CustomButton(text: 'Login', onPressed: () => _login(context)),
+        PrimaryButton(text: 'Login', onPressed: () => _login(context)),
 
         const SizedBox(height: AppSpacing.xxxl),
       ],

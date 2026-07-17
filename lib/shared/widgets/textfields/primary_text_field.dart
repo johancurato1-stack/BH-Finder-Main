@@ -6,7 +6,7 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 //==============================================================================
-//! CUSTOM TEXT FIELD
+//! PRIMARY TEXT FIELD
 //==============================================================================
 //
 //? A reusable text field used throughout the application.
@@ -18,7 +18,7 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 //* - Prefix icon
 //
 //==============================================================================
-class CustomTextField extends StatefulWidget {
+class PrimaryTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData prefixIcon;
@@ -33,7 +33,7 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final int maxLines;
 
-  const CustomTextField({
+  const PrimaryTextField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -46,10 +46,10 @@ class CustomTextField extends StatefulWidget {
   });
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<PrimaryTextField> createState() => _CustomTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _CustomTextFieldState extends State<PrimaryTextField> {
   late bool _obscureText;
 
   @override

@@ -122,7 +122,7 @@ class HomeScreen extends StatelessWidget {
               //============================================================================
               //! BOARDING HOUSE LIST
               //============================================================================
-              BhHorizontalList(boardingHouses: provider.rooms),
+              BhHorizontalList(boardingHouses: provider.boardingHouses),
 
               const SizedBox(height: AppSpacing.xxxl),
             ],

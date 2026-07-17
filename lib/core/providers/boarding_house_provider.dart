@@ -18,7 +18,7 @@ class BoardingHouseProvider extends ChangeNotifier {
   //==========================================================================
 
   /// All boarding houses
-  List<BoardingHouseModel> get rooms => _boardingHouses;
+  List<BoardingHouseModel> get boardingHouses => _boardingHouses;
 
   /// Boarding houses shown in "Near You"
   List<BoardingHouseModel> get nearYouList => _boardingHouses;

@@ -6,7 +6,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/tenant/features/search/widgets/search_header.dart';
 import 'package:bh_finder/roles/tenant/features/search/widgets/search_filters_body.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
 import 'package:bh_finder/roles/tenant/features/search/screens/search_results_screen.dart';
 
@@ -111,7 +111,7 @@ class _SearchScreenState extends State<SearchScreen> {
             //============================================================================
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 46),
-              child: CustomButton(
+              child: PrimaryButton(
                 text: 'Show Results',
                 onPressed: _showResults,
               ),

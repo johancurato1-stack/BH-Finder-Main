@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/core/providers/boarding_house_provider.dart';
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen.dart';
 
 class BhDetailScreen extends StatefulWidget {
@@ -341,7 +341,7 @@ class _BhDetailScreenState extends State<BhDetailScreen> {
                 20,
                 MediaQuery.of(context).padding.bottom + 12,
               ),
-              child: CustomButton(
+              child: PrimaryButton(
                 text: 'View Rooms (${bh.totalRooms})',
                 onPressed: () {
                   final provider = Provider.of<BoardingHouseProvider>(

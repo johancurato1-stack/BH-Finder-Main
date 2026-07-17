@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
-import 'package:bh_finder/shared/widgets/textfields/custom_text_field.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+import 'package:bh_finder/shared/widgets/textfields/primary_text_field.dart';
 
 class SignupForm extends StatelessWidget {
   final TextEditingController nameController;
@@ -49,7 +49,7 @@ class SignupForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: nameController,
             hintText: 'Enter your full name',
             prefixIcon: Icons.badge_outlined,
@@ -67,7 +67,7 @@ class SignupForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: emailController,
             hintText: 'Enter your email or phone number',
             prefixIcon: Icons.person_outline,
@@ -86,7 +86,7 @@ class SignupForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: passwordController,
             hintText: 'Enter your password',
             prefixIcon: Icons.lock_outline,
@@ -105,7 +105,7 @@ class SignupForm extends StatelessWidget {
 
         SizedBox(
           height: 42,
-          child: CustomTextField(
+          child: PrimaryTextField(
             controller: confirmPasswordController,
             hintText: 'Confirm your password',
             prefixIcon: Icons.lock_reset_outlined,
@@ -118,7 +118,7 @@ class SignupForm extends StatelessWidget {
         //============================================================================
         //! CREATE ACCOUNT BUTTON
         //============================================================================
-        CustomButton(text: 'Create an account', onPressed: _createAccount),
+        PrimaryButton(text: 'Create an account', onPressed: _createAccount),
 
         const SizedBox(height: AppSpacing.xxl),
       ],

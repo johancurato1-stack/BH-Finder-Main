@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/property_stat.dart';
-
 import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+
+import 'package:bh_finder/roles/landlord/features/dashboard/widgets/property_stat.dart';
 
 class PropertyStatsRow extends StatelessWidget {
   //==========================================================================
@@ -18,25 +18,6 @@ class PropertyStatsRow extends StatelessWidget {
   final BoardingHouseModel boardingHouse;
 
   //==========================================================================
-  //! HELPERS
-  //==========================================================================
-
-  String _getAvailableRooms() {
-    final parts = boardingHouse.availabilityCount.split('/');
-    return parts.first;
-  }
-
-  String _getOccupiedRooms() {
-    final parts = boardingHouse.availabilityCount.split('/');
-
-    if (parts.length != 2) return "0";
-
-    final occupied = int.parse(parts.last) - int.parse(parts.first);
-
-    return occupied.toString();
-  }
-
-  //==========================================================================
   //! BUILD
   //==========================================================================
 
@@ -49,11 +30,20 @@ class PropertyStatsRow extends StatelessWidget {
           label: "Rooms",
         ),
 
-        PropertyStat(value: _getAvailableRooms(), label: "Available"),
+        PropertyStat(
+          value: boardingHouse.availableRooms.toString(),
+          label: "Available",
+        ),
 
-        const PropertyStat(value: "0", label: "Reserved"),
+        PropertyStat(
+          value: boardingHouse.reservedRooms.toString(),
+          label: "Reserved",
+        ),
 
-        PropertyStat(value: _getOccupiedRooms(), label: "Occupied"),
+        PropertyStat(
+          value: boardingHouse.occupiedRooms.toString(),
+          label: "Occupied",
+        ),
       ],
     );
   }

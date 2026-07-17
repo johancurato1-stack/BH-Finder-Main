@@ -6,7 +6,7 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 //==============================================================================
-//! CUSTOM BUTTON
+//! PRIMARY BUTTON
 //==============================================================================
 //
 //? A reusable button used throughout the application.
@@ -17,14 +17,14 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 //* - Optional leading icon
 //
 //==============================================================================
-class CustomButton extends StatelessWidget {
+class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isSecondary;
   final IconData? icon;
   final Color? iconColor;
 
-  const CustomButton({
+  const PrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,

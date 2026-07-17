@@ -5,7 +5,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/screens/dashboard_screen.dart';
 import 'package:bh_finder/roles/landlord/features/messages/screens/messages_screen.dart';
 import 'package:bh_finder/roles/landlord/features/profile/screens/profile_screen.dart';
-import 'package:bh_finder/roles/landlord/features/properties/temporary_properties_screen.dart';
+import 'package:bh_finder/roles/landlord/features/properties/screens/properties_screen.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/widgets/landlord_bottom_navigation_bar.dart';
 
@@ -47,7 +47,7 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
     final screens = [
       const DashboardScreen(),
 
-      const TemporaryPropertiesScreen(),
+      PropertiesScreen(onBackPressed: _goToDashboard),
 
       MessagesScreen(onBackPressed: _goToDashboard),
 

@@ -19,6 +19,9 @@ class BoardingHouseModel extends ChangeNotifier {
   final List<String> amenities;
   final String description;
   final Landlord landlord;
+  final int availableRooms;
+  final int reservedRooms;
+  final int occupiedRooms;
 
   bool _isSaved;
 
@@ -40,6 +43,9 @@ class BoardingHouseModel extends ChangeNotifier {
     required this.amenities,
     required this.description,
     required this.landlord,
+    this.availableRooms = 0,
+    this.reservedRooms = 0,
+    this.occupiedRooms = 0,
     bool isSaved = false,
   }) : _isSaved = isSaved;
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import '../../../../../shared/widgets/buttons/custom_button.dart';
+import '../../../../../shared/widgets/buttons/primary_button.dart';
 import 'filter_button.dart';
 import 'filter_constants.dart';
 import 'filter_models.dart';
@@ -250,7 +250,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               bottom: MediaQuery.of(context).padding.bottom + 78,
             ),
 
-            child: CustomButton(
+            child: PrimaryButton(
               text: 'Apply Filters',
               onPressed: _applyFilters,
             ),

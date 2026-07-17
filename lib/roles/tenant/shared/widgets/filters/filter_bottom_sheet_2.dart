@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_button.dart';
-import 'package:bh_finder/shared/widgets/buttons/custom_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
 class FilterBottomSheet2 extends StatefulWidget {
   const FilterBottomSheet2({super.key});
@@ -118,7 +118,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet2> {
               20,
               MediaQuery.of(context).padding.bottom + 20,
             ),
-            child: CustomButton(
+            child: PrimaryButton(
               text: 'Apply Filters',
               onPressed: () {
                 Navigator.pop(context);
