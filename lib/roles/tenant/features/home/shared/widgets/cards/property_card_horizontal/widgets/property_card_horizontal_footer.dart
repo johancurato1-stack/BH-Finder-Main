@@ -50,15 +50,11 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
         ),
 
         //======================================================================
-        //! AVAILABLE ROOMS
+        //! HEARTS
         //======================================================================
         Row(
           children: [
-            const Icon(
-              Icons.group_outlined,
-              size: 14,
-              color: AppColors.secondary,
-            ),
+            const Icon(Icons.favorite, size: 14, color: Colors.red),
 
             const SizedBox(width: 4),
 

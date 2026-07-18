@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/data/mock_data/mock_user.dart';
-import 'package:bh_finder/core/data/mock_data/mock_boarding_houses.dart';
+import 'package:bh_finder/core/data/mock/mock_user.dart';
+import 'package:bh_finder/core/data/mock/mock_boarding_houses.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/dashboard_header.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/greeting_section.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/boarding_house_carousel.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/page_indicator.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/widgets/recent_inquiries_section.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_header.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_greeting_section.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/boarding_house_carousel.dart';
+import 'package:bh_finder/shared/page_indicator.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_recent_inquiries_section.dart';
 
 class DashboardScreen extends StatefulWidget {
   //==========================================================================
@@ -45,12 +45,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               //! HEADER
               //==============================================================
-              DashboardHeader(onNotificationPressed: () {}),
+              DashboardScreenHeader(onNotificationPressed: () {}),
 
               //==============================================================
               //! GREETING
               //==============================================================
-              GreetingSection(user: mockUser),
+              DashboardScreenGreetingSection(user: mockUser),
 
               const SizedBox(height: 20),
 
@@ -88,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               //! RECENT INQUIRIES
               //==============================================================
-              const RecentInquiriesSection(),
+              const DashboardScreenRecentInquiriesSection(),
 
               const SizedBox(height: 50),
             ],

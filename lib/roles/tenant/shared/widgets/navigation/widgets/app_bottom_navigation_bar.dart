@@ -71,7 +71,7 @@ class AppBottomNavigationBar extends StatelessWidget {
           const BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border_rounded),
             activeIcon: Icon(Icons.favorite_rounded),
-            label: 'Saved',
+            label: 'Favorites',
           ),
 
           BottomNavigationBarItem(
@@ -98,6 +98,7 @@ class AppBottomNavigationBar extends StatelessWidget {
 
 //============================================================================
 //! MESSAGE ICON
+//TODO CONNECT LATER TO BACKEND
 //============================================================================
 
 class _MessagesIcon extends StatelessWidget {

@@ -19,7 +19,7 @@ class EmptySearchResults extends StatelessWidget {
           //============================================================================
           //! ICON
           //============================================================================
-          Icon(Icons.search_off_rounded, size: 64, color: AppColors.tertiary),
+          Icon(Icons.search_off_rounded, size: 42, color: AppColors.tertiary),
 
           SizedBox(height: 16),
 
@@ -29,7 +29,7 @@ class EmptySearchResults extends StatelessWidget {
           Text(
             'No Boarding Houses Found',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               fontFamily: 'Roboto',
               color: AppColors.secondary,
@@ -45,7 +45,7 @@ class EmptySearchResults extends StatelessWidget {
             'Try adjusting your filters\nor search another location.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Roboto',
               color: AppColors.tertiary,
             ),

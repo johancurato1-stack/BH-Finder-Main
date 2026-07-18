@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 
-import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card.dart';
+import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card/property_card.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/add_property_card.dart';
 
 class PropertiesScreenList extends StatelessWidget {

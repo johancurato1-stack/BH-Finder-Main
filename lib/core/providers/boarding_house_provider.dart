@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock_data/mock_boarding_houses.dart';
-import 'package:bh_finder/core/data/mock_data/mock_rooms.dart';
+import 'package:bh_finder/core/data/mock/mock_boarding_houses.dart';
+import 'package:bh_finder/core/data/mock/mock_rooms.dart';
 
 import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/core/data/models/room_model.dart';

@@ -1,7 +1,7 @@
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock_data/mock_user.dart';
+import 'package:bh_finder/core/data/mock/mock_user.dart';
 import 'package:bh_finder/core/data/models/user_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';

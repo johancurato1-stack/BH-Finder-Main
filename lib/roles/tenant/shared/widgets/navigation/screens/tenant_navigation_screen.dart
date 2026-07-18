@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/roles/tenant/features/home/screens/home_screen.dart';
 import 'package:bh_finder/roles/tenant/features/messages/screens/messages_screen.dart';
 import 'package:bh_finder/roles/tenant/features/profile/screens/profile_screen.dart';
-import 'package:bh_finder/roles/tenant/features/saved/screens/saved_screen.dart';
+import 'package:bh_finder/roles/tenant/features/favorites/screens/favorites_screen.dart';
 import 'package:bh_finder/roles/tenant/features/search/screens/search_screen.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/app_bottom_navigation_bar.dart';
@@ -63,7 +63,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         },
       ),
 
-      SavedScreen(
+      FavoritesScreen(
         onBackPressed: () {
           setState(() {
             _currentIndex = 0;

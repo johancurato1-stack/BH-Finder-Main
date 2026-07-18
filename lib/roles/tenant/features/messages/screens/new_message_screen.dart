@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/core/data/mock_data/mock_contacts.dart';
+import 'package:bh_finder/core/data/mock/mock_contacts.dart';
 import 'package:bh_finder/core/data/models/contact_model.dart';
 
 class NewMessageScreen extends StatefulWidget {

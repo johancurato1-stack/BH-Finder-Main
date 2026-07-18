@@ -4,7 +4,7 @@ import 'package:bh_finder/core/data/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_image.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_info.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_status.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_arrow.dart';
 
 class PropertyRoomCard extends StatelessWidget {
   //* Room data to display.
@@ -57,9 +57,9 @@ class PropertyRoomCard extends StatelessWidget {
             Expanded(child: PropertyRoomInfo(room: room)),
 
             //============================================================================
-            //! STATUS BADGE
+            //! ARROW INDICATOR
             //============================================================================
-            PropertyRoomStatus(room: room),
+            PropertyRoomArrow(room: room),
           ],
         ),
       ),

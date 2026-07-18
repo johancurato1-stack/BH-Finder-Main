@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock_data/mock_user.dart';
+import 'package:bh_finder/core/data/mock/mock_user.dart';
 import 'package:bh_finder/core/data/models/user_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -188,11 +188,11 @@ class ProfileScreen extends StatelessWidget {
 
                   children: [
                     //==========================================================
-                    //! SAVED
+                    //! FAVORITES
                     //==========================================================
                     MenuListTile(
                       icon: Icons.favorite_rounded,
-                      title: 'Saved',
+                      title: 'My Favorites',
                       subtitle: '${user.favoritesCount} listings',
 
                       onTap: () {

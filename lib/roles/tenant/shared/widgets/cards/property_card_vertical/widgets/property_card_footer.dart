@@ -16,6 +16,7 @@ class PropertyCardFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        Spacer(),
         // Gender preference.
         const Icon(Icons.person_outline, size: 12, color: AppColors.secondary),
 
@@ -28,40 +29,6 @@ class PropertyCardFooter extends StatelessWidget {
             color: AppColors.secondary,
             fontWeight: FontWeight.w500,
           ),
-        ),
-
-        const SizedBox(width: 8),
-
-        // Available room count.
-        const Icon(Icons.group_outlined, size: 12, color: AppColors.secondary),
-
-        const SizedBox(width: 2),
-
-        Text(
-          boardingHouse.availabilityCount,
-          style: const TextStyle(
-            fontSize: 9,
-            color: AppColors.secondary,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-
-        const Spacer(),
-
-        // Boarding house rating.
-        const Icon(Icons.star, size: 12, color: Colors.amber),
-
-        const SizedBox(width: 2),
-
-        Text(
-          '${boardingHouse.rating} ',
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-        ),
-
-        // Number of reviews.
-        Text(
-          '(${boardingHouse.reviewCount})',
-          style: const TextStyle(fontSize: 9, color: AppColors.tertiary),
         ),
       ],
     );

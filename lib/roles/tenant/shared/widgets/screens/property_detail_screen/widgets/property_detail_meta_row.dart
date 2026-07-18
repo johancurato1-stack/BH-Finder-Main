@@ -32,13 +32,6 @@ class PropertyMetaRow extends StatelessWidget {
           icon: Icons.meeting_room,
           label: '${boardingHouse.totalRooms} Rooms',
         ),
-
-        const SizedBox(width: 8),
-
-        _MetaChip(
-          icon: Icons.group_outlined,
-          label: '${boardingHouse.availabilityCount} Tenants',
-        ),
       ],
     );
   }

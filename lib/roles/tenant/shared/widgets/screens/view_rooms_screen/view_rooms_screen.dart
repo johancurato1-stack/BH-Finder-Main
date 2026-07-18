@@ -6,9 +6,8 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet_mini/filter_bottom_sheet_mini.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/widgets/view_rooms_availability_notice_card.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/widgets/view_rooms_status_filter_bar.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/widgets/view_rooms_header.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
 
 class ViewRoomsScreen extends StatefulWidget {
   //============================================================================
@@ -30,30 +29,6 @@ class ViewRoomsScreen extends StatefulWidget {
 
 class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
   //============================================================================
-  //! STATE
-  //============================================================================
-
-  String _selectedFilter = 'All';
-
-  final List<String> _filters = ['All', 'Available', 'Reserved', 'Occupied'];
-
-  //============================================================================
-  //! GETTERS
-  //============================================================================
-
-  List<RoomModel> get _filteredRooms {
-    if (_selectedFilter == 'All') {
-      return widget.rooms;
-    }
-
-    return widget.rooms
-        .where(
-          (room) => room.status.toLowerCase() == _selectedFilter.toLowerCase(),
-        )
-        .toList();
-  }
-
-  //============================================================================
   //! BUILD
   //============================================================================
 
@@ -74,25 +49,12 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
             ),
 
             //==================================================================
-            //! FILTER BAR
-            //==================================================================
-            RoomStatusFilterBar(
-              filters: _filters,
-              selectedFilter: _selectedFilter,
-              onSelected: (filter) {
-                setState(() {
-                  _selectedFilter = filter;
-                });
-              },
-            ),
-
-            //==================================================================
             //! CONTENT
             //==================================================================
             Expanded(
               child: Column(
                 children: [
-                  Expanded(child: RoomListView(rooms: _filteredRooms)),
+                  Expanded(child: RoomListView(rooms: widget.rooms)),
 
                   const AvailabilityNoticeCard(),
                 ],

@@ -17,6 +17,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/sec
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/view_rooms_screen.dart';
+import 'package:bh_finder/shared/page_indicator.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   //============================================================================
@@ -153,6 +154,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         onBack: () => Navigator.pop(context),
                       ),
                     ],
+                  ),
+
+                  PageIndicator(
+                    currentPage: _currentPage,
+                    pageCount: _images.length,
                   ),
 
                   Padding(
