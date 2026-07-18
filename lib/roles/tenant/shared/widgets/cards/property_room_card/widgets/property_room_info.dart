@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! PROPERTY ROOM INFO
+//============================================================================
+
 class PropertyRoomInfo extends StatelessWidget {
-  //* Room data to display.
-  final RoomModel room;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const PropertyRoomInfo({super.key, required this.room});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final RoomModel room;
+
+  //============================================================================
+  //! GENDER LABEL
+  //============================================================================
+
+  String _getGenderLabel(GenderPreference gender) {
+    switch (gender) {
+      case GenderPreference.male:
+        return 'Male';
+
+      case GenderPreference.female:
+        return 'Female';
+
+      case GenderPreference.mixed:
+        return 'Mixed';
+    }
+  }
 
   //============================================================================
   //! BUILD
@@ -18,13 +47,17 @@ class PropertyRoomInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //* Room title.
+        //======================================================================
+        //! ROOM NUMBER
+        //======================================================================
         Text(
-          room.title,
+          room.roomNumber,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
 
-        //* Monthly rental price.
+        //======================================================================
+        //! PRICE
+        //======================================================================
         Text(
           '₱ ${room.price} / month',
           style: const TextStyle(
@@ -35,10 +68,11 @@ class PropertyRoomInfo extends StatelessWidget {
 
         const SizedBox(height: 13),
 
-        //* Room details.
+        //======================================================================
+        //! DETAILS
+        //======================================================================
         Row(
           children: [
-            //* Gender icon.
             const Icon(
               Icons.person_outline,
               size: 15,
@@ -47,15 +81,13 @@ class PropertyRoomInfo extends StatelessWidget {
 
             const SizedBox(width: 6),
 
-            //* Gender rules.
             Text(
-              room.genderRules,
+              _getGenderLabel(room.genderPreference),
               style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
             ),
 
             const SizedBox(width: 10),
 
-            //* Capacity icon.
             const Icon(
               Icons.group_outlined,
               size: 15,
@@ -64,9 +96,8 @@ class PropertyRoomInfo extends StatelessWidget {
 
             const SizedBox(width: 6),
 
-            //* Room capacity.
             Text(
-              room.capacity,
+              '${room.capacity} Person${room.capacity > 1 ? 's' : ''}',
               style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
             ),
           ],

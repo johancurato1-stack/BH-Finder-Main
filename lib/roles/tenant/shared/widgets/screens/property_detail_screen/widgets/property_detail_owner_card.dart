@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/landlord_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/landlord_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+
+//============================================================================
+//! PROPERTY OWNER CARD
+//============================================================================
 
 class PropertyOwnerCard extends StatelessWidget {
   //============================================================================
@@ -14,7 +19,34 @@ class PropertyOwnerCard extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final Landlord landlord;
+  final LandlordModel landlord;
+
+  //============================================================================
+  //! RESPONSE TIME
+  //============================================================================
+
+  /// Returns a readable response time.
+  String _getResponseTime(ResponseTime responseTime) {
+    switch (responseTime) {
+      case ResponseTime.within15Minutes:
+        return 'Typically responds within 15 minutes';
+
+      case ResponseTime.within30Minutes:
+        return 'Typically responds within 30 minutes';
+
+      case ResponseTime.within1Hour:
+        return 'Typically responds within 1 hour';
+
+      case ResponseTime.within3Hours:
+        return 'Typically responds within 3 hours';
+
+      case ResponseTime.within24Hours:
+        return 'Typically responds within 24 hours';
+
+      case ResponseTime.moreThan24Hours:
+        return 'Typically responds in more than 24 hours';
+    }
+  }
 
   //============================================================================
   //! BUILD
@@ -26,7 +58,7 @@ class PropertyOwnerCard extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundImage: NetworkImage(landlord.imageUrl),
+          backgroundImage: NetworkImage(landlord.profileImageUrl),
         ),
 
         const SizedBox(width: 12),
@@ -36,7 +68,7 @@ class PropertyOwnerCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                landlord.name,
+                landlord.fullName,
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -45,7 +77,7 @@ class PropertyOwnerCard extends StatelessWidget {
               ),
 
               Text(
-                landlord.responseTime,
+                _getResponseTime(landlord.responseTime),
                 style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
               ),
             ],
@@ -55,7 +87,7 @@ class PropertyOwnerCard extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.phone, color: AppColors.primary),
           onPressed: () {
-            // TODO: Call landlord
+            // TODO: Call landlord.
           },
         ),
       ],

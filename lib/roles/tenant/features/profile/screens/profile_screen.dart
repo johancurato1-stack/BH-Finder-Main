@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock/mock_user.dart';
-import 'package:bh_finder/core/data/models/user_model.dart';
+import 'package:bh_finder/core/data/mock/user/mock_user.dart';
+import 'package:bh_finder/core/models/user_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_radius.dart';

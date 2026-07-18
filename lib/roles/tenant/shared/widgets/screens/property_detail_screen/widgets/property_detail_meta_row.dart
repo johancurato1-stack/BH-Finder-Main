@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_detail_data.dart';
+
+//============================================================================
+//! PROPERTY META ROW
+//============================================================================
 
 class PropertyMetaRow extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyMetaRow({super.key, required this.boardingHouse});
+  const PropertyMetaRow({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyDetailData data;
+
+  //============================================================================
+  //! GENDER LABEL
+  //============================================================================
+
+  /// Returns a readable gender preference.
+  String _getGenderLabel(GenderPreference gender) {
+    switch (gender) {
+      case GenderPreference.male:
+        return 'Male';
+
+      case GenderPreference.female:
+        return 'Female';
+
+      case GenderPreference.mixed:
+        return 'Mixed';
+    }
+  }
 
   //============================================================================
   //! BUILD
@@ -24,14 +47,14 @@ class PropertyMetaRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _MetaChip(icon: Icons.person_outline, label: boardingHouse.genderRules),
+        _MetaChip(
+          icon: Icons.person_outline,
+          label: _getGenderLabel(data.genderPreference),
+        ),
 
         const SizedBox(width: 8),
 
-        _MetaChip(
-          icon: Icons.meeting_room,
-          label: '${boardingHouse.totalRooms} Rooms',
-        ),
+        _MetaChip(icon: Icons.meeting_room, label: '${data.roomCount} Rooms'),
       ],
     );
   }

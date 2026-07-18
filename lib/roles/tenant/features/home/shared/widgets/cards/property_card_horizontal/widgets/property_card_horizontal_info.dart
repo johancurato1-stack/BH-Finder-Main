@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_footer.dart';
+
+//============================================================================
+//! PROPERTY CARD HORIZONTAL INFO
+//============================================================================
 
 class PropertyCardHorizontalInfo extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyCardHorizontalInfo({super.key, required this.boardingHouse});
+  const PropertyCardHorizontalInfo({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyCardData data;
 
   //============================================================================
   //! BUILD
@@ -33,7 +37,7 @@ class PropertyCardHorizontalInfo extends StatelessWidget {
           //! TITLE
           //====================================================================
           Text(
-            boardingHouse.title,
+            data.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -50,7 +54,7 @@ class PropertyCardHorizontalInfo extends StatelessWidget {
           //! DISTANCE
           //====================================================================
           Text(
-            boardingHouse.distanceText,
+            '${data.distance.toStringAsFixed(1)} km away',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -76,7 +80,7 @@ class PropertyCardHorizontalInfo extends StatelessWidget {
           //====================================================================
           //! FOOTER
           //====================================================================
-          PropertyCardHorizontalFooter(boardingHouse: boardingHouse),
+          PropertyCardHorizontalFooter(data: data),
         ],
       ),
     );

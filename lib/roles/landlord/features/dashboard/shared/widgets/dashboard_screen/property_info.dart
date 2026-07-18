@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
-
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
+import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
 class PropertyInfo extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyInfo({super.key, required this.boardingHouse});
+  const PropertyInfo({super.key, required this.data});
 
   //==========================================================================
-  //! VARIABLES
+  //! PROPERTIES
   //==========================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final LandlordPropertyCardData data;
 
   //==========================================================================
   //! BUILD
@@ -30,19 +29,16 @@ class PropertyInfo extends StatelessWidget {
         horizontal: AppSpacing.md,
         vertical: AppSpacing.md,
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           //==================================================================
-          //! BOARDING HOUSE NAME
+          //! PROPERTY TITLE
           //==================================================================
           Text(
-            boardingHouse.title,
+            data.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-
             style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.w700),
           ),
 
@@ -63,10 +59,9 @@ class PropertyInfo extends StatelessWidget {
 
               Expanded(
                 child: Text(
-                  boardingHouse.distanceText,
+                  '${data.distance.toStringAsFixed(0)} m away',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-
                   style: AppTextStyles.subtitle,
                 ),
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_image.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/widgets/property_room_info.dart';

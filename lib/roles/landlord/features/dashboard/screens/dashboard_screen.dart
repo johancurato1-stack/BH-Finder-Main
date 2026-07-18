@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/data/mock/mock_user.dart';
-import 'package:bh_finder/core/data/mock/mock_boarding_houses.dart';
+import 'package:bh_finder/core/data/mock/user/mock_user.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_header.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_greeting_section.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/boarding_house_carousel.dart';
+import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
+
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_header.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_greeting_section.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/property_carousel.dart';
 import 'package:bh_finder/shared/page_indicator.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/dashboard_screen_recent_inquiries_section.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_recent_inquiries_section.dart';
 
 class DashboardScreen extends StatefulWidget {
   //==========================================================================
@@ -24,6 +26,12 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   //==========================================================================
+  //! REPOSITORIES
+  //==========================================================================
+
+  static final PropertyRepository _propertyRepository = PropertyRepository();
+
+  //==========================================================================
   //! VARIABLES
   //==========================================================================
 
@@ -35,9 +43,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<LandlordPropertyCardData> properties = _propertyRepository
+        .getLandlordPropertyCards();
+
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -55,10 +65,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const SizedBox(height: 20),
 
               //==============================================================
-              //! BOARDING HOUSE CAROUSEL
+              //! PROPERTY CAROUSEL
               //==============================================================
-              BoardingHouseCarousel(
-                boardingHouses: mockBoardingHouses,
+              PropertyCarousel(
+                properties: properties,
 
                 onPageChanged: (page) {
                   setState(() {
@@ -66,14 +76,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   });
                 },
 
-                onPropertyTap: (boardingHouse) {
+                onPropertyTap: (property) {
                   // TODO:
                   // Navigate to Manage Property Screen
                 },
 
                 onAddProperty: () {
                   // TODO:
-                  // Navigate to Add Boarding House Flow
+                  // Navigate to Add Property Flow
                 },
               ),
 
@@ -82,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               PageIndicator(
                 currentPage: _currentPage,
-                pageCount: mockBoardingHouses.length + 1,
+                pageCount: properties.length + 1,
               ),
 
               //==============================================================

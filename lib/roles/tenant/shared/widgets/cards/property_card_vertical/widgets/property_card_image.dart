@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+//============================================================================
+//! PROPERTY CARD IMAGE
+//============================================================================
 
 class PropertyCardImage extends StatelessWidget {
-  final BoardingHouseModel boardingHouse;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
-  const PropertyCardImage({super.key, required this.boardingHouse});
+  const PropertyCardImage({super.key, required this.data});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final PropertyCardData data;
 
   //============================================================================
   //! STATUS COLOR
   //============================================================================
 
   Color _getStatusColor() {
-    switch (boardingHouse.status.toLowerCase()) {
-      case 'occupied':
-        return const Color(0xFFEF5350);
-
-      case 'pending':
-        return const Color(0xFFFFB300);
-
-      case 'available':
-      default:
+    switch (data.status) {
+      case PropertyStatus.available:
         return const Color(0xFF00E676);
+
+      case PropertyStatus.occupied:
+        return const Color(0xFFEF5350);
     }
   }
 
@@ -37,7 +46,7 @@ class PropertyCardImage extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.network(
-            boardingHouse.imageUrl,
+            data.coverImageUrl,
             height: 110,
             width: 120,
             fit: BoxFit.cover,

@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/room_detail_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/image_carousel.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/section_title.dart';
@@ -15,18 +16,22 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_room_deta
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_room_detail_screen/widgets/room_detail_photos_section.dart';
 import 'package:bh_finder/shared/page_indicator.dart';
 
+//============================================================================
+//! ROOM DETAIL SCREEN
+//============================================================================
+
 class RoomDetailScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomDetailScreen({super.key, required this.room});
+  const RoomDetailScreen({super.key, required this.roomId});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final RoomModel room;
+  final String roomId;
 
   @override
   State<RoomDetailScreen> createState() => _RoomDetailScreenState();
@@ -34,8 +39,16 @@ class RoomDetailScreen extends StatefulWidget {
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
   //============================================================================
+  //! DEPENDENCIES
+  //============================================================================
+
+  final RoomRepository _repository = RoomRepository();
+
+  //============================================================================
   //! STATE
   //============================================================================
+
+  late final RoomDetailData _data;
 
   late final PageController _pageController;
 
@@ -53,13 +66,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   void initState() {
     super.initState();
 
+    _data = _repository.getRoomDetail(widget.roomId);
+
     _pageController = PageController();
 
-    _images = [
-      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600',
-    ];
+    _images = _data.imageUrls;
 
     _timer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!_pageController.hasClients) return;
@@ -91,10 +102,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   //============================================================================
 
   @override
-  @override
   Widget build(BuildContext context) {
-    final room = widget.room;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Column(
@@ -135,11 +143,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RoomHeader(room: room),
+                      RoomHeader(data: _data),
 
                       const SizedBox(height: 15),
 
-                      RoomMetaRow(room: room),
+                      RoomMetaRow(data: _data),
 
                       const Divider(
                         height: 32,
@@ -166,7 +174,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       const SizedBox(height: 8),
 
                       Text(
-                        room.description,
+                        _data.description,
                         style: const TextStyle(
                           fontSize: 14,
                           color: AppColors.secondary,

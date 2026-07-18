@@ -1,54 +1,58 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+//============================================================================
+//! PROPERTY AMENITIES
+//============================================================================
 
 class PropertyAmenities extends StatelessWidget {
-  final BoardingHouseModel boardingHouse;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
-  const PropertyAmenities({super.key, required this.boardingHouse});
+  const PropertyAmenities({super.key, required this.data});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final PropertyCardData data;
 
   //============================================================================
   //! AMENITY ICON
   //============================================================================
 
-  /// Returns the appropriate icon for each boarding house amenity.
-  IconData _getAmenityIcon(String amenity) {
-    switch (amenity.toLowerCase()) {
-      case 'wi-fi':
+  /// Returns the appropriate icon for each property amenity.
+  IconData _getAmenityIcon(Amenity amenity) {
+    switch (amenity) {
+      case Amenity.wifi:
         return Icons.wifi;
 
-      case 'aircon':
+      case Amenity.airConditioning:
         return Icons.ac_unit;
 
-      case 'own cr':
-        return Icons.bathroom;
-
-      case 'kitchen':
+      case Amenity.kitchen:
         return Icons.countertops;
 
-      case 'laundry':
+      case Amenity.laundry:
         return Icons.local_laundry_service;
 
-      case 'study area':
+      case Amenity.studyArea:
         return Icons.menu_book;
 
-      case 'desk':
-        return Icons.desk;
-
-      case 'cabinet':
-        return Icons.shelves;
-
-      case 'cctv':
+      case Amenity.cctv:
         return Icons.videocam;
 
-      case 'security':
-        return Icons.security;
-
-      case 'parking':
+      case Amenity.parking:
         return Icons.directions_car;
 
-      default:
-        return Icons.star_border_rounded;
+      case Amenity.waterIncluded:
+        return Icons.water_drop;
+
+      case Amenity.electricityIncluded:
+        return Icons.bolt;
     }
   }
 
@@ -61,7 +65,7 @@ class PropertyAmenities extends StatelessWidget {
     return Wrap(
       spacing: 6,
       runSpacing: 5,
-      children: boardingHouse.amenities.map((amenity) {
+      children: data.amenities.map((amenity) {
         return Container(
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
@@ -69,8 +73,6 @@ class PropertyAmenities extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: Border.all(color: Colors.grey.shade300, width: 0.5),
           ),
-
-          // Amenity icon.
           child: Icon(
             _getAmenityIcon(amenity),
             size: 11,

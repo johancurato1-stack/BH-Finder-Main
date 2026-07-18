@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/dashboard/property_stat.dart';
+
+//============================================================================
+//! PROPERTY STATS ROW
+//============================================================================
 
 class PropertyStatsRow extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyStatsRow({super.key, required this.boardingHouse});
+  const PropertyStatsRow({super.key, required this.data});
 
   //==========================================================================
-  //! VARIABLES
+  //! PROPERTIES
   //==========================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final LandlordPropertyCardData data;
 
   //==========================================================================
   //! BUILD
@@ -25,25 +29,25 @@ class PropertyStatsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        PropertyStat(
-          value: boardingHouse.totalRooms.toString(),
-          label: "Rooms",
-        ),
+        //====================================================================
+        //! TOTAL ROOMS
+        //====================================================================
+        PropertyStat(value: data.totalRooms.toString(), label: 'Rooms'),
 
-        PropertyStat(
-          value: boardingHouse.availableRooms.toString(),
-          label: "Available",
-        ),
+        //====================================================================
+        //! TOTAL VIEWS
+        //====================================================================
+        PropertyStat(value: data.totalViews.toString(), label: 'Views'),
 
-        PropertyStat(
-          value: boardingHouse.reservedRooms.toString(),
-          label: "Reserved",
-        ),
+        //====================================================================
+        //! TOTAL FAVORITES
+        //====================================================================
+        PropertyStat(value: data.totalFavorites.toString(), label: 'Favorites'),
 
-        PropertyStat(
-          value: boardingHouse.occupiedRooms.toString(),
-          label: "Occupied",
-        ),
+        //====================================================================
+        //! TOTAL INQUIRIES
+        //====================================================================
+        PropertyStat(value: data.totalInquiries.toString(), label: 'Inquiries'),
       ],
     );
   }

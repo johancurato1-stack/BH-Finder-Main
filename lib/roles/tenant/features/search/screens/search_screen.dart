@@ -1,25 +1,46 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+import 'package:bh_finder/core/repositories/property_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_header.dart';
 import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_filters_body.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
-
 import 'package:bh_finder/roles/tenant/features/search/screens/search_results_screen.dart';
 
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+
+//============================================================================
+//! SEARCH SCREEN
+//============================================================================
+
 class SearchScreen extends StatefulWidget {
-  final VoidCallback onBackPressed;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreen({super.key, required this.onBackPressed});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final VoidCallback onBackPressed;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  //============================================================================
+  //! DEPENDENCIES
+  //============================================================================
+
+  final PropertyRepository _propertyRepository = PropertyRepository();
+
   //============================================================================
   //! CONTROLLERS
   //============================================================================
@@ -66,12 +87,15 @@ class _SearchScreenState extends State<SearchScreen> {
   //============================================================================
 
   void _showResults() {
+    final List<PropertyCardData> properties = _propertyRepository
+        .getPropertyCards();
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SearchResultsScreen(
           filter: _filter.copyWith(query: _searchController.text),
-          boardingHouses: const [],
+          properties: properties,
         ),
       ),
     );
@@ -85,18 +109,17 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: Column(
           children: [
-            //============================================================================
+            //==========================================================================
             //! HEADER
-            //============================================================================
+            //==========================================================================
             SearchScreenHeader(onBackPressed: widget.onBackPressed),
 
-            //============================================================================
+            //==========================================================================
             //! FILTERS
-            //============================================================================
+            //==========================================================================
             Expanded(
               child: SearchScreenFiltersBody(
                 controller: _searchController,
@@ -106,9 +129,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
 
-            //============================================================================
+            //==========================================================================
             //! SHOW RESULTS BUTTON
-            //============================================================================
+            //==========================================================================
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 46),
               child: PrimaryButton(

@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/widgets/property_card_amenities.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/widgets/property_card_footer.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/widgets/property_card_image.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/widgets/property_card_info.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
-class PropertyCardVertical extends StatelessWidget {
-  final BoardingHouseModel boardingHouse;
+//============================================================================
+//! PROPERTY CARD VERTICAL
+//============================================================================
 
-  const PropertyCardVertical({super.key, required this.boardingHouse});
+class PropertyCardVertical extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
+  const PropertyCardVertical({super.key, required this.property});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final PropertyCardData property;
 
   //============================================================================
   //! BUILD
@@ -20,16 +34,15 @@ class PropertyCardVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Navigate to the boarding house details screen.
       onTap: () {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                PropertyDetailScreen(boardingHouse: boardingHouse),
+            pageBuilder: (_, __, ___) =>
+                PropertyDetailScreen(propertyId: property.id),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(0.0, 1.0);
+                  const begin = Offset(0, 1);
                   const end = Offset.zero;
                   const curve = Curves.easeOut;
 
@@ -63,39 +76,37 @@ class PropertyCardVertical extends StatelessWidget {
             ),
           ],
         ),
-
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //============================================================================
-            //! IMAGE SECTION
-            //============================================================================
-            PropertyCardImage(boardingHouse: boardingHouse),
+            //==========================================================================
+            //! IMAGE
+            //==========================================================================
+            PropertyCardImage(data: property),
 
             const SizedBox(width: 12),
 
-            //============================================================================
-            //! CARD CONTENT
-            //============================================================================
+            //==========================================================================
+            //! CONTENT
+            //==========================================================================
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PropertyCardInfo(boardingHouse: boardingHouse),
+                  PropertyCardInfo(
+                    data: property,
+                    onFavoritePressed: () {
+                      // TODO: Toggle favorite
+                    },
+                  ),
 
                   const SizedBox(height: 6),
 
-                  //============================================================================
-                  //! AMENITIES
-                  //============================================================================
-                  PropertyAmenities(boardingHouse: boardingHouse),
+                  PropertyAmenities(data: property),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 18),
 
-                  //============================================================================
-                  //! FOOTER
-                  //============================================================================
-                  PropertyCardFooter(boardingHouse: boardingHouse),
+                  PropertyCardFooter(data: property),
                 ],
               ),
             ),

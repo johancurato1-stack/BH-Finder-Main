@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
-import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+//============================================================================
+//! PROPERTY CARD INFO
+//============================================================================
 
 class PropertyCardInfo extends StatelessWidget {
-  final BoardingHouseModel boardingHouse;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
-  const PropertyCardInfo({super.key, required this.boardingHouse});
+  const PropertyCardInfo({
+    super.key,
+    required this.data,
+    required this.onFavoritePressed,
+  });
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final PropertyCardData data;
+
+  final VoidCallback onFavoritePressed;
 
   //============================================================================
   //! BUILD
@@ -19,13 +35,15 @@ class PropertyCardInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Boarding house title and save button.
+        //==========================================================================
+        //! TITLE & FAVORITE
+        //==========================================================================
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Text(
-                boardingHouse.title,
+                data.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -37,14 +55,11 @@ class PropertyCardInfo extends StatelessWidget {
               ),
             ),
 
-            // Toggle saved state using Provider.
             GestureDetector(
-              onTap: () => context.read<BoardingHouseProvider>().toggleSaved(
-                boardingHouse,
-              ),
+              onTap: onFavoritePressed,
               child: Icon(
-                boardingHouse.isSaved ? Icons.favorite : Icons.favorite_border,
-                color: boardingHouse.isSaved ? Colors.red : AppColors.tertiary,
+                data.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: data.isFavorite ? Colors.red : AppColors.tertiary,
                 size: 18,
               ),
             ),
@@ -53,9 +68,11 @@ class PropertyCardInfo extends StatelessWidget {
 
         const SizedBox(height: 2),
 
-        // Monthly rental price.
+        //==========================================================================
+        //! PRICE
+        //==========================================================================
         Text(
-          '₱ ${boardingHouse.price} / month',
+          '₱ ${data.minimumPrice.toStringAsFixed(0)} / month',
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -66,9 +83,11 @@ class PropertyCardInfo extends StatelessWidget {
 
         const SizedBox(height: 4),
 
-        // Distance from the selected school/location.
+        //==========================================================================
+        //! DISTANCE
+        //==========================================================================
         Text(
-          boardingHouse.distanceText,
+          '${data.distance.toStringAsFixed(1)} km away',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontSize: 10, color: AppColors.tertiary),

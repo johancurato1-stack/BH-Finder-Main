@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+//============================================================================
+//! PROPERTY CARD HORIZONTAL FOOTER
+//============================================================================
 
 class PropertyCardHorizontalFooter extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyCardHorizontalFooter({super.key, required this.boardingHouse});
+  const PropertyCardHorizontalFooter({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyCardData data;
+
+  //============================================================================
+  //! GENDER LABEL
+  //============================================================================
+
+  String _getGenderLabel() {
+    switch (data.genderPreference) {
+      case GenderPreference.male:
+        return 'Male';
+
+      case GenderPreference.female:
+        return 'Female';
+
+      case GenderPreference.mixed:
+        return 'Mixed';
+    }
+  }
 
   //============================================================================
   //! BUILD
@@ -39,7 +61,7 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
             const SizedBox(width: 4),
 
             Text(
-              boardingHouse.genderRules,
+              _getGenderLabel(),
               style: const TextStyle(
                 fontSize: 10,
                 color: AppColors.secondary,
@@ -50,7 +72,7 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
         ),
 
         //======================================================================
-        //! HEARTS
+        //! FAVORITES
         //======================================================================
         Row(
           children: [
@@ -59,7 +81,7 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
             const SizedBox(width: 4),
 
             Text(
-              boardingHouse.availabilityCount,
+              data.favoriteCount.toString(),
               style: const TextStyle(
                 fontSize: 10,
                 color: AppColors.secondary,

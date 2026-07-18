@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+
+//============================================================================
+//! PROPERTY AMENITIES GRID
+//============================================================================
 
 class PropertyAmenitiesGrid extends StatelessWidget {
   //============================================================================
@@ -13,49 +18,77 @@ class PropertyAmenitiesGrid extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final List<String> amenities;
+  final List<Amenity> amenities;
 
   //============================================================================
-  //! METHODS
+  //! AMENITY ICON
   //============================================================================
 
-  IconData _getAmenityIcon(String title) {
-    switch (title.toLowerCase()) {
-      case 'wi-fi':
+  /// Returns the appropriate icon for each amenity.
+  IconData _getAmenityIcon(Amenity amenity) {
+    switch (amenity) {
+      case Amenity.wifi:
         return Icons.wifi;
 
-      case 'aircon':
+      case Amenity.airConditioning:
         return Icons.ac_unit;
 
-      case 'own cr':
-        return Icons.bathroom;
-
-      case 'kitchen':
+      case Amenity.kitchen:
         return Icons.countertops;
 
-      case 'laundry':
+      case Amenity.laundry:
         return Icons.local_laundry_service;
 
-      case 'study area':
+      case Amenity.studyArea:
         return Icons.menu_book;
 
-      case 'desk':
-        return Icons.desk;
-
-      case 'cabinet':
-        return Icons.shelves;
-
-      case 'cctv':
+      case Amenity.cctv:
         return Icons.videocam;
 
-      case 'security':
-        return Icons.security;
-
-      case 'parking':
+      case Amenity.parking:
         return Icons.directions_car;
 
-      default:
-        return Icons.star;
+      case Amenity.waterIncluded:
+        return Icons.water_drop;
+
+      case Amenity.electricityIncluded:
+        return Icons.bolt;
+    }
+  }
+
+  //============================================================================
+  //! AMENITY LABEL
+  //============================================================================
+
+  /// Returns a readable amenity label.
+  String _getAmenityLabel(Amenity amenity) {
+    switch (amenity) {
+      case Amenity.wifi:
+        return 'Wi-Fi';
+
+      case Amenity.airConditioning:
+        return 'Aircon';
+
+      case Amenity.kitchen:
+        return 'Kitchen';
+
+      case Amenity.laundry:
+        return 'Laundry';
+
+      case Amenity.studyArea:
+        return 'Study Area';
+
+      case Amenity.cctv:
+        return 'CCTV';
+
+      case Amenity.parking:
+        return 'Parking';
+
+      case Amenity.waterIncluded:
+        return 'Water';
+
+      case Amenity.electricityIncluded:
+        return 'Electricity';
     }
   }
 
@@ -69,7 +102,10 @@ class PropertyAmenitiesGrid extends StatelessWidget {
       spacing: 10,
       runSpacing: 10,
       children: amenities.map((amenity) {
-        return _AmenityBox(title: amenity, icon: _getAmenityIcon(amenity));
+        return _AmenityBox(
+          title: _getAmenityLabel(amenity),
+          icon: _getAmenityIcon(amenity),
+        );
       }).toList(),
     );
   }
@@ -83,6 +119,7 @@ class _AmenityBox extends StatelessWidget {
   const _AmenityBox({required this.title, required this.icon});
 
   final String title;
+
   final IconData icon;
 
   @override
@@ -109,8 +146,8 @@ class _AmenityBox extends StatelessWidget {
 
           Text(
             title,
-            style: const TextStyle(fontSize: 10, color: AppColors.tertiary),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 10, color: AppColors.tertiary),
           ),
         ],
       ),

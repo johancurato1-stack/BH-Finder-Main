@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
-import 'package:bh_finder/core/providers/boarding_house_provider.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+
+//============================================================================
+//! PROPERTY FLOATING ACTIONS
+//============================================================================
 
 class PropertyFloatingActions extends StatelessWidget {
   //============================================================================
@@ -12,16 +13,18 @@ class PropertyFloatingActions extends StatelessWidget {
 
   const PropertyFloatingActions({
     super.key,
-    required this.boardingHouse,
     required this.onBack,
+    required this.onFavorite,
+    required this.isFavorite,
   });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
   final VoidCallback onBack;
+  final VoidCallback onFavorite;
+  final bool isFavorite;
 
   //============================================================================
   //! BUILD
@@ -42,29 +45,21 @@ class PropertyFloatingActions extends StatelessWidget {
             onTap: onBack,
           ),
 
-          Consumer<BoardingHouseProvider>(
-            builder: (context, provider, child) {
-              return Row(
-                children: [
-                  _FloatingButton(
-                    icon: boardingHouse.isSaved
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    iconColor: boardingHouse.isSaved
-                        ? Colors.red
-                        : AppColors.secondary,
-                    onTap: () => provider.toggleSaved(boardingHouse),
-                  ),
+          const Spacer(),
 
-                  const SizedBox(width: 12),
+          _FloatingButton(
+            icon: isFavorite ? Icons.favorite : Icons.favorite_border,
+            iconColor: isFavorite ? Colors.red : AppColors.secondary,
+            onTap: onFavorite,
+          ),
 
-                  _FloatingButton(
-                    icon: Icons.share,
-                    iconColor: AppColors.secondary,
-                    onTap: () {},
-                  ),
-                ],
-              );
+          const SizedBox(width: 12),
+
+          _FloatingButton(
+            icon: Icons.share,
+            iconColor: AppColors.secondary,
+            onTap: () {
+              // TODO: Share property.
             },
           ),
         ],
@@ -85,7 +80,9 @@ class _FloatingButton extends StatelessWidget {
   });
 
   final IconData icon;
+
   final VoidCallback onTap;
+
   final Color? iconColor;
 
   @override

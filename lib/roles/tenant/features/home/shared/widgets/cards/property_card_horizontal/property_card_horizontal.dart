@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_image.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_info.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
+//============================================================================
+//! PROPERTY CARD HORIZONTAL
+//============================================================================
+
 class PropertyCardHorizontal extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyCardHorizontal({super.key, required this.boardingHouse});
+  const PropertyCardHorizontal({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyCardData data;
 
   //============================================================================
   //! BUILD
@@ -35,8 +39,8 @@ class PropertyCardHorizontal extends StatelessWidget {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                PropertyDetailScreen(boardingHouse: boardingHouse),
+            pageBuilder: (_, __, ___) =>
+                PropertyDetailScreen(propertyId: data.id),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
@@ -71,19 +75,18 @@ class PropertyCardHorizontal extends StatelessWidget {
             ),
           ],
         ),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //==============================================================
             //! IMAGE
             //==============================================================
-            PropertyCardHorizontalImage(boardingHouse: boardingHouse),
+            PropertyCardHorizontalImage(data: data),
 
             //==============================================================
             //! INFORMATION
             //==============================================================
-            PropertyCardHorizontalInfo(boardingHouse: boardingHouse),
+            PropertyCardHorizontalInfo(data: data),
           ],
         ),
       ),

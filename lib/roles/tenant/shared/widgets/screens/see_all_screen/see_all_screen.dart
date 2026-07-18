@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/widgets/see_all_property_list_view.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/widgets/see_all_header.dart';
+
+//============================================================================
+//! SEE ALL SCREEN
+//============================================================================
 
 class SeeAllScreen extends StatelessWidget {
   //============================================================================
@@ -15,7 +19,7 @@ class SeeAllScreen extends StatelessWidget {
   const SeeAllScreen({
     super.key,
     required this.title,
-    required this.boardingHouses,
+    required this.properties,
   });
 
   //============================================================================
@@ -23,7 +27,8 @@ class SeeAllScreen extends StatelessWidget {
   //============================================================================
 
   final String title;
-  final List<BoardingHouseModel> boardingHouses;
+
+  final List<PropertyCardData> properties;
 
   //============================================================================
   //! BUILD
@@ -48,7 +53,7 @@ class SeeAllScreen extends StatelessWidget {
             //==================================================================
             //! PROPERTY LIST
             //==================================================================
-            Expanded(child: PropertyListView(boardingHouses: boardingHouses)),
+            Expanded(child: PropertyListView(properties: properties)),
           ],
         ),
       ),

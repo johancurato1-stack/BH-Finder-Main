@@ -1,36 +1,53 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_detail_data.dart';
+
+//============================================================================
+//! PROPERTY HEADER
+//============================================================================
 
 class PropertyHeader extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyHeader({super.key, required this.boardingHouse});
+  const PropertyHeader({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyDetailData data;
 
   //============================================================================
-  //! METHODS
+  //! STATUS COLOR
   //============================================================================
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'occupied':
-        return const Color(0xFFEF5350);
-
-      case 'pending':
-        return const Color(0xFFFFB300);
-
-      case 'available':
-      default:
+  /// Returns the appropriate color for a property status.
+  Color _getStatusColor(PropertyStatus status) {
+    switch (status) {
+      case PropertyStatus.available:
         return const Color(0xFF00E676);
+
+      case PropertyStatus.occupied:
+        return const Color(0xFFEF5350);
+    }
+  }
+
+  //============================================================================
+  //! STATUS LABEL
+  //============================================================================
+
+  /// Returns a readable property status.
+  String _getStatusLabel(PropertyStatus status) {
+    switch (status) {
+      case PropertyStatus.available:
+        return 'Available';
+
+      case PropertyStatus.occupied:
+        return 'Occupied';
     }
   }
 
@@ -43,13 +60,13 @@ class PropertyHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //==========================================================================
+        //======================================================================
         //! STATUS
-        //==========================================================================
+        //======================================================================
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: _getStatusColor(boardingHouse.status),
+            color: _getStatusColor(data.status),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -60,7 +77,7 @@ class PropertyHeader extends StatelessWidget {
               const SizedBox(width: 6),
 
               Text(
-                boardingHouse.status,
+                _getStatusLabel(data.status),
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 12,
@@ -74,11 +91,11 @@ class PropertyHeader extends StatelessWidget {
 
         const SizedBox(height: 10),
 
-        //==========================================================================
+        //======================================================================
         //! TITLE
-        //==========================================================================
+        //======================================================================
         Text(
-          boardingHouse.title,
+          data.title,
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w700,
@@ -89,11 +106,11 @@ class PropertyHeader extends StatelessWidget {
 
         const SizedBox(height: 5),
 
-        //==========================================================================
+        //======================================================================
         //! PRICE
-        //==========================================================================
+        //======================================================================
         Text(
-          '₱ ${boardingHouse.price} / month',
+          '₱ ${data.minimumPrice} / month',
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -104,9 +121,9 @@ class PropertyHeader extends StatelessWidget {
 
         const SizedBox(height: 6),
 
-        //==========================================================================
+        //======================================================================
         //! DISTANCE
-        //==========================================================================
+        //======================================================================
         Row(
           children: [
             const Icon(Icons.location_on, size: 16, color: AppColors.tertiary),
@@ -115,7 +132,7 @@ class PropertyHeader extends StatelessWidget {
 
             Expanded(
               child: Text(
-                boardingHouse.distanceText,
+                '${data.distance.toStringAsFixed(1)} km away',
                 style: const TextStyle(fontSize: 13, color: AppColors.tertiary),
               ),
             ),

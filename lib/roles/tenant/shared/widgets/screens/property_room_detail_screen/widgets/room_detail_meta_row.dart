@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/room_detail_data.dart';
+
+//============================================================================
+//! ROOM META ROW
+//============================================================================
 
 class RoomMetaRow extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomMetaRow({super.key, required this.room});
+  const RoomMetaRow({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final RoomModel room;
+  final RoomDetailData data;
+
+  //============================================================================
+  //! GENDER LABEL
+  //============================================================================
+
+  String _getGenderLabel(GenderPreference gender) {
+    switch (gender) {
+      case GenderPreference.male:
+        return 'Male';
+
+      case GenderPreference.female:
+        return 'Female';
+
+      case GenderPreference.mixed:
+        return 'Mixed';
+    }
+  }
 
   //============================================================================
   //! BUILD
@@ -24,11 +46,17 @@ class RoomMetaRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _MetaChip(icon: Icons.person_outline, label: room.genderRules),
+        _MetaChip(
+          icon: Icons.person_outline,
+          label: _getGenderLabel(data.genderPreference),
+        ),
 
         const SizedBox(width: 8),
 
-        _MetaChip(icon: Icons.group_outlined, label: room.capacity),
+        _MetaChip(
+          icon: Icons.group_outlined,
+          label: '${data.capacity} Person${data.capacity > 1 ? 's' : ''}',
+        ),
       ],
     );
   }
@@ -42,6 +70,7 @@ class _MetaChip extends StatelessWidget {
   const _MetaChip({required this.icon, required this.label});
 
   final IconData icon;
+
   final String label;
 
   @override
@@ -49,7 +78,7 @@ class _MetaChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -68,7 +97,12 @@ class _MetaChip extends StatelessWidget {
 
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.tertiary),
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Roboto',
+              color: AppColors.tertiary,
+            ),
           ),
         ],
       ),

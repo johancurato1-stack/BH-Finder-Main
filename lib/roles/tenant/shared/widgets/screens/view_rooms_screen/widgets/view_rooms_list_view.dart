@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_room_card/property_room_card.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_room_detail_screen/room_detail_screen.dart';
@@ -39,7 +39,9 @@ class RoomListView extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => RoomDetailScreen(room: room)),
+              MaterialPageRoute(
+                builder: (_) => RoomDetailScreen(roomId: room.id),
+              ),
             );
           },
         );

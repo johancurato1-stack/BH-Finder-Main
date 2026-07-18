@@ -1,36 +1,51 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/boarding_house_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/view_models/property_card_data.dart';
+
+//============================================================================
+//! PROPERTY CARD HORIZONTAL IMAGE
+//============================================================================
 
 class PropertyCardHorizontalImage extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyCardHorizontalImage({super.key, required this.boardingHouse});
+  const PropertyCardHorizontalImage({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final BoardingHouseModel boardingHouse;
+  final PropertyCardData data;
 
   //============================================================================
   //! STATUS COLOR
   //============================================================================
 
   Color _getStatusColor() {
-    switch (boardingHouse.status.toLowerCase()) {
-      case 'occupied':
+    switch (data.status) {
+      case PropertyStatus.occupied:
         return const Color(0xFFEF5350);
 
-      case 'pending':
-        return const Color(0xFFFFB300);
-
-      case 'available':
-      default:
+      case PropertyStatus.available:
         return const Color(0xFF00E676);
+    }
+  }
+
+  //============================================================================
+  //! STATUS LABEL
+  //============================================================================
+
+  String _getStatusLabel() {
+    switch (data.status) {
+      case PropertyStatus.available:
+        return 'Available';
+
+      case PropertyStatus.occupied:
+        return 'Occupied';
     }
   }
 
@@ -48,7 +63,7 @@ class PropertyCardHorizontalImage extends StatelessWidget {
         ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           child: Image.network(
-            boardingHouse.imageUrl,
+            data.coverImageUrl,
             height: 140,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -74,7 +89,7 @@ class PropertyCardHorizontalImage extends StatelessWidget {
                 const SizedBox(width: 4),
 
                 Text(
-                  boardingHouse.status,
+                  _getStatusLabel(),
                   style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 10,
@@ -100,7 +115,7 @@ class PropertyCardHorizontalImage extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              '₱ ${boardingHouse.price}/mo',
+              '₱ ${data.minimumPrice.toStringAsFixed(0)}/mo',
               style: const TextStyle(
                 color: AppColors.white,
                 fontSize: 13,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet_mini/filter_bottom_sheet_mini.dart';
@@ -14,13 +14,17 @@ class ViewRoomsScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const ViewRoomsScreen({super.key, required this.bhName, required this.rooms});
+  const ViewRoomsScreen({
+    super.key,
+    required this.PropertyName,
+    required this.rooms,
+  });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final String bhName;
+  final String PropertyName;
   final List<RoomModel> rooms;
 
   @override
@@ -43,7 +47,7 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
             //! HEADER
             //==================================================================
             ViewRoomsHeader(
-              title: widget.bhName,
+              title: widget.PropertyName,
               onBack: () => Navigator.pop(context),
               onFilter: () => FilterBottomSheetMini.show(context),
             ),
