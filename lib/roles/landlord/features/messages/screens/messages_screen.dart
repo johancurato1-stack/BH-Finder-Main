@@ -4,15 +4,15 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/roles/tenant/features/messages/models/chat_model.dart';
+import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
 import 'package:bh_finder/roles/landlord/features/messages/repositories/chat_repository.dart';
 
 import 'package:bh_finder/roles/landlord/features/messages/screens/chat_room_screen.dart';
 import 'package:bh_finder/roles/landlord/features/messages/screens/new_message_screen.dart';
 import 'package:bh_finder/roles/landlord/features/messages/screens/notification_chat_screen.dart';
 
-import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/chat/chat_tile.dart';
-import 'package:bh_finder/roles/tenant/features/messages/shared/widgets/notification/notification_tile.dart';
+import 'package:bh_finder/shared/widgets/messages/chat/chat_tile.dart';
+import 'package:bh_finder/shared/widgets/messages/notification/notification_tile.dart';
 
 class MessagesScreen extends StatefulWidget {
   //============================================================================

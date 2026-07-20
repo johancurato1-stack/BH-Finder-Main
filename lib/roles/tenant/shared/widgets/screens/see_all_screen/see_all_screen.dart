@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/widgets/see_all_property_list_view.dart';
@@ -28,7 +28,7 @@ class SeeAllScreen extends StatelessWidget {
 
   final String title;
 
-  final List<PropertyCardData> properties;
+  final List<TenantPropertyCardData> properties;
 
   //============================================================================
   //! BUILD

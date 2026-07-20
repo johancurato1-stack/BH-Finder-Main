@@ -3,7 +3,7 @@ import 'package:bh_finder/core/models/property_model.dart';
 import 'package:bh_finder/core/repositories/landlord_repository.dart';
 import 'package:bh_finder/core/repositories/room_repository.dart';
 import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 import 'package:bh_finder/core/view_models/property_detail_data.dart';
 
 //============================================================================
@@ -48,9 +48,9 @@ class PropertyRepository {
   //! GET PROPERTY CARDS
   //============================================================================
 
-  List<PropertyCardData> getPropertyCards() {
+  List<TenantPropertyCardData> getPropertyCards() {
     return mockProperties.map((property) {
-      return PropertyCardData(
+      return TenantPropertyCardData(
         id: property.id,
         title: property.title,
         coverImageUrl: property.imageUrls.first,

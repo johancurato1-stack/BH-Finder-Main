@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/shared/widgets/menu_list_tile.dart';
+import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 
 class SettingsScreen extends StatelessWidget {
   //============================================================================

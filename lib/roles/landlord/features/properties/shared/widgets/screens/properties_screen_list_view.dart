@@ -5,6 +5,7 @@ import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/add_property_card.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 
 class PropertiesScreenListView extends StatelessWidget {
   //==========================================================================
@@ -39,8 +40,29 @@ class PropertiesScreenListView extends StatelessWidget {
         if (index == properties.length) {
           return AddPropertyCard(
             onTap: () {
-              // TODO:
-              // Navigate to Add Property Screen.
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, animation, __) => const AddPropertyScreen(),
+                  transitionsBuilder: (_, animation, __, child) {
+                    final offsetAnimation =
+                        Tween<Offset>(
+                          begin: const Offset(0, 1),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOut,
+                          ),
+                        );
+
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
           );
         }
@@ -51,13 +73,7 @@ class PropertiesScreenListView extends StatelessWidget {
 
         final property = properties[index];
 
-        return PropertyCardVertical(
-          data: property,
-          onTap: () {
-            // TODO:
-            // Navigate to Property Detail Screen.
-          },
-        );
+        return PropertyCardVertical(data: property);
       },
     );
   }

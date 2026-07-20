@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/empty_saved_state.dart';
 
@@ -31,7 +31,7 @@ class FavoritesScreenList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<PropertyCardData> savedProperties = _propertyRepository
+    final List<TenantPropertyCardData> savedProperties = _propertyRepository
         .getPropertyCards();
 
     //==========================================================================

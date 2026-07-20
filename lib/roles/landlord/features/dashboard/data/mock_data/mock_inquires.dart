@@ -1,4 +1,4 @@
-import 'package:bh_finder/roles/landlord/features/dashboard/data/models/inquiry_model.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/models/inquiry_model.dart';
 
 final List<InquiryModel> mockInquiries = [
   InquiryModel(

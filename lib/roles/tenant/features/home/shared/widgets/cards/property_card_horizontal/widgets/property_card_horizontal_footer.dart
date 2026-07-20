@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 //============================================================================
 //! PROPERTY CARD HORIZONTAL FOOTER
@@ -19,7 +19,7 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final PropertyCardData data;
+  final TenantPropertyCardData data;
 
   //============================================================================
   //! GENDER LABEL

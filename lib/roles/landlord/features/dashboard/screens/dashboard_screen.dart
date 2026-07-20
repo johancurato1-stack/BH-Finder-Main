@@ -9,9 +9,11 @@ import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_header.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_greeting_section.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/property_carousel.dart';
-import 'package:bh_finder/shared/page_indicator.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_carousel.dart';
+import 'package:bh_finder/shared/widgets/page_indicator.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_recent_inquiries_section.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   //==========================================================================
@@ -67,7 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               //! PROPERTY CAROUSEL
               //==============================================================
-              PropertyCarousel(
+              PropertyCardCarousel(
                 properties: properties,
 
                 onPageChanged: (page) {
@@ -77,13 +79,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
 
                 onPropertyTap: (property) {
-                  // TODO:
-                  // Navigate to Manage Property Screen
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) =>
+                          PropertyDetailScreen(propertyId: property.id),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(0, 1);
+                            const end = Offset.zero;
+                            const curve = Curves.easeOut;
+
+                            final offsetAnimation = animation.drive(
+                              Tween(
+                                begin: begin,
+                                end: end,
+                              ).chain(CurveTween(curve: curve)),
+                            );
+
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                    ),
+                  );
                 },
 
                 onAddProperty: () {
-                  // TODO:
-                  // Navigate to Add Property Flow
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const AddPropertyScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(0, 1);
+                            const end = Offset.zero;
+                            const curve = Curves.easeOut;
+
+                            final offsetAnimation = animation.drive(
+                              Tween(
+                                begin: begin,
+                                end: end,
+                              ).chain(CurveTween(curve: curve)),
+                            );
+
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                    ),
+                  );
                 },
               ),
 

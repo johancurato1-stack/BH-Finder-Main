@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
@@ -20,7 +20,7 @@ class PropertyListView extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final List<PropertyCardData> properties;
+  final List<TenantPropertyCardData> properties;
 
   //============================================================================
   //! BUILD

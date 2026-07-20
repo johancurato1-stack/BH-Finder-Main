@@ -9,7 +9,7 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
-import 'package:bh_finder/shared/widgets/menu_list_tile.dart';
+import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
 
 class ProfileScreen extends StatelessWidget {

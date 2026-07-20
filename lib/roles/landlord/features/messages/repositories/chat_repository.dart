@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:bh_finder/roles/landlord/features/messages/data/mock_chat.dart';
-import 'package:bh_finder/roles/landlord/features/messages/data/mock_messages.dart';
-import 'package:bh_finder/roles/tenant/features/messages/models/chat_model.dart';
-import 'package:bh_finder/roles/tenant/features/messages/models/message_model.dart';
+import 'package:bh_finder/shared/widgets/messages/data/mock_chat.dart';
+import 'package:bh_finder/shared/widgets/messages/data/mock_messages.dart';
+import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
+import 'package:bh_finder/shared/widgets/messages/models/message_model.dart';
 
 class ChatRepository {
   //============================================================================

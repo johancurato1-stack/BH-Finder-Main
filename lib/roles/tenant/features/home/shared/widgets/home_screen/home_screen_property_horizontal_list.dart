@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/property_card_horizontal.dart';
 
@@ -19,7 +19,7 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final List<PropertyCardData> properties;
+  final List<TenantPropertyCardData> properties;
 
   //============================================================================
   //! BUILD

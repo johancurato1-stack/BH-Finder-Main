@@ -12,12 +12,12 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_owner_card.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/image_carousel.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/image_carousel.dart';
+import 'package:bh_finder/shared/widgets/section_title.dart';
 
-import 'package:bh_finder/shared/page_indicator.dart';
+import 'package:bh_finder/shared/widgets/page_indicator.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/view_rooms_screen/view_rooms_screen.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/view_rooms_screen.dart';
 
 //============================================================================
 //! PROPERTY DETAIL SCREEN
@@ -105,7 +105,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   }
 
   /// TODO:
-  /// Refactor after migrating the Room feature.
   void _viewRooms() {
     Navigator.push(
       context,

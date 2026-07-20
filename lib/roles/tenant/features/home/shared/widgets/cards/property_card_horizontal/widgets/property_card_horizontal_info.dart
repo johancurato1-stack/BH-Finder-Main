@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_footer.dart';
 
@@ -20,7 +20,7 @@ class PropertyCardHorizontalInfo extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final PropertyCardData data;
+  final TenantPropertyCardData data;
 
   //============================================================================
   //! BUILD

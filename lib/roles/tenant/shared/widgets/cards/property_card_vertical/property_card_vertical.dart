@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -25,7 +25,7 @@ class PropertyCardVertical extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final PropertyCardData property;
+  final TenantPropertyCardData property;
 
   //============================================================================
   //! BUILD

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_card_data.dart';
+import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 
@@ -31,7 +31,7 @@ class SearchResultsScreen extends StatelessWidget {
 
   final SearchFilterModel filter;
 
-  final List<PropertyCardData> properties;
+  final List<TenantPropertyCardData> properties;
 
   //============================================================================
   //! BUILD
