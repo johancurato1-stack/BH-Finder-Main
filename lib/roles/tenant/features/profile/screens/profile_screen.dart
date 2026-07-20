@@ -11,6 +11,7 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   //============================================================================
@@ -223,11 +224,14 @@ class ProfileScreen extends StatelessWidget {
                       title: 'Become A Landlord',
 
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const LandlordNavigationScreen(),
+                            builder: (_) => const SplashScreen(
+                              destination: LandlordNavigationScreen(),
+                            ),
                           ),
+                          (route) => false,
                         );
                       },
                     ),

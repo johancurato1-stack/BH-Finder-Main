@@ -11,6 +11,7 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   //============================================================================
@@ -210,11 +211,14 @@ class ProfileScreen extends StatelessWidget {
                       title: 'Become A Tenant',
 
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const TenantNavigationScreen(),
+                            builder: (_) => const SplashScreen(
+                              destination: TenantNavigationScreen(),
+                            ),
                           ),
+                          (route) => false,
                         );
                       },
                     ),

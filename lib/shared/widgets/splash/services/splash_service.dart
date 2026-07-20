@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
-
 class SplashService {
   const SplashService();
 
@@ -11,15 +9,20 @@ class SplashService {
   //! INITIALIZE APP
   //============================================================================
 
-  Future<void> initialize(BuildContext context) async {
+  Future<void> initialize(
+    BuildContext context, {
+    required Widget destination,
+    Duration duration = const Duration(seconds: 3),
+  }) async {
     // Simulate app initialization
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(duration);
 
     if (!context.mounted) return;
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => destination),
+      (route) => false,
     );
   }
 }
