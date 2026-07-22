@@ -8,12 +8,12 @@ import 'package:bh_finder/core/view_models/property_detail_data.dart';
 //! PROPERTY HEADER
 //============================================================================
 
-class PropertyHeader extends StatelessWidget {
+class PropertyDetailHeader extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyHeader({super.key, required this.data});
+  const PropertyDetailHeader({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES

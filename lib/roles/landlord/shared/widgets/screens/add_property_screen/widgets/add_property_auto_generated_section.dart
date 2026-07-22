@@ -5,7 +5,7 @@ import 'package:bh_finder/core/theme/app_radius.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 //============================================================================
 //! ADD PROPERTY AUTO GENERATED SECTION

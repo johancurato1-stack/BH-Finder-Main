@@ -79,7 +79,13 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         },
       ),
 
-      const ProfileScreen(),
+      ProfileScreen(
+        onNavigateToTab: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     ];
 
     return Scaffold(

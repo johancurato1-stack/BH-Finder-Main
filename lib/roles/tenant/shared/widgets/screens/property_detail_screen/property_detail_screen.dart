@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/repositories/property_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
+
 import 'package:bh_finder/core/view_models/property_detail_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
@@ -12,12 +14,11 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_owner_card.dart';
-import 'package:bh_finder/shared/widgets/image_carousel.dart';
-import 'package:bh_finder/shared/widgets/section_title.dart';
-
-import 'package:bh_finder/shared/widgets/page_indicator.dart';
-
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/view_rooms_screen.dart';
+
+import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
 //============================================================================
 //! PROPERTY DETAIL SCREEN
@@ -143,7 +144,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         },
                       ),
 
-                      PropertyFloatingActions(
+                      PropertyDetailFloatingActions(
                         onBack: () => Navigator.pop(context),
                         isFavorite: false,
                         onFavorite: () {
@@ -163,11 +164,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        PropertyHeader(data: _data),
+                        PropertyDetailHeader(data: _data),
 
                         const SizedBox(height: 15),
 
-                        PropertyMetaRow(data: _data),
+                        PropertyDetailMetaRow(data: _data),
 
                         const Divider(
                           height: 32,
@@ -204,7 +205,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                         const SizedBox(height: 12),
 
-                        PropertyAmenitiesGrid(amenities: _data.amenities),
+                        PropertyDetailAmenitiesGrid(amenities: _data.amenities),
 
                         const Divider(
                           height: 32,
@@ -219,7 +220,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                         const SizedBox(height: 12),
 
-                        PropertyOwnerCard(landlord: _data.landlord),
+                        PropertyDetailOwnerCard(landlord: _data.landlord),
                       ],
                     ),
                   ),
@@ -227,7 +228,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
               ),
             ),
 
-            PropertyBottomButton(
+            PropertyDetailBottomButton(
               roomCount: _data.roomCount,
               onPressed: _viewRooms,
             ),

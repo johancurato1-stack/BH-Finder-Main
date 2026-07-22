@@ -6,12 +6,12 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 //! PROPERTY FLOATING ACTIONS
 //============================================================================
 
-class PropertyFloatingActions extends StatelessWidget {
+class PropertyDetailFloatingActions extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyFloatingActions({
+  const PropertyDetailFloatingActions({
     super.key,
     required this.onBack,
     required this.onFavorite,

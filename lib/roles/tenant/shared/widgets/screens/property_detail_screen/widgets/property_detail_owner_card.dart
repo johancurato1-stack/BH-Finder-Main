@@ -8,12 +8,12 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 //! PROPERTY OWNER CARD
 //============================================================================
 
-class PropertyOwnerCard extends StatelessWidget {
+class PropertyDetailOwnerCard extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyOwnerCard({super.key, required this.landlord});
+  const PropertyDetailOwnerCard({super.key, required this.landlord});
 
   //============================================================================
   //! PROPERTIES

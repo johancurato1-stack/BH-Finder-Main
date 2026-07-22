@@ -6,12 +6,12 @@ import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/fil
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_section_title.dart';
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
-class FilterBottomSheetMini extends StatefulWidget {
+class FilterBottomSheetSecondary extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const FilterBottomSheetMini({super.key});
+  const FilterBottomSheetSecondary({super.key});
 
   //============================================================================
   //! SHOW
@@ -22,15 +22,16 @@ class FilterBottomSheetMini extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FilterBottomSheetMini(),
+      builder: (_) => const FilterBottomSheetSecondary(),
     );
   }
 
   @override
-  State<FilterBottomSheetMini> createState() => _FilterBottomSheetMiniState();
+  State<FilterBottomSheetSecondary> createState() =>
+      _FilterBottomSheetMiniState();
 }
 
-class _FilterBottomSheetMiniState extends State<FilterBottomSheetMini> {
+class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
   //============================================================================
   //! STATE
   //============================================================================
@@ -108,9 +109,9 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetMini> {
                 //==============================================================
                 //! BUDGET
                 //==============================================================
-                const FilterSectionTitle(title: 'Budget Range'),
+                const FilterBottomSheetSectionTitle(title: 'Budget Range'),
 
-                FilterOptionsWrap(
+                FilterBottomSheetOptionsWrap(
                   options: _budgets,
                   selectedValue: _selectedBudget,
                   onSelected: (value) {
@@ -121,9 +122,9 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetMini> {
                 //==============================================================
                 //! GENDER
                 //==============================================================
-                const FilterSectionTitle(title: 'Gender Preference'),
+                const FilterBottomSheetSectionTitle(title: 'Gender Preference'),
 
-                FilterOptionsWrap(
+                FilterBottomSheetOptionsWrap(
                   options: _genders,
                   selectedValue: _selectedGender,
                   onSelected: (value) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/image_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/photo_thumbnails.dart';
-import 'package:bh_finder/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 //============================================================================
 //! ADD PROPERTY PHOTOS SECTION

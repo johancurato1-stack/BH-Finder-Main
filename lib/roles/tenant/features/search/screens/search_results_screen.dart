@@ -65,7 +65,7 @@ class SearchResultsScreen extends StatelessWidget {
             //==========================================================================
             Expanded(
               child: properties.isEmpty
-                  ? const EmptySearchResults()
+                  ? const EmptySearchResultsScreen()
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 1),
                       itemCount: properties.length,

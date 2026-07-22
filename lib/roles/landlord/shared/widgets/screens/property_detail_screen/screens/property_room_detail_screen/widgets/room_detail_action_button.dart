@@ -6,12 +6,12 @@ import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 //! ROOM ACTION BUTTONS
 //============================================================================
 
-class RoomActionButtons extends StatelessWidget {
+class RoomDetailActionButtons extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomActionButtons({
+  const RoomDetailActionButtons({
     super.key,
     required this.onEdit,
     required this.onDelete,

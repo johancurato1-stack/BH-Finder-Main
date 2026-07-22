@@ -8,12 +8,12 @@ import 'package:bh_finder/core/view_models/property_detail_data.dart';
 //! PROPERTY META ROW
 //============================================================================
 
-class PropertyMetaRow extends StatelessWidget {
+class PropertyDetailMetaRow extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyMetaRow({super.key, required this.data});
+  const PropertyDetailMetaRow({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES

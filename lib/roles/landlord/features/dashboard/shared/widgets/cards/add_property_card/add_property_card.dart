@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/cards/add_property_card/widgets/add_property_card_icon.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/cards/add_property_card/widgets/add_property_card_text.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/add_property_card/widgets/add_property_card_icon.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/add_property_card/widgets/add_property_card_text.dart';
 
 class AddPropertyCard extends StatelessWidget {
   //==========================================================================

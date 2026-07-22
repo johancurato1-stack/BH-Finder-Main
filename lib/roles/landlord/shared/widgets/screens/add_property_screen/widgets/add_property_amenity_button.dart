@@ -9,12 +9,12 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 //! AMENITY BUTTON
 //============================================================================
 
-class AmenityButton extends StatelessWidget {
+class AddPropertyAmenityButton extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const AmenityButton({
+  const AddPropertyAmenityButton({
     super.key,
     required this.icon,
     required this.label,

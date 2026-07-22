@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class RoomFloatingActions extends StatelessWidget {
+class RoomDetailFloatingActions extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomFloatingActions({
+  const RoomDetailFloatingActions({
     super.key,
     required this.onBack,
     required this.onShare,

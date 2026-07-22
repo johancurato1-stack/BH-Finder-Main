@@ -8,12 +8,12 @@ import 'package:bh_finder/core/view_models/room_detail_data.dart';
 //! ROOM META ROW
 //============================================================================
 
-class RoomMetaRow extends StatelessWidget {
+class RoomDetailMetaRow extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomMetaRow({super.key, required this.data});
+  const RoomDetailMetaRow({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES

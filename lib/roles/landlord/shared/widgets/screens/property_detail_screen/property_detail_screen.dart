@@ -128,11 +128,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! HEADER
                   //==========================================================
-                  PropertyHeader(data: _data),
+                  PropertyDetailHeader(data: _data),
 
                   const SizedBox(height: 15),
 
-                  PropertyMetaRow(data: _data),
+                  PropertyDetailMetaRow(data: _data),
 
                   const Divider(
                     height: 32,
@@ -142,7 +142,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! PERFORMANCE
                   //==========================================================
-                  PropertyPerformanceSection(),
+                  PropertyDetailPerformanceSection(),
 
                   const Divider(
                     height: 32,
@@ -164,7 +164,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! AMENITIES
                   //==========================================================
-                  PropertyAmenitiesGrid(amenities: _data.amenities),
+                  PropertyDetailAmenitiesGrid(amenities: _data.amenities),
 
                   const SizedBox(height: 32),
 
@@ -177,7 +177,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==============================================================
                   //! MANAGE ROOMS
                   //==============================================================
-                  PropertyBottomButton(
+                  PropertyDetailBottomButton(
                     roomCount: _data.roomCount,
                     onPressed: _viewRooms,
                   ),
@@ -193,7 +193,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! ACTION BUTTONS
                   //==========================================================
-                  PropertyActionButtons(
+                  PropertyDetailActionButtons(
                     onEditPressed: () {
                       // TODO: Edit Property
                     },

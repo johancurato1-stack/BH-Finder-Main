@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/cards/add_property_card/add_property_card.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/cards/property_card_horizontal/property_card_horizontal.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/add_property_card/add_property_card.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/property_card_horizontal/property_card_horizontal.dart';
 
 //============================================================================
 //! BOARDING HOUSE CAROUSEL

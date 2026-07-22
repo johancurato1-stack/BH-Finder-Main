@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class FilterSectionTitle extends StatelessWidget {
+class FilterBottomSheetSectionTitle extends StatelessWidget {
   final String title;
 
-  const FilterSectionTitle({super.key, required this.title});
+  const FilterBottomSheetSectionTitle({super.key, required this.title});
 
   //============================================================================
   //! BUILD

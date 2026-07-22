@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:bh_finder/shared/widgets/messages/data/mock_chat.dart';
-import 'package:bh_finder/shared/widgets/messages/data/mock_messages.dart';
-import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
-import 'package:bh_finder/shared/widgets/messages/models/message_model.dart';
+import 'package:bh_finder/core/data/mock/chat/mock_chat.dart';
+import 'package:bh_finder/core/data/mock/chat/mock_messages.dart';
+import 'package:bh_finder/core/models/chat_model.dart';
+import 'package:bh_finder/core/models/message_model.dart';
 
 class ChatRepository {
   //============================================================================

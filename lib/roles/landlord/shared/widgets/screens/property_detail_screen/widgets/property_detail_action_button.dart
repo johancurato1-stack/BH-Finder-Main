@@ -6,12 +6,12 @@ import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 //! PROPERTY ACTION BUTTONS
 //============================================================================
 
-class PropertyActionButtons extends StatelessWidget {
+class PropertyDetailActionButtons extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyActionButtons({
+  const PropertyDetailActionButtons({
     super.key,
     required this.onEditPressed,
     required this.onDeletePressed,

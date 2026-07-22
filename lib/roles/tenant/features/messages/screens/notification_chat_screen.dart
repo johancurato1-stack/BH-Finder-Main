@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/shared/widgets/messages/data/mock_notif.dart';
+import 'package:bh_finder/core/data/mock/chat/mock_notif.dart';
 
 class NotificationChatScreen extends StatelessWidget {
   //============================================================================

@@ -7,12 +7,12 @@ import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 //! PROPERTY AMENITIES
 //============================================================================
 
-class PropertyAmenities extends StatelessWidget {
+class PropertyCardAmenities extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyAmenities({super.key, required this.data});
+  const PropertyCardAmenities({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES

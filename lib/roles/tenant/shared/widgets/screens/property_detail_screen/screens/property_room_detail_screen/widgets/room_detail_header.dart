@@ -7,12 +7,12 @@ import 'package:bh_finder/core/view_models/room_detail_data.dart';
 //! ROOM HEADER
 //============================================================================
 
-class RoomHeader extends StatelessWidget {
+class RoomDetailHeader extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomHeader({super.key, required this.data});
+  const RoomDetailHeader({super.key, required this.data});
 
   //============================================================================
   //! PROPERTIES

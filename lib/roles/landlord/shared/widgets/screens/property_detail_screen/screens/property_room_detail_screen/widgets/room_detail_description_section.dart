@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 //============================================================================
 //! ROOM DESCRIPTION SECTION
 //============================================================================
 
-class RoomDescriptionSection extends StatelessWidget {
+class RoomDetailDescriptionSection extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomDescriptionSection({super.key, required this.description});
+  const RoomDetailDescriptionSection({super.key, required this.description});
 
   //============================================================================
   //! PROPERTIES

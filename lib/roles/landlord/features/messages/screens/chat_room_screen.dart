@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
-import 'package:bh_finder/shared/widgets/messages/models/inquiry_model.dart';
-import 'package:bh_finder/shared/widgets/messages/models/message_model.dart';
+import 'package:bh_finder/core/models/chat_model.dart';
+import 'package:bh_finder/core/models/inquiry_model.dart';
+import 'package:bh_finder/core/models/message_model.dart';
 
 import 'package:bh_finder/roles/landlord/features/messages/repositories/chat_repository.dart';
 
 import 'package:bh_finder/shared/widgets/messages/chat/chat_app_bar.dart';
-import 'package:bh_finder/shared/widgets/messages/inquiry/inquiry_card.dart';
-import 'package:bh_finder/shared/widgets/messages/message_bubble.dart';
-import 'package:bh_finder/shared/widgets/messages/message_input.dart';
+import 'package:bh_finder/shared/widgets/messages/cards/inquiry_card.dart';
+import 'package:bh_finder/shared/widgets/messages/widgets/message_bubble.dart';
+import 'package:bh_finder/shared/widgets/messages/widgets/message_input.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatRoomScreen extends StatefulWidget {
   //============================================================================
   //! VARIABLES
   //============================================================================
@@ -24,13 +24,13 @@ class ChatScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const ChatScreen({super.key, required this.chat});
+  const ChatRoomScreen({super.key, required this.chat});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatRoomScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatRoomScreen> {
   //============================================================================
   //! REPOSITORY
   //============================================================================

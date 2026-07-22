@@ -6,15 +6,15 @@ import 'package:bh_finder/core/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/view_models/room_detail_data.dart';
 
-import 'package:bh_finder/shared/widgets/image_carousel.dart';
-import 'package:bh_finder/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_bottom_button.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_floating_actions.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_photos_section.dart';
-import 'package:bh_finder/shared/widgets/page_indicator.dart';
+import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
 //============================================================================
 //! ROOM DETAIL SCREEN
@@ -125,7 +125,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         },
                       ),
 
-                      RoomFloatingActions(
+                      RoomDetailFloatingActions(
                         onBack: () => Navigator.pop(context),
                         onShare: () {},
                       ),
@@ -143,11 +143,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RoomHeader(data: _data),
+                      RoomDetailHeader(data: _data),
 
                       const SizedBox(height: 15),
 
-                      RoomMetaRow(data: _data),
+                      RoomDetailMetaRow(data: _data),
 
                       const Divider(
                         height: 32,
@@ -158,7 +158,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       //========================================================
                       //! ROOM PHOTOS
                       //========================================================
-                      RoomPhotosSection(onViewAll: () {}),
+                      RoomDetailPhotosSection(onViewAll: () {}),
 
                       const Divider(
                         height: 32,
@@ -188,7 +188,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             ),
           ),
 
-          RoomBottomCTA(
+          RoomDetailBottomButton(
             onPressed: () {
               // TODO: Implement inquiry action.
             },

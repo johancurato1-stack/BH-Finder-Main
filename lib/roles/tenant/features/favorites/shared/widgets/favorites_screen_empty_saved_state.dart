@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class EmptySavedState extends StatelessWidget {
-  const EmptySavedState({super.key});
+class FavoritesScreenEmptySavedState extends StatelessWidget {
+  const FavoritesScreenEmptySavedState({super.key});
 
   //============================================================================
   //! BUILD

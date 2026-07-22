@@ -51,7 +51,13 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
 
       MessagesScreen(onBackPressed: _goToDashboard),
 
-      const ProfileScreen(),
+      ProfileScreen(
+        onNavigateToTab: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     ];
 
     return Scaffold(

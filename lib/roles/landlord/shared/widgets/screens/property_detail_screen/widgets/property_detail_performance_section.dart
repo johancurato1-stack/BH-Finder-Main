@@ -4,18 +4,18 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_performance_card.dart';
 
-import 'package:bh_finder/shared/widgets/section_title.dart';
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 //============================================================================
 //! PROPERTY PERFORMANCE SECTION
 //============================================================================
 
-class PropertyPerformanceSection extends StatelessWidget {
+class PropertyDetailPerformanceSection extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyPerformanceSection({super.key});
+  const PropertyDetailPerformanceSection({super.key});
 
   //==========================================================================
   //! BUILD

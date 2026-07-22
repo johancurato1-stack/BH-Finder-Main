@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/repositories/property_repository.dart';
 import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
-import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/empty_saved_state.dart';
+import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/favorites_screen_empty_saved_state.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
@@ -39,7 +39,7 @@ class FavoritesScreenList extends StatelessWidget {
     //==========================================================================
 
     if (savedProperties.isEmpty) {
-      return const EmptySavedState();
+      return const FavoritesScreenEmptySavedState();
     }
 
     //==========================================================================

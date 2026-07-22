@@ -1,4 +1,4 @@
-import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
+import 'package:bh_finder/core/models/chat_model.dart';
 
 class MockChat {
   MockChat._();

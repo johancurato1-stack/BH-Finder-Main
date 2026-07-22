@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/cards/property_card_horizontal/widgets/property_card_status_tag.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/property_card_horizontal/widgets/property_card_status_tag.dart';
 
 //============================================================================
 //! PROPERTY IMAGE

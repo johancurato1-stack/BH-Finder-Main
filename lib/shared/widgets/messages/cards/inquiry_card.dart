@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/shared/widgets/messages/models/inquiry_model.dart';
-import 'package:bh_finder/shared/widgets/messages/models/message_model.dart';
+import 'package:bh_finder/core/models/inquiry_model.dart';
+import 'package:bh_finder/core/models/message_model.dart';
 
 class InquiryCard extends StatelessWidget {
   //============================================================================

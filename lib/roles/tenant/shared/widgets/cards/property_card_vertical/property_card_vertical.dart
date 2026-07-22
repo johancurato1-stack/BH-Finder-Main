@@ -102,7 +102,7 @@ class PropertyCardVertical extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  PropertyAmenities(data: property),
+                  PropertyCardAmenities(data: property),
 
                   const SizedBox(height: 18),
 

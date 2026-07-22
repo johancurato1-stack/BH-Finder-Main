@@ -121,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
             //! FILTERS
             //==========================================================================
             Expanded(
-              child: SearchScreenFiltersBody(
+              child: SearchScreenFilterBody(
                 controller: _searchController,
                 filter: _filter,
                 onReset: _resetFilters,

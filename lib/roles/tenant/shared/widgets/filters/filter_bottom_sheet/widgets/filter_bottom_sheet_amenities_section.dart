@@ -4,11 +4,11 @@ import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/fil
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/constants/filter_constants.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/models/filters/filter_model.dart';
 
-class AmenitiesSection extends StatelessWidget {
+class FilterBottomSheetAmenitiesSection extends StatelessWidget {
   final List<String> selectedAmenities;
   final ValueChanged<String> onAmenityToggle;
 
-  const AmenitiesSection({
+  const FilterBottomSheetAmenitiesSection({
     super.key,
     required this.selectedAmenities,
     required this.onAmenityToggle,

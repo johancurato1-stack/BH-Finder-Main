@@ -4,11 +4,11 @@ import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/fil
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/constants/filter_constants.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/models/filters/filter_model.dart';
 
-class StatusSection extends StatelessWidget {
+class FilterBottomSheetStatusSection extends StatelessWidget {
   final String selectedStatus;
   final ValueChanged<String> onStatusSelected;
 
-  const StatusSection({
+  const FilterBottomSheetStatusSection({
     super.key,
     required this.selectedStatus,
     required this.onStatusSelected,

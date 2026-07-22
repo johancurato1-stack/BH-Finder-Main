@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class EmptySearchResults extends StatelessWidget {
-  const EmptySearchResults({super.key});
+class EmptySearchResultsScreen extends StatelessWidget {
+  const EmptySearchResultsScreen({super.key});
 
   //============================================================================
   //! BUILD

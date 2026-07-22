@@ -18,7 +18,9 @@ class ProfileScreen extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.onNavigateToTab});
+
+  final ValueChanged<int> onNavigateToTab;
 
   //============================================================================
   //! METHODS
@@ -197,7 +199,7 @@ class ProfileScreen extends StatelessWidget {
                       subtitle: '${user.favoritesCount} listings',
 
                       onTap: () {
-                        // TODO: Navigate to Saved Listings
+                        onNavigateToTab(2);
                       },
                     ),
 
@@ -210,7 +212,7 @@ class ProfileScreen extends StatelessWidget {
                       subtitle: '${user.inquiriesCount} inquiries',
 
                       onTap: () {
-                        // TODO: Navigate to My Inquiries
+                        onNavigateToTab(3);
                       },
                     ),
 
@@ -239,16 +241,16 @@ class ProfileScreen extends StatelessWidget {
                     const Divider(height: 30, color: Colors.black12),
 
                     //==========================================================
-                    //! HELP CENTER
+                    //! HELP CENTER (COMING SOON)
                     //==========================================================
-                    MenuListTile(
-                      icon: Icons.help_center_rounded,
-                      title: 'Help Center',
+                    //MenuListTile(
+                    //icon: Icons.help_center_rounded,
+                    //title: 'Help Center',
 
-                      onTap: () {
-                        // TODO: Navigate to Help Center
-                      },
-                    ),
+                    //onTap: () {
+                    // TODO: Navigate to Help Center
+                    //},
+                    //),
 
                     //==========================================================
                     //! ABOUT BH FINDER

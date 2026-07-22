@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AvailabilityNoticeCard extends StatelessWidget {
+class ViewRoomsAvailabilityNoticeCard extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const AvailabilityNoticeCard({super.key});
+  const ViewRoomsAvailabilityNoticeCard({super.key});
 
   //============================================================================
   //! BUILD

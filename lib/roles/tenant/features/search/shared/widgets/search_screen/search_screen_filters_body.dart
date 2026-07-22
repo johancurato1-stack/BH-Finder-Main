@@ -11,14 +11,14 @@ import 'search_screen_filter_option_grid.dart';
 import 'search_screen_amenities_grid.dart';
 import 'search_screen_status_grid.dart';
 
-class SearchScreenFiltersBody extends StatelessWidget {
+class SearchScreenFilterBody extends StatelessWidget {
   final TextEditingController controller;
   final SearchFilterModel filter;
 
   final VoidCallback onReset;
   final VoidCallback onChanged;
 
-  const SearchScreenFiltersBody({
+  const SearchScreenFilterBody({
     super.key,
     required this.controller,
     required this.filter,

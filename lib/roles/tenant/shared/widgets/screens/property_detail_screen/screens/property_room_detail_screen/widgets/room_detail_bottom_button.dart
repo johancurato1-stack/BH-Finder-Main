@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
-class RoomBottomCTA extends StatelessWidget {
+class RoomDetailBottomButton extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomBottomCTA({super.key, required this.onPressed});
+  const RoomDetailBottomButton({super.key, required this.onPressed});
 
   //============================================================================
   //! PROPERTIES

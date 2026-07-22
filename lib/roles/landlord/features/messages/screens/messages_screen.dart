@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/shared/widgets/messages/models/chat_model.dart';
+import 'package:bh_finder/core/models/chat_model.dart';
 import 'package:bh_finder/roles/landlord/features/messages/repositories/chat_repository.dart';
 
 import 'package:bh_finder/roles/landlord/features/messages/screens/chat_room_screen.dart';
@@ -76,7 +76,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
   void _openChat(ChatModel chat) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => ChatScreen(chat: chat)),
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(chat: chat)),
     );
   }
 

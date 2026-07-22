@@ -126,9 +126,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //==============================================================
                 //! BUDGET
                 //==============================================================
-                const FilterSectionTitle(title: 'Budget Range'),
+                const FilterBottomSheetSectionTitle(title: 'Budget Range'),
 
-                FilterOptionsWrap(
+                FilterBottomSheetOptionsWrap(
                   options: FilterConstants.budgets,
                   selectedValue: _selectedBudget,
                   onSelected: (value) {
@@ -139,9 +139,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //==============================================================
                 //! AMENITIES
                 //==============================================================
-                const FilterSectionTitle(title: 'Amenities'),
+                const FilterBottomSheetSectionTitle(title: 'Amenities'),
 
-                AmenitiesSection(
+                FilterBottomSheetAmenitiesSection(
                   selectedAmenities: _selectedAmenities,
                   onAmenityToggle: _toggleAmenity,
                 ),
@@ -149,9 +149,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //==============================================================
                 //! DISTANCE
                 //==============================================================
-                const FilterSectionTitle(title: 'Distance from School'),
+                const FilterBottomSheetSectionTitle(
+                  title: 'Distance from School',
+                ),
 
-                FilterOptionsWrap(
+                FilterBottomSheetOptionsWrap(
                   options: FilterConstants.distances,
                   selectedValue: _selectedDistance,
                   onSelected: (value) {
@@ -162,9 +164,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //==============================================================
                 //! GENDER
                 //==============================================================
-                const FilterSectionTitle(title: 'Gender Preference'),
+                const FilterBottomSheetSectionTitle(title: 'Gender Preference'),
 
-                FilterOptionsWrap(
+                FilterBottomSheetOptionsWrap(
                   options: FilterConstants.genders,
                   selectedValue: _selectedGender,
                   onSelected: (value) {
@@ -175,9 +177,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //==============================================================
                 //! STATUS
                 //==============================================================
-                const FilterSectionTitle(title: 'Room Status'),
+                const FilterBottomSheetSectionTitle(title: 'Room Status'),
 
-                StatusSection(
+                FilterBottomSheetStatusSection(
                   selectedStatus: _selectedStatus,
                   onStatusSelected: (status) {
                     setState(() => _selectedStatus = status);

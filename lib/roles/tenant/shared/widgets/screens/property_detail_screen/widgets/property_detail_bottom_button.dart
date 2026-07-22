@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
-class PropertyBottomButton extends StatelessWidget {
+class PropertyDetailBottomButton extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyBottomButton({
+  const PropertyDetailBottomButton({
     super.key,
     required this.roomCount,
     required this.onPressed,

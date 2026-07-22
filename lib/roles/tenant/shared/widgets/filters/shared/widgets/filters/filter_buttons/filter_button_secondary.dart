@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-class FilterButtonMini extends StatelessWidget {
+class FilterButtonSecondary extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
@@ -9,7 +9,7 @@ class FilterButtonMini extends StatelessWidget {
   final bool isStatusType;
   final Color? statusColor;
 
-  const FilterButtonMini({
+  const FilterButtonSecondary({
     super.key,
     required this.label,
     required this.isSelected,

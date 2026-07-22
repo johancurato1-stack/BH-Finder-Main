@@ -7,12 +7,12 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 //! PROPERTY AMENITIES GRID
 //============================================================================
 
-class PropertyAmenitiesGrid extends StatelessWidget {
+class PropertyDetailAmenitiesGrid extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyAmenitiesGrid({super.key, required this.amenities});
+  const PropertyDetailAmenitiesGrid({super.key, required this.amenities});
 
   //============================================================================
   //! PROPERTIES

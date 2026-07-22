@@ -107,28 +107,28 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             //! HEADER
             //==============================================================
-            RoomHeader(data: _data),
+            RoomDetailHeader(data: _data),
 
             const SizedBox(height: 16),
 
             //==============================================================
             //! META
             //==============================================================
-            RoomMetaRow(data: _data),
+            RoomDetailMetaRow(data: _data),
 
             const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
 
             //==============================================================
             //! DESCRIPTION
             //==============================================================
-            RoomDescriptionSection(description: _data.description),
+            RoomDetailDescriptionSection(description: _data.description),
 
             const SizedBox(height: 32),
 
             //==============================================================
             //! ACTION BUTTONS
             //==============================================================
-            RoomActionButtons(
+            RoomDetailActionButtons(
               onEdit: () {
                 // TODO: Edit Room
               },
