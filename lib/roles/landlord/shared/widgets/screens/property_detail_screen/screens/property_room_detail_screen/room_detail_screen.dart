@@ -18,59 +18,92 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 //============================================================================
 
 class RoomDetailScreen extends StatefulWidget {
-  //============================================================================
+  //==========================================================================
   //! CONSTRUCTOR
-  //============================================================================
+  //==========================================================================
 
-  const RoomDetailScreen({super.key, required this.roomId});
+  const RoomDetailScreen({
+    super.key,
+    required this.roomId,
+    required this.repository,
+  });
 
-  //============================================================================
+  //==========================================================================
   //! PROPERTIES
-  //============================================================================
+  //==========================================================================
 
   final String roomId;
+
+  final RoomRepository repository;
 
   @override
   State<RoomDetailScreen> createState() => _RoomDetailScreenState();
 }
 
+//============================================================================
+//! STATE
+//============================================================================
+
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
-  //============================================================================
-  //! DEPENDENCIES
-  //============================================================================
-
-  final RoomRepository _repository = RoomRepository();
-
-  //============================================================================
+  //==========================================================================
   //! STATE
-  //============================================================================
+  //==========================================================================
 
-  late final RoomDetailData _data;
+  RoomDetailData? _data;
+
+  bool _loading = true;
 
   int _selectedImage = 0;
 
-  //============================================================================
+  //==========================================================================
   //! LIFECYCLE
-  //============================================================================
+  //==========================================================================
 
   @override
   void initState() {
     super.initState();
 
-    _data = _repository.getRoomDetail(widget.roomId);
+    _loadRoom();
   }
 
-  //============================================================================
+  //==========================================================================
+  //! LOAD ROOM
+  //==========================================================================
+
+  Future<void> _loadRoom() async {
+    final data = await widget.repository.getRoomDetail(widget.roomId);
+
+    if (!mounted) return;
+
+    setState(() {
+      _data = data;
+
+      _loading = false;
+    });
+  }
+  //==========================================================================
   //! BUILD
-  //============================================================================
+  //==========================================================================
 
   @override
   Widget build(BuildContext context) {
+    if (_loading || _data == null) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final data = _data!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
+
           children: [
             //==============================================================
             //! BACK BUTTON
@@ -82,7 +115,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             //! ROOM IMAGE
             //==============================================================
-            ImageCard(imageUrl: _data.imageUrls[_selectedImage]),
+            ImageCard(imageUrl: data.imageUrls[_selectedImage]),
 
             const SizedBox(height: 16),
 
@@ -90,13 +123,16 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //! PHOTO THUMBNAILS
             //==============================================================
             PhotoThumbnails(
-              images: _data.imageUrls,
+              images: data.imageUrls,
+
               selectedIndex: _selectedImage,
+
               onImageSelected: (index) {
                 setState(() {
                   _selectedImage = index;
                 });
               },
+
               onAddPhoto: () {
                 // TODO: Add Photo
               },
@@ -107,21 +143,21 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             //! HEADER
             //==============================================================
-            RoomDetailHeader(data: _data),
+            RoomDetailHeader(data: data),
 
             const SizedBox(height: 16),
 
             //==============================================================
             //! META
             //==============================================================
-            RoomDetailMetaRow(data: _data),
+            RoomDetailMetaRow(data: data),
 
             const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
 
             //==============================================================
             //! DESCRIPTION
             //==============================================================
-            RoomDetailDescriptionSection(description: _data.description),
+            RoomDetailDescriptionSection(description: data.description),
 
             const SizedBox(height: 32),
 
@@ -132,6 +168,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
               onEdit: () {
                 // TODO: Edit Room
               },
+
               onDelete: () {
                 // TODO: Delete Room
               },

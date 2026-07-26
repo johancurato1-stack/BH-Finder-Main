@@ -13,6 +13,8 @@ import 'package:bh_finder/roles/tenant/features/search/screens/search_results_sc
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 //============================================================================
 //! SEARCH SCREEN
 //============================================================================
@@ -22,7 +24,12 @@ class SearchScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const SearchScreen({super.key, required this.onBackPressed});
+  const SearchScreen({
+    super.key,
+    required this.onBackPressed,
+    required this.propertyRepository,
+    required this.roomRepository,
+  });
 
   //============================================================================
   //! PROPERTIES
@@ -30,17 +37,15 @@ class SearchScreen extends StatefulWidget {
 
   final VoidCallback onBackPressed;
 
+  final PropertyRepository propertyRepository;
+
+  final RoomRepository roomRepository;
+
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  //============================================================================
-  //! DEPENDENCIES
-  //============================================================================
-
-  final PropertyRepository _propertyRepository = PropertyRepository();
-
   //============================================================================
   //! CONTROLLERS
   //============================================================================
@@ -86,16 +91,22 @@ class _SearchScreenState extends State<SearchScreen> {
   //! SHOW RESULTS
   //============================================================================
 
-  void _showResults() {
-    final List<TenantPropertyCardData> properties = _propertyRepository
-        .getPropertyCards();
+  Future<void> _showResults() async {
+    final properties = await widget.propertyRepository.getPropertyCards();
+
+    if (!mounted) return;
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SearchResultsScreen(
           filter: _filter.copyWith(query: _searchController.text),
+
           properties: properties,
+
+          repository: widget.propertyRepository,
+
+          roomRepository: widget.roomRepository,
         ),
       ),
     );

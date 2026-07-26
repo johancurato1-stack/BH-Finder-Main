@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
+import 'package:bh_finder/core/repositories/mock/mock_property_repository.dart';
+import 'package:bh_finder/core/repositories/mock/mock_room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/landlord/features/dashboard/screens/dashboard_screen.dart';
@@ -8,6 +14,10 @@ import 'package:bh_finder/roles/landlord/features/profile/screens/profile_screen
 import 'package:bh_finder/roles/landlord/features/properties/screens/properties_screen.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/widgets/landlord_bottom_navigation_bar.dart';
+
+//============================================================================
+//! LANDLORD NAVIGATION SCREEN
+//============================================================================
 
 class LandlordNavigationScreen extends StatefulWidget {
   //==========================================================================
@@ -21,7 +31,19 @@ class LandlordNavigationScreen extends StatefulWidget {
       _LandlordNavigationScreenState();
 }
 
+//============================================================================
+//! STATE
+//============================================================================
+
 class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
+  //==========================================================================
+  //! REPOSITORIES
+  //==========================================================================
+
+  final PropertyRepository _propertyRepository = MockPropertyRepository();
+
+  final RoomRepository _roomRepository = MockRoomRepository();
+
   //==========================================================================
   //! VARIABLES
   //==========================================================================
@@ -45,9 +67,19 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      const DashboardScreen(),
+      DashboardScreen(
+        propertyRepository: _propertyRepository,
 
-      PropertiesScreen(onBackPressed: _goToDashboard),
+        roomRepository: _roomRepository,
+      ),
+
+      PropertiesScreen(
+        onBackPressed: _goToDashboard,
+
+        propertyRepository: _propertyRepository,
+
+        roomRepository: _roomRepository,
+      ),
 
       MessagesScreen(onBackPressed: _goToDashboard),
 
@@ -67,6 +99,7 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
 
       bottomNavigationBar: LandlordBottomNavigationBar(
         currentIndex: _currentIndex,
+
         showMessagesBadge: false,
 
         onTap: (index) {

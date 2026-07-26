@@ -55,7 +55,7 @@ class PropertyDetailData {
 
   final double longitude;
 
-  final LandlordModel landlord;
+  final LandlordModel? landlord;
 
   final PropertyStatus status;
 

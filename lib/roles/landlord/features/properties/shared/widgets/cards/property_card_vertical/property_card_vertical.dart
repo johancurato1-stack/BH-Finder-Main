@@ -10,6 +10,9 @@ import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashb
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 //============================================================================
 //! PROPERTY CARD VERTICAL
 //============================================================================
@@ -19,13 +22,22 @@ class PropertyCardVertical extends StatelessWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyCardVertical({super.key, required this.data});
+  const PropertyCardVertical({
+    super.key,
+    required this.data,
+    required this.repository,
+    required this.roomRepository,
+  });
 
   //==========================================================================
   //! PROPERTIES
   //==========================================================================
 
   final LandlordPropertyCardData data;
+
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
 
   //==========================================================================
   //! BUILD
@@ -38,8 +50,11 @@ class PropertyCardVertical extends StatelessWidget {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) =>
-                PropertyDetailScreen(propertyId: data.id),
+            pageBuilder: (_, __, ___) => PropertyDetailScreen(
+              propertyId: data.id,
+              repository: repository,
+              roomRepository: roomRepository,
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0, 1);

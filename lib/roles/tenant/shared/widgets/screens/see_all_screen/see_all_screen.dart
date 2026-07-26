@@ -7,6 +7,9 @@ import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_shee
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/widgets/see_all_property_list_view.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/widgets/see_all_header.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 //============================================================================
 //! SEE ALL SCREEN
 //============================================================================
@@ -20,6 +23,8 @@ class SeeAllScreen extends StatelessWidget {
     super.key,
     required this.title,
     required this.properties,
+    required this.repository,
+    required this.roomRepository,
   });
 
   //============================================================================
@@ -29,6 +34,10 @@ class SeeAllScreen extends StatelessWidget {
   final String title;
 
   final List<TenantPropertyCardData> properties;
+
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
 
   //============================================================================
   //! BUILD
@@ -53,7 +62,13 @@ class SeeAllScreen extends StatelessWidget {
             //==================================================================
             //! PROPERTY LIST
             //==================================================================
-            Expanded(child: PropertyListView(properties: properties)),
+            Expanded(
+              child: PropertyListView(
+                properties: properties,
+                repository: repository,
+                roomRepository: roomRepository,
+              ),
+            ),
           ],
         ),
       ),

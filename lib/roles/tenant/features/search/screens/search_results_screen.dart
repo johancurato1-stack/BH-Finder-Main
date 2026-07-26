@@ -10,6 +10,9 @@ import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_res
 import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_summary.dart';
 import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/empty_search_results_screen.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 //============================================================================
 //! SEARCH RESULTS SCREEN
 //============================================================================
@@ -23,6 +26,8 @@ class SearchResultsScreen extends StatelessWidget {
     super.key,
     required this.filter,
     this.properties = const [],
+    required this.repository,
+    required this.roomRepository,
   });
 
   //============================================================================
@@ -32,6 +37,10 @@ class SearchResultsScreen extends StatelessWidget {
   final SearchFilterModel filter;
 
   final List<TenantPropertyCardData> properties;
+
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
 
   //============================================================================
   //! BUILD
@@ -72,6 +81,8 @@ class SearchResultsScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return PropertyCardVertical(
                           property: properties[index],
+                          repository: repository,
+                          roomRepository: roomRepository,
                         );
                       },
                     ),

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_image.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_info.dart';
 
@@ -17,13 +20,22 @@ class PropertyCardHorizontal extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyCardHorizontal({super.key, required this.data});
+  const PropertyCardHorizontal({
+    super.key,
+    required this.data,
+    required this.repository,
+    required this.roomRepository,
+  });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
   final TenantPropertyCardData data;
+
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
 
   //============================================================================
   //! BUILD
@@ -38,24 +50,35 @@ class PropertyCardHorizontal extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
+
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) =>
-                PropertyDetailScreen(propertyId: data.id),
+            pageBuilder: (_, __, ___) => PropertyDetailScreen(
+              propertyId: data.id,
+
+              repository: repository,
+
+              roomRepository: roomRepository,
+            ),
+
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
+
                   const end = Offset.zero;
+
                   const curve = Curves.easeOut;
 
                   final offsetAnimation = animation.drive(
                     Tween(
                       begin: begin,
+
                       end: end,
                     ).chain(CurveTween(curve: curve)),
                   );
 
                   return SlideTransition(
                     position: offsetAnimation,
+
                     child: child,
                   );
                 },
@@ -66,17 +89,23 @@ class PropertyCardHorizontal extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
+
           borderRadius: BorderRadius.circular(16),
+
           boxShadow: [
             BoxShadow(
               color: AppColors.black.withValues(alpha: 0.04),
+
               blurRadius: 10,
+
               offset: const Offset(0, 4),
             ),
           ],
         ),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
             //==============================================================
             //! IMAGE

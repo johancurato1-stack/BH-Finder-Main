@@ -1,35 +1,31 @@
-import 'package:bh_finder/core/theme/app_spacing.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/shared/widgets/textfields/primary_text_field.dart';
 
 class LoginScreenForm extends StatelessWidget {
+  final AuthViewModel viewModel;
+
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
+  final VoidCallback onLogin;
+
   const LoginScreenForm({
     super.key,
+
+    required this.viewModel,
+
     required this.emailController,
+
     required this.passwordController,
+
+    required this.onLogin,
   });
-
-  //============================================================================
-  //! LOGIN
-  //============================================================================
-
-  void _login(BuildContext context) {
-    print('Email: ${emailController.text}');
-    print('Password: ${passwordController.text}');
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const TenantNavigationScreen()),
-    );
-  }
 
   //============================================================================
   //! BUILD
@@ -44,18 +40,17 @@ class LoginScreenForm extends StatelessWidget {
         //============================================================================
         //! EMAIL
         //============================================================================
-        const Text('Email or Phone Number', style: AppTextStyles.label),
+        const Text('Email', style: AppTextStyles.label),
 
         const SizedBox(height: AppSpacing.sm),
 
-        SizedBox(
-          height: 42,
-          child: PrimaryTextField(
-            controller: emailController,
-            hintText: 'Enter your email or phone number',
-            prefixIcon: Icons.person_outline,
-            keyboardType: TextInputType.emailAddress,
-          ),
+        PrimaryTextField(
+          controller: emailController,
+          hintText: 'Enter your email',
+          prefixIcon: Icons.email_outlined,
+          keyboardType: TextInputType.emailAddress,
+          validation: viewModel.emailValidation,
+          errorMessage: viewModel.loginError,
         ),
 
         const SizedBox(height: AppSpacing.sm),
@@ -67,14 +62,13 @@ class LoginScreenForm extends StatelessWidget {
 
         const SizedBox(height: AppSpacing.sm),
 
-        SizedBox(
-          height: 42,
-          child: PrimaryTextField(
-            controller: passwordController,
-            hintText: 'Enter your password',
-            prefixIcon: Icons.lock_outline,
-            isPasswordField: true,
-          ),
+        PrimaryTextField(
+          controller: passwordController,
+          hintText: 'Enter your password',
+          prefixIcon: Icons.lock_outline,
+          isPasswordField: true,
+          validation: viewModel.passwordValidation,
+          errorMessage: viewModel.loginError,
         ),
 
         const SizedBox(height: AppSpacing.huge),
@@ -82,7 +76,7 @@ class LoginScreenForm extends StatelessWidget {
         //============================================================================
         //! LOGIN BUTTON
         //============================================================================
-        PrimaryButton(text: 'Login', onPressed: () => _login(context)),
+        PrimaryButton(text: 'Login', onPressed: onLogin),
 
         const SizedBox(height: AppSpacing.xxxl),
       ],

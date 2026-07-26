@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock/user/mock_user.dart';
 import 'package:bh_finder/core/models/user_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -13,7 +12,12 @@ import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/view_models/profile_view_model.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
+
+class ProfileScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
@@ -21,6 +25,51 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.onNavigateToTab});
 
   final ValueChanged<int> onNavigateToTab;
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  //============================================================================
+  //! VERIFICATION STATUS
+  //============================================================================
+
+  VerificationStatus _getVerificationStatus() {
+    // Temporary until verification_requests is connected
+
+    return VerificationStatus.unverified;
+  }
+
+  //============================================================================
+  //! VIEW MODEL
+  //============================================================================
+  final ProfileViewModel _profileViewModel = ProfileViewModel(
+    repository: SupabaseProfileRepository(),
+  );
+
+  final AuthViewModel _authViewModel = AuthViewModel(
+    repository: SupabaseAuthRepository(),
+  );
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _profileViewModel.loadProfile();
+  }
+
+  //============================================================================
+  //! LOGOUT
+  //============================================================================
+
+  Future<void> _logout() async {
+    await _authViewModel.signOut();
+  }
 
   //============================================================================
   //! METHODS
@@ -76,7 +125,11 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = mockUser;
+    final profile = _profileViewModel.profile;
+
+    if (profile == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -124,7 +177,7 @@ class ProfileScreen extends StatelessWidget {
 
                       children: [
                         Text(
-                          user.name,
+                          '${profile['first_name']} ${profile['last_name']}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
 
@@ -135,7 +188,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
 
                         Text(
-                          user.email,
+                          profile['email'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
 
@@ -147,7 +200,7 @@ class ProfileScreen extends StatelessWidget {
 
                         const SizedBox(height: AppSpacing.sm),
 
-                        _buildVerificationBadge(user.verificationStatus),
+                        _buildVerificationBadge(_getVerificationStatus()),
                       ],
                     ),
                   ),
@@ -196,10 +249,10 @@ class ProfileScreen extends StatelessWidget {
                     MenuListTile(
                       icon: Icons.favorite_rounded,
                       title: 'My Favorites',
-                      subtitle: '${user.favoritesCount} listings',
+                      subtitle: '${_profileViewModel.favoritesCount} listings',
 
                       onTap: () {
-                        onNavigateToTab(2);
+                        widget.onNavigateToTab(2);
                       },
                     ),
 
@@ -209,10 +262,10 @@ class ProfileScreen extends StatelessWidget {
                     MenuListTile(
                       icon: Icons.email_rounded,
                       title: 'My Inquiries',
-                      subtitle: '${user.inquiriesCount} inquiries',
+                      subtitle: '${_profileViewModel.inquiriesCount} inquiries',
 
                       onTap: () {
-                        onNavigateToTab(3);
+                        widget.onNavigateToTab(3);
                       },
                     ),
 
@@ -276,8 +329,8 @@ class ProfileScreen extends StatelessWidget {
                       iconColor: Colors.red,
                       hideArrow: true,
 
-                      onTap: () {
-                        // TODO: Implement Logout
+                      onTap: () async {
+                        await _logout();
                       },
                     ),
                   ],

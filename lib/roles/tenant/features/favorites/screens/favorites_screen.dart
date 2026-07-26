@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/favorites_screen_header.dart';
 import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/favorites_screen_list.dart';
 
+//============================================================================
+//! FAVORITES SCREEN
+//============================================================================
+
 class FavoritesScreen extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
+  const FavoritesScreen({
+    super.key,
+    required this.onBackPressed,
+    required this.propertyRepository,
+    required this.roomRepository,
+  });
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
   final VoidCallback onBackPressed;
 
-  const FavoritesScreen({super.key, required this.onBackPressed});
+  final PropertyRepository propertyRepository;
+
+  final RoomRepository roomRepository;
 
   //============================================================================
   //! BUILD
@@ -24,15 +48,21 @@ class FavoritesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-            //============================================================================
+            //==============================================================
             //! HEADER
-            //============================================================================
+            //==============================================================
             FavoritesScreenHeader(onBackPressed: onBackPressed),
 
-            //============================================================================
+            //==============================================================
             //! SAVED LIST
-            //============================================================================
-            const Expanded(child: FavoritesScreenList()),
+            //==============================================================
+            Expanded(
+              child: FavoritesScreenList(
+                propertyRepository: propertyRepository,
+
+                roomRepository: roomRepository,
+              ),
+            ),
           ],
         ),
       ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
+
 import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_property_horizontal_list.dart';
@@ -17,7 +20,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/see
 //! HOME SCREEN
 //============================================================================
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
@@ -27,6 +30,8 @@ class HomeScreen extends StatelessWidget {
     required this.onSearchPressed,
     required this.hasNotification,
     required this.onNotificationsRead,
+    required this.propertyRepository,
+    required this.roomRepository,
   });
 
   //============================================================================
@@ -39,11 +44,53 @@ class HomeScreen extends StatelessWidget {
 
   final VoidCallback onNotificationsRead;
 
+  final PropertyRepository propertyRepository;
+
+  final RoomRepository roomRepository;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+//============================================================================
+//! STATE
+//============================================================================
+
+class _HomeScreenState extends State<HomeScreen> {
   //============================================================================
-  //! DEPENDENCIES
+  //! STATE
   //============================================================================
 
-  static final PropertyRepository _propertyRepository = PropertyRepository();
+  List<TenantPropertyCardData> _properties = [];
+
+  bool _loading = true;
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadProperties();
+  }
+
+  //============================================================================
+  //! LOAD PROPERTIES
+  //============================================================================
+
+  Future<void> _loadProperties() async {
+    final properties = await widget.propertyRepository.getPropertyCards();
+
+    if (!mounted) return;
+
+    setState(() {
+      _properties = properties;
+
+      _loading = false;
+    });
+  }
 
   //============================================================================
   //! BUILD
@@ -51,20 +98,31 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TenantPropertyCardData> properties = _propertyRepository
-        .getPropertyCards();
+    if (_loading) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final properties = _properties;
 
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     const SizedBox(height: AppSpacing.xl),
 
@@ -72,8 +130,9 @@ class HomeScreen extends StatelessWidget {
                     //! HOME HEADER
                     //==========================================================
                     HomeScreenHeader(
-                      hasNotification: hasNotification,
-                      onNotificationsRead: onNotificationsRead,
+                      hasNotification: widget.hasNotification,
+
+                      onNotificationsRead: widget.onNotificationsRead,
                     ),
 
                     const SizedBox(height: AppSpacing.xxl),
@@ -88,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                     //==========================================================
                     //! SEARCH BAR
                     //==========================================================
-                    HomeScreenSearchBar(onTap: onSearchPressed),
+                    HomeScreenSearchBar(onTap: widget.onSearchPressed),
 
                     const SizedBox(height: AppSpacing.xxl),
 
@@ -97,14 +156,22 @@ class HomeScreen extends StatelessWidget {
                     //==========================================================
                     HomeScreenSectionHeader(
                       title: 'Near You',
+
                       onSeeAll: () {
                         Navigator.push(
                           context,
+
                           PageRouteBuilder(
                             pageBuilder: (_, __, ___) => SeeAllScreen(
                               title: 'Near You',
+
                               properties: properties,
+
+                              repository: widget.propertyRepository,
+
+                              roomRepository: widget.roomRepository,
                             ),
+
                             transitionsBuilder:
                                 (
                                   context,
@@ -116,13 +183,16 @@ class HomeScreen extends StatelessWidget {
                                     position:
                                         Tween<Offset>(
                                           begin: const Offset(0, 1),
+
                                           end: Offset.zero,
                                         ).animate(
                                           CurvedAnimation(
                                             parent: animation,
+
                                             curve: Curves.easeOut,
                                           ),
                                         ),
+
                                     child: child,
                                   );
                                 },
@@ -139,7 +209,13 @@ class HomeScreen extends StatelessWidget {
               //==============================================================
               //! PROPERTY LIST
               //==============================================================
-              HomeScreenPropertyHorizontalList(properties: properties),
+              HomeScreenPropertyHorizontalList(
+                properties: properties,
+
+                repository: widget.propertyRepository,
+
+                roomRepository: widget.roomRepository,
+              ),
 
               const SizedBox(height: AppSpacing.xxxl),
             ],

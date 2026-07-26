@@ -8,6 +8,12 @@ import 'package:bh_finder/roles/tenant/features/search/screens/search_screen.dar
 
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/app_bottom_navigation_bar.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
+import 'package:bh_finder/core/repositories/mock/mock_property_repository.dart';
+import 'package:bh_finder/core/repositories/mock/mock_room_repository.dart';
+
 class TenantNavigationScreen extends StatefulWidget {
   const TenantNavigationScreen({super.key});
 
@@ -25,6 +31,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
   //============================================================================
 
   int _currentIndex = 0;
+
+  final PropertyRepository _propertyRepository = MockPropertyRepository();
+
+  final RoomRepository _roomRepository = MockRoomRepository();
 
   bool _hasUnreadNotifications = true;
   bool _hasUnreadLandlordMessages = true;
@@ -53,6 +63,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
             _currentIndex = 1;
           });
         },
+
+        propertyRepository: _propertyRepository,
+
+        roomRepository: _roomRepository,
       ),
 
       SearchScreen(
@@ -61,6 +75,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
             _currentIndex = 0;
           });
         },
+
+        propertyRepository: _propertyRepository,
+
+        roomRepository: _roomRepository,
       ),
 
       FavoritesScreen(
@@ -69,6 +87,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
             _currentIndex = 0;
           });
         },
+
+        propertyRepository: _propertyRepository,
+
+        roomRepository: _roomRepository,
       ),
 
       MessagesScreen(

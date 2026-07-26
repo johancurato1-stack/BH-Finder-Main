@@ -15,29 +15,77 @@ import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashb
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
+//============================================================================
+//! DASHBOARD SCREEN
+//============================================================================
+
 class DashboardScreen extends StatefulWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
 
-  const DashboardScreen({super.key});
+  const DashboardScreen({
+    super.key,
+    required this.propertyRepository,
+    required this.roomRepository,
+  });
+
+  //==========================================================================
+  //! PROPERTIES
+  //==========================================================================
+
+  final PropertyRepository propertyRepository;
+
+  final RoomRepository roomRepository;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
+//============================================================================
+//! STATE
+//============================================================================
+
 class _DashboardScreenState extends State<DashboardScreen> {
-  //==========================================================================
-  //! REPOSITORIES
-  //==========================================================================
-
-  static final PropertyRepository _propertyRepository = PropertyRepository();
-
   //==========================================================================
   //! VARIABLES
   //==========================================================================
 
   int _currentPage = 0;
+
+  bool _loading = true;
+
+  List<LandlordPropertyCardData> _properties = [];
+
+  //==========================================================================
+  //! LIFECYCLE
+  //==========================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadProperties();
+  }
+
+  //==========================================================================
+  //! LOAD PROPERTIES
+  //==========================================================================
+
+  Future<void> _loadProperties() async {
+    final properties = await widget.propertyRepository
+        .getLandlordPropertyCards();
+
+    if (!mounted) return;
+
+    setState(() {
+      _properties = properties;
+
+      _loading = false;
+    });
+  }
 
   //==========================================================================
   //! BUILD
@@ -45,11 +93,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<LandlordPropertyCardData> properties = _propertyRepository
-        .getLandlordPropertyCards();
+    if (_loading) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final properties = _properties;
 
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -81,24 +137,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onPropertyTap: (property) {
                   Navigator.push(
                     context,
+
                     PageRouteBuilder(
-                      pageBuilder: (_, __, ___) =>
-                          PropertyDetailScreen(propertyId: property.id),
+                      pageBuilder: (_, __, ___) => PropertyDetailScreen(
+                        propertyId: property.id,
+
+                        repository: widget.propertyRepository,
+
+                        roomRepository: widget.roomRepository,
+                      ),
+
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                             const begin = Offset(0, 1);
+
                             const end = Offset.zero;
+
                             const curve = Curves.easeOut;
 
                             final offsetAnimation = animation.drive(
                               Tween(
                                 begin: begin,
+
                                 end: end,
                               ).chain(CurveTween(curve: curve)),
                             );
 
                             return SlideTransition(
                               position: offsetAnimation,
+
                               child: child,
                             );
                           },
@@ -109,23 +176,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onAddProperty: () {
                   Navigator.push(
                     context,
+
                     PageRouteBuilder(
                       pageBuilder: (_, __, ___) => const AddPropertyScreen(),
+
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                             const begin = Offset(0, 1);
+
                             const end = Offset.zero;
+
                             const curve = Curves.easeOut;
 
                             final offsetAnimation = animation.drive(
                               Tween(
                                 begin: begin,
+
                                 end: end,
                               ).chain(CurveTween(curve: curve)),
                             );
 
                             return SlideTransition(
                               position: offsetAnimation,
+
                               child: child,
                             );
                           },
@@ -139,6 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               PageIndicator(
                 currentPage: _currentPage,
+
                 pageCount: properties.length + 1,
               ),
 

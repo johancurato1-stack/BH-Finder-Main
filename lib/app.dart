@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
+
+import 'package:bh_finder/shared/widgets/auth/auth_gate.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,7 +16,7 @@ class App extends StatelessWidget {
 
       theme: ThemeData(scaffoldBackgroundColor: AppColors.background),
 
-      home: const SplashScreen(destination: LoginScreen()),
+      home: const SplashScreen(destination: AuthGate()),
     );
   }
 }

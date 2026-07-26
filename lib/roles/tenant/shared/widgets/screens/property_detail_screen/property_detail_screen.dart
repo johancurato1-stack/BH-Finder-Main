@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -14,6 +15,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_owner_card.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/view_rooms_screen.dart';
 
 import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
@@ -29,7 +31,12 @@ class PropertyDetailScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyDetailScreen({super.key, required this.propertyId});
+  const PropertyDetailScreen({
+    super.key,
+    required this.propertyId,
+    required this.repository,
+    required this.roomRepository,
+  });
 
   //============================================================================
   //! PROPERTIES
@@ -37,20 +44,29 @@ class PropertyDetailScreen extends StatefulWidget {
 
   final String propertyId;
 
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
+
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
 }
+//============================================================================
+//! STATE
+//============================================================================
 
 class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //============================================================================
   //! STATE
   //============================================================================
 
-  late final PropertyDetailData _data;
+  PropertyDetailData? _data;
+
+  bool _loading = true;
 
   late final PageController _pageController;
 
-  late final List<String> _images;
+  List<String> _images = [];
 
   Timer? _autoScrollTimer;
 
@@ -66,18 +82,52 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
     _pageController = PageController();
 
-    final repository = PropertyRepository();
+    _images = [];
 
-    _data = repository.getPropertyDetail(widget.propertyId);
+    _loadProperty();
+  }
 
-    _images = _data.imageUrls;
+  //============================================================================
+  //! LOAD PROPERTY
+  //============================================================================
 
-    _startAutoScroll();
+  Future<void> _loadProperty() async {
+    debugPrint('START LOADING PROPERTY: ${widget.propertyId}');
+
+    try {
+      final data = await widget.repository.getPropertyDetail(widget.propertyId);
+
+      debugPrint('PROPERTY LOADED: ${data.title}');
+
+      if (!mounted) return;
+
+      setState(() {
+        _data = data;
+
+        _images = data.imageUrls;
+
+        _loading = false;
+      });
+
+      debugPrint('LOADING FINISHED');
+
+      _startAutoScroll();
+    } catch (e, stackTrace) {
+      debugPrint('PROPERTY DETAIL ERROR: $e');
+      debugPrint(stackTrace.toString());
+
+      if (!mounted) return;
+
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _autoScrollTimer?.cancel();
+
     _pageController.dispose();
 
     super.dispose();
@@ -91,6 +141,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!_pageController.hasClients) return;
 
+      if (_images.isEmpty) return;
+
       int nextPage = _currentPage + 1;
 
       if (nextPage >= _images.length) {
@@ -99,19 +151,26 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
       _pageController.animateToPage(
         nextPage,
+
         duration: const Duration(milliseconds: 600),
+
         curve: Curves.easeInOutCubic,
       );
     });
   }
 
-  /// TODO:
-  void _viewRooms() {
+  void _viewRooms(PropertyDetailData data) {
     Navigator.push(
       context,
+
       MaterialPageRoute(
-        builder: (_) =>
-            ViewRoomsScreen(PropertyName: _data.title, rooms: _data.rooms),
+        builder: (_) => ViewRoomsScreen(
+          PropertyName: data.title,
+
+          rooms: data.rooms,
+
+          repository: widget.roomRepository,
+        ),
       ),
     );
   }
@@ -122,21 +181,35 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading || _data == null) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final data = _data!;
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+
         child: Column(
           children: [
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
+
                 children: [
                   Stack(
                     children: [
                       ImageCarousel(
                         pageController: _pageController,
+
                         images: _images,
+
                         onPageChanged: (index) {
                           setState(() {
                             _currentPage = index;
@@ -146,9 +219,12 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                       PropertyDetailFloatingActions(
                         onBack: () => Navigator.pop(context),
+
                         isFavorite: false,
+
                         onFavorite: () {
-                          // TODO: Connect to FavoritesRepository.
+                          // TODO:
+                          // Connect FavoritesRepository
                         },
                       ),
                     ],
@@ -156,23 +232,28 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   PageIndicator(
                     currentPage: _currentPage,
+
                     pageCount: _images.length,
                   ),
 
                   Padding(
                     padding: const EdgeInsets.all(20),
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
-                        PropertyDetailHeader(data: _data),
+                        PropertyDetailHeader(data: data),
 
                         const SizedBox(height: 15),
 
-                        PropertyDetailMetaRow(data: _data),
+                        PropertyDetailMetaRow(data: data),
 
                         const Divider(
                           height: 32,
+
                           thickness: .5,
+
                           color: AppColors.tertiary,
                         ),
 
@@ -184,17 +265,22 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         const SizedBox(height: 8),
 
                         Text(
-                          _data.description,
+                          data.description,
+
                           style: const TextStyle(
                             fontSize: 13,
+
                             color: AppColors.secondary,
+
                             height: 1.4,
                           ),
                         ),
 
                         const Divider(
                           height: 32,
+
                           thickness: .5,
+
                           color: AppColors.tertiary,
                         ),
 
@@ -205,11 +291,13 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                         const SizedBox(height: 12),
 
-                        PropertyDetailAmenitiesGrid(amenities: _data.amenities),
+                        PropertyDetailAmenitiesGrid(amenities: data.amenities),
 
                         const Divider(
                           height: 32,
+
                           thickness: .5,
+
                           color: AppColors.tertiary,
                         ),
 
@@ -220,7 +308,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                         const SizedBox(height: 12),
 
-                        PropertyDetailOwnerCard(landlord: _data.landlord),
+                        if (data.landlord != null)
+                          PropertyDetailOwnerCard(landlord: data.landlord!),
                       ],
                     ),
                   ),
@@ -229,8 +318,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
             ),
 
             PropertyDetailBottomButton(
-              roomCount: _data.roomCount,
-              onPressed: _viewRooms,
+              roomCount: data.roomCount,
+
+              onPressed: () {
+                _viewRooms(data);
+              },
             ),
           ],
         ),

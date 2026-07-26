@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/property_card_horizontal.dart';
@@ -13,13 +16,22 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const HomeScreenPropertyHorizontalList({super.key, required this.properties});
+  const HomeScreenPropertyHorizontalList({
+    super.key,
+    required this.properties,
+    required this.repository,
+    required this.roomRepository,
+  });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
   final List<TenantPropertyCardData> properties;
+
+  final PropertyRepository repository;
+
+  final RoomRepository roomRepository;
 
   //============================================================================
   //! BUILD
@@ -29,11 +41,16 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 270,
+
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+
         physics: const BouncingScrollPhysics(),
+
         padding: const EdgeInsets.symmetric(horizontal: 16),
+
         itemCount: properties.length,
+
         itemBuilder: (context, index) {
           final property = properties[index];
 
@@ -41,10 +58,19 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
             children: [
               SizedBox(
                 width: 160,
+
                 height: 255,
+
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: PropertyCardHorizontal(data: property),
+
+                  child: PropertyCardHorizontal(
+                    data: property,
+
+                    repository: repository,
+
+                    roomRepository: roomRepository,
+                  ),
                 ),
               ),
 

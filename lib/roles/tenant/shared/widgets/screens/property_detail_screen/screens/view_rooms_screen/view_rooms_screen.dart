@@ -9,6 +9,8 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
 
+import 'package:bh_finder/core/repositories/room_repository.dart';
+
 class ViewRoomsScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
@@ -18,6 +20,7 @@ class ViewRoomsScreen extends StatefulWidget {
     super.key,
     required this.PropertyName,
     required this.rooms,
+    required this.repository,
   });
 
   //============================================================================
@@ -26,6 +29,7 @@ class ViewRoomsScreen extends StatefulWidget {
 
   final String PropertyName;
   final List<RoomModel> rooms;
+  final RoomRepository repository;
 
   @override
   State<ViewRoomsScreen> createState() => _ViewRoomsScreenState();
@@ -58,7 +62,12 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
             Expanded(
               child: Column(
                 children: [
-                  Expanded(child: ViewRoomListView(rooms: widget.rooms)),
+                  Expanded(
+                    child: ViewRoomListView(
+                      rooms: widget.rooms,
+                      repository: widget.repository,
+                    ),
+                  ),
 
                   const ViewRoomsAvailabilityNoticeCard(),
                 ],
