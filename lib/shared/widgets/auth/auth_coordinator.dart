@@ -7,16 +7,19 @@ import 'package:bh_finder/core/view_models/auth_state_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
-import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
+import 'package:bh_finder/roles/tenant/features/auth/forgot_password/screens/reset_password_screen.dart';
 
-class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
+
+class AuthCoordinator extends StatefulWidget {
+  const AuthCoordinator({super.key});
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
+  State<AuthCoordinator> createState() => _AuthCoordinatorState();
 }
 
-class _AuthGateState extends State<AuthGate> {
+class _AuthCoordinatorState extends State<AuthCoordinator> {
   //============================================================================
   //! VIEW MODELS / REPOSITORIES
   //============================================================================
@@ -36,15 +39,51 @@ class _AuthGateState extends State<AuthGate> {
   VoidCallback? _authListener;
 
   //============================================================================
+  //! PASSWORD RECOVERY
+  //============================================================================
+
+  bool _handledPasswordRecovery = false;
+
+  //============================================================================
   //! AUTH LISTENER
   //============================================================================
 
   void _listenAuthChanges() {
     _authListener = () async {
+      if (_authViewModel.lastEvent == AuthChangeEvent.passwordRecovery) {
+        _handlePasswordRecovery();
+        return;
+      }
+
       await _checkSession();
     };
 
     _authViewModel.addListener(_authListener!);
+  }
+
+  //============================================================================
+  //! PASSWORD RECOVERY
+  //============================================================================
+
+  void _handlePasswordRecovery() {
+    if (_authViewModel.lastEvent != AuthChangeEvent.passwordRecovery) {
+      _handledPasswordRecovery = false;
+      return;
+    }
+
+    if (_handledPasswordRecovery) {
+      return;
+    }
+
+    _handledPasswordRecovery = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const ResetPasswordScreen()));
+    });
   }
 
   //============================================================================
@@ -65,44 +104,42 @@ class _AuthGateState extends State<AuthGate> {
   Future<void> _checkSession() async {
     if (!mounted) return;
 
-    //==========================================================================
-    //! LOGGED OUT
-    //==========================================================================
+    setState(() {
+      _loading = true;
+    });
 
     if (!_authViewModel.isLoggedIn) {
-      setState(() {
-        _role = null;
-        _loading = true;
-      });
-
-      await Future.delayed(const Duration(milliseconds: 800));
+      await Future.delayed(const Duration(seconds: 2));
 
       if (!mounted) return;
 
       setState(() {
+        _role = null;
         _loading = false;
       });
 
       return;
     }
 
-    //==========================================================================
-    //! LOGGED IN
-    //==========================================================================
+    try {
+      final profile = await _profileRepository.getCurrentProfile();
 
-    setState(() {
-      _loading = true;
-    });
+      if (!mounted) return;
 
-    final profile = await _profileRepository.getCurrentProfile();
+      setState(() {
+        _role = profile?['last_active_role'];
+        _loading = false;
+      });
+    } catch (e, stackTrace) {
+      debugPrint('PROFILE ERROR: $e');
+      debugPrintStack(stackTrace: stackTrace);
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _role = profile?['last_active_role'];
-
-      _loading = false;
-    });
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -124,14 +161,13 @@ class _AuthGateState extends State<AuthGate> {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _authViewModel,
-
       builder: (context, _) {
         //======================================================================
         //! LOADING
         //======================================================================
 
         if (_loading) {
-          return const SplashScreen(destination: LoginScreen());
+          return const LoadingScreen();
         }
 
         //======================================================================
@@ -147,9 +183,7 @@ class _AuthGateState extends State<AuthGate> {
         //======================================================================
 
         if (_role == null) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const LoadingScreen();
         }
 
         //======================================================================

@@ -4,7 +4,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 
-import 'package:bh_finder/shared/widgets/auth/auth_gate.dart';
+import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
 
       theme: ThemeData(scaffoldBackgroundColor: AppColors.background),
 
-      home: const SplashScreen(destination: AuthGate()),
+      home: const SplashScreen(destination: AuthCoordinator()),
     );
   }
 }

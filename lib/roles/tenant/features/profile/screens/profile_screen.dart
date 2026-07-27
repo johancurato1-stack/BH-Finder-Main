@@ -11,6 +11,7 @@ import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
 import 'package:bh_finder/core/view_models/auth_view_model.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
@@ -128,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final profile = _profileViewModel.profile;
 
     if (profile == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const LoadingScreen();
     }
 
     return Scaffold(

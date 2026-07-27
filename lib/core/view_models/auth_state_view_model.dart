@@ -22,6 +22,10 @@ class AuthStateViewModel extends ChangeNotifier {
 
   String? get userId => _session?.user.id;
 
+  AuthChangeEvent? _lastEvent;
+
+  AuthChangeEvent? get lastEvent => _lastEvent;
+
   //============================================================================
   //! LISTENER
   //============================================================================
@@ -33,18 +37,10 @@ class AuthStateViewModel extends ChangeNotifier {
   //============================================================================
 
   void initialize() {
-    print('AUTH VIEW MODEL INITIALIZED');
-
     _session = _supabase.auth.currentSession;
 
-    print('CURRENT SESSION: $_session');
-
     _authSubscription = _supabase.auth.onAuthStateChange.listen((data) {
-      print('============================');
-      print('AUTH EVENT: ${data.event}');
-      print('SESSION: ${data.session}');
-      print('============================');
-
+      _lastEvent = data.event;
       _session = data.session;
 
       notifyListeners();

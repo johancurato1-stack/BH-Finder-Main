@@ -118,6 +118,62 @@ class AuthViewModel {
     await _repository.signOut();
   }
 
+  Future<void> updatePassword({required String password}) async {
+    await _repository.updatePassword(password: password);
+  }
+
+  Future<void> resendEmailVerification({required String email}) async {
+    await _repository.resendEmailVerification(email: email);
+  }
+
+  Future<bool> isEmailVerified() async {
+    return await _repository.isEmailVerified();
+  }
+
+  //============================================================================
+  //! AUTH ERROR MESSAGES
+  //============================================================================
+
+  String getFriendlyAuthError(Object error) {
+    final message = error.toString().toLowerCase();
+
+    if (message.contains('user already registered')) {
+      return 'An account with this email already exists.';
+    }
+
+    if (message.contains('email not confirmed')) {
+      return 'Please verify your email before logging in.';
+    }
+
+    if (message.contains('invalid login credentials')) {
+      return 'Invalid email or password.';
+    }
+
+    if (message.contains('over_email_send_rate_limit')) {
+      return 'You have requested verification emails too frequently.\n\nPlease wait a few minutes before trying again.';
+    }
+
+    if (message.contains('signup_disabled')) {
+      return 'Account registration is currently unavailable.';
+    }
+
+    if (message.contains('network') ||
+        message.contains('socketexception') ||
+        message.contains('failed host lookup')) {
+      return 'No internet connection.';
+    }
+
+    return 'Unable to log in. Please try again.';
+  }
+
+  //============================================================================
+  //! RESET PASSWORD
+  //============================================================================
+
+  Future<void> resetPassword({required String email}) async {
+    await _repository.resetPassword(email: email);
+  }
+
   //============================================================================
   //! FORM VALIDITY
   //============================================================================

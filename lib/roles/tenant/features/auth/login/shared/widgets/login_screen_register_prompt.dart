@@ -10,8 +10,8 @@ class LoginScreenRegisterPrompt extends StatelessWidget {
   //! NAVIGATE TO SIGN UP
   //============================================================================
 
-  void _navigateToSignup(BuildContext context) {
-    Navigator.push(
+  Future<void> _navigateToSignup(BuildContext context) async {
+    await Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const SignupScreen()),
     );
@@ -25,7 +25,6 @@ class LoginScreenRegisterPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-
       children: [
         const Text(
           "Don't have an account? ",
@@ -35,10 +34,8 @@ class LoginScreenRegisterPrompt extends StatelessWidget {
             color: AppColors.tertiary,
           ),
         ),
-
         GestureDetector(
           onTap: () => _navigateToSignup(context),
-
           child: const Text(
             'Register',
             style: TextStyle(

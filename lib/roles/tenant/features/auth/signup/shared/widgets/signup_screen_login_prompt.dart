@@ -2,8 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
+
 class SignupScreenLoginPrompt extends StatelessWidget {
   const SignupScreenLoginPrompt({super.key});
+
+  //============================================================================
+  //! NAVIGATE TO LOGIN
+  //============================================================================
+
+  void _navigateToLogin(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
 
   //============================================================================
   //! BUILD
@@ -13,7 +26,6 @@ class SignupScreenLoginPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-
       children: [
         const Text(
           'Already have an account? ',
@@ -23,10 +35,8 @@ class SignupScreenLoginPrompt extends StatelessWidget {
             color: AppColors.tertiary,
           ),
         ),
-
         GestureDetector(
-          onTap: () => Navigator.pop(context),
-
+          onTap: () => _navigateToLogin(context),
           child: const Text(
             'Login',
             style: TextStyle(

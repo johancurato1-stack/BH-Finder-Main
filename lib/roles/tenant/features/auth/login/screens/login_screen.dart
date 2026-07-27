@@ -10,8 +10,10 @@ import 'package:bh_finder/roles/tenant/shared/widgets/auth/auth_header.dart';
 import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/login_screen_form.dart';
 import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/login_screen_register_prompt.dart';
 import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/social_login_section.dart';
+import 'package:bh_finder/roles/tenant/features/auth/forgot_password/screens/forgot_password_screen.dart';
 
 import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -81,11 +83,94 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text.trim(),
       );
     } catch (error) {
-      if (!mounted) return;
+      final message = error.toString();
+
+      if (message.contains('Email not confirmed')) {
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.mark_email_unread_rounded,
+            iconColor: Colors.orange,
+            title: 'Email Not Verified',
+            message:
+                'Please verify your email before logging in.\n\n'
+                'Check your inbox and click the verification link.',
+            buttonText: 'Resend Email',
+            onPressed: () async {
+              Navigator.of(context).pop();
+
+              try {
+                await _viewModel.resendEmailVerification(
+                  email: _emailController.text.trim(),
+                );
+
+                if (!mounted) return;
+
+                await showDialog(
+                  context: context,
+                  builder: (_) => PrimaryDialog(
+                    icon: Icons.mark_email_read_rounded,
+                    iconColor: Colors.green,
+                    title: 'Verification Email Sent',
+                    message:
+                        'We have sent another verification email.\n\n'
+                        'Please check your inbox and click the verification link before logging in.',
+                    buttonText: 'OK',
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                );
+              } catch (error) {
+                if (!mounted) return;
+
+                debugPrint('Resend verification error: $error');
+
+                await showDialog(
+                  context: context,
+                  builder: (_) => PrimaryDialog(
+                    icon: Icons.error_outline_rounded,
+                    iconColor: Colors.red,
+                    title: 'Unable to Send Email',
+                    message: _viewModel.getFriendlyAuthError(error),
+                    buttonText: 'OK',
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        );
+
+        return;
+      }
 
       setState(() {
-        _viewModel.setLoginError('Invalid email or password.');
+        _viewModel.setLoginError(_viewModel.getFriendlyAuthError(error));
       });
+    }
+  }
+
+  //============================================================================
+  //! FORGOT PASSWORD
+  //============================================================================
+
+  Future<void> _forgotPassword() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+    );
+
+    _emailController.clear();
+    _passwordController.clear();
+
+    _viewModel.resetValidation();
+
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -110,17 +195,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.screenPadding,
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 //============================================================================
                 //! HEADER
@@ -138,12 +220,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 //============================================================================
                 LoginScreenForm(
                   viewModel: _viewModel,
-
                   emailController: _emailController,
-
                   passwordController: _passwordController,
-
                   onLogin: _login,
+                  onForgotPassword: _forgotPassword,
                 ),
 
                 //============================================================================

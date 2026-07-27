@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/shared/widgets/splash/services/splash_service.dart';
-import 'package:bh_finder/shared/widgets/splash/shared/widgets/splash_screen_loading.dart';
-import 'package:bh_finder/shared/widgets/splash/shared/widgets/splash_screen_logo.dart';
+import 'package:bh_finder/shared/widgets/splash/shared/widgets/splash_content.dart';
 
 class SplashScreen extends StatefulWidget {
   //============================================================================
@@ -49,24 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: const SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              //==============================================================
-              //! LOGO
-              //==============================================================
-              SplashScreenLogo(),
-
-              //==============================================================
-              //! LOADING
-              //==============================================================
-              SplashScreenLoading(),
-            ],
-          ),
-        ),
-      ),
+      body: const SafeArea(child: SplashContent()),
     );
   }
 }

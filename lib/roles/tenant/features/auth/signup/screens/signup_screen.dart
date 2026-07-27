@@ -14,6 +14,8 @@ import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signu
 import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_terms_section.dart';
 
 import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
+import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -154,9 +156,22 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> _createAccount() async {
     if (!_viewModel.canCreateAccount) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please complete all required fields correctly.'),
+      await showDialog(
+        context: context,
+        builder: (_) => PrimaryDialog(
+          icon: Icons.warning_amber_rounded,
+          iconColor: Colors.orange,
+
+          title: 'Incomplete Information',
+
+          message:
+              'Please complete all required fields correctly before creating your account.',
+
+          buttonText: 'OK',
+
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       );
 
@@ -164,11 +179,22 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (!_agreedToTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Please accept the Terms & Conditions before continuing.',
-          ),
+      await showDialog(
+        context: context,
+        builder: (_) => PrimaryDialog(
+          icon: Icons.gpp_good_rounded,
+          iconColor: Colors.orange,
+
+          title: 'Terms Required',
+
+          message:
+              'Please accept the Terms & Conditions and Privacy Policy before creating your account.',
+
+          buttonText: 'OK',
+
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       );
 
@@ -185,17 +211,54 @@ class _SignupScreenState extends State<SignupScreen> {
         password: _passwordController.text,
       );
 
-      print('========== ACCOUNT CREATED ==========');
-
       if (!mounted) return;
 
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => PrimaryDialog(
+          icon: Icons.mark_email_read_rounded,
+          iconColor: Colors.green,
 
-      print('SIGN UP ERROR: $e');
+          title: 'Verify Your Email',
+
+          message:
+              'Your account has been created successfully.\n\n'
+              'We sent a verification email to your inbox. Please verify your email before logging in.',
+
+          buttonText: 'Go to Login',
+
+          onPressed: () {
+            Navigator.of(context).pop();
+
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      await showDialog(
+        context: context,
+        builder: (_) => PrimaryDialog(
+          icon: Icons.error_outline_rounded,
+          iconColor: Colors.red,
+
+          title: 'Unable to Create Account',
+
+          message: _viewModel.getFriendlyAuthError(e),
+
+          buttonText: 'OK',
+
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      );
     }
   }
 

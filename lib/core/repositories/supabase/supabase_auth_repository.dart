@@ -25,6 +25,7 @@ class SupabaseAuthRepository implements AuthRepository {
     final response = await _supabase.auth.signUp(
       email: email,
       password: password,
+      emailRedirectTo: 'bhfinder://confirmation',
       data: {
         'first_name': firstName,
         'last_name': lastName,
@@ -69,7 +70,45 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> resetPassword({required String email}) async {
-    await _supabase.auth.resetPasswordForEmail(email);
+    await _supabase.auth.resetPasswordForEmail(
+      email,
+      redirectTo: 'bhfinder://reset-password',
+    );
+  }
+
+  //============================================================================
+  //! UPDATE PASSWORD
+  //============================================================================
+
+  @override
+  Future<void> updatePassword({required String password}) async {
+    await _supabase.auth.updateUser(UserAttributes(password: password));
+  }
+
+  //============================================================================
+  //! RESEND EMAIL VERIFICATION
+  //============================================================================
+
+  @override
+  Future<void> resendEmailVerification({required String email}) async {
+    await _supabase.auth.resend(
+      type: OtpType.signup,
+      email: email,
+      emailRedirectTo: 'bhfinder://confirmation',
+    );
+  }
+
+  //============================================================================
+  //! CHECK EMAIL VERIFICATION
+  //============================================================================
+
+  @override
+  Future<bool> isEmailVerified() async {
+    await _supabase.auth.refreshSession();
+
+    final user = _supabase.auth.currentUser;
+
+    return user?.emailConfirmedAt != null;
   }
 
   //============================================================================

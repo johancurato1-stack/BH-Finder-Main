@@ -15,14 +15,22 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 //* - Primary button
 //* - Secondary (outlined) button
 //* - Optional leading icon
+//* - Loading state
 //
 //==============================================================================
+
 class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isSecondary;
   final IconData? icon;
   final Color? iconColor;
+
+  //----------------------------------------------------------------------------
+  //! Loading
+  //----------------------------------------------------------------------------
+
+  final bool isLoading;
 
   const PrimaryButton({
     super.key,
@@ -31,6 +39,7 @@ class PrimaryButton extends StatelessWidget {
     this.isSecondary = false,
     this.icon,
     this.iconColor,
+    this.isLoading = false,
   });
 
   @override
@@ -43,12 +52,12 @@ class PrimaryButton extends StatelessWidget {
 
       child: isSecondary
           ? OutlinedButton(
-              onPressed: onPressed,
+              onPressed: isLoading ? null : onPressed,
               style: _secondaryButtonStyle(),
               child: _buildButtonContent(),
             )
           : ElevatedButton(
-              onPressed: onPressed,
+              onPressed: isLoading ? null : onPressed,
               style: _primaryButtonStyle(),
               child: _buildButtonContent(),
             ),
@@ -61,6 +70,17 @@ class PrimaryButton extends StatelessWidget {
 
   /// Builds the content displayed inside the button.
   Widget _buildButtonContent() {
+    if (isLoading) {
+      return const SizedBox(
+        width: 22,
+        height: 22,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.5,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -90,6 +110,8 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.white,
+      disabledBackgroundColor: AppColors.primary,
+      disabledForegroundColor: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -101,6 +123,7 @@ class PrimaryButton extends StatelessWidget {
   ButtonStyle _secondaryButtonStyle() {
     return OutlinedButton.styleFrom(
       side: const BorderSide(color: AppColors.tertiary, width: 0.5),
+      disabledForegroundColor: AppColors.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),

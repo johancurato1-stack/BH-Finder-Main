@@ -33,4 +33,35 @@ class MockAuthRepository implements AuthRepository {
 
   @override
   String? get currentUserId => null;
+
+  //============================================================================
+  //! UPDATE PASSWORD
+  //============================================================================
+
+  @override
+  Future<void> updatePassword({required String password}) async {
+    throw UnimplementedError('Mock updatePassword() has not been implemented.');
+  }
+
+  //============================================================================
+  //! RESEND EMAIL VERIFICATION
+  //============================================================================
+
+  @override
+  Future<void> resendEmailVerification({required String email}) async {
+    throw UnimplementedError(
+      'Mock resendEmailVerification() has not been implemented.',
+    );
+  }
+
+  //============================================================================
+  //! CHECK EMAIL VERIFICATION
+  //============================================================================
+
+  @override
+  Future<bool> isEmailVerified() async {
+    throw UnimplementedError(
+      'Mock isEmailVerified() has not been implemented.',
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 import 'package:bh_finder/core/view_models/auth_view_model.dart';
 
@@ -14,6 +15,7 @@ class LoginScreenForm extends StatelessWidget {
   final TextEditingController passwordController;
 
   final VoidCallback onLogin;
+  final VoidCallback onForgotPassword;
 
   const LoginScreenForm({
     super.key,
@@ -25,6 +27,8 @@ class LoginScreenForm extends StatelessWidget {
     required this.passwordController,
 
     required this.onLogin,
+
+    required this.onForgotPassword,
   });
 
   //============================================================================
@@ -71,7 +75,21 @@ class LoginScreenForm extends StatelessWidget {
           errorMessage: viewModel.loginError,
         ),
 
-        const SizedBox(height: AppSpacing.huge),
+        //============================================================================
+        //! FORGET PASSWORD
+        //============================================================================
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: onForgotPassword,
+            child: Text(
+              'Forgot Password?',
+              style: TextStyle(fontSize: 12, color: AppColors.primary),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: AppSpacing.md),
 
         //============================================================================
         //! LOGIN BUTTON
