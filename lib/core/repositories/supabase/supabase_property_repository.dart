@@ -92,6 +92,57 @@ class SupabasePropertyRepository implements PropertyRepository {
   }
 
   //============================================================================
+  //! CREATE PROPERTY
+  //============================================================================
+
+  @override
+  Future<String> create(PropertyModel property) async {
+    final response = await _supabase
+        .from('properties')
+        .insert({
+          'owner_id': property.landlordId,
+          'title': property.title,
+          'description': property.description,
+          'latitude': property.latitude,
+          'longitude': property.longitude,
+          'amenities': property.amenities.map((e) => e.name).toList(),
+          'availability_status': property.status.name,
+        })
+        .select('id')
+        .single();
+
+    return response['id'] as String;
+  }
+
+  //============================================================================
+  //! UPDATE PROPERTY
+  //============================================================================
+
+  @override
+  Future<void> update(PropertyModel property) async {
+    await _supabase
+        .from('properties')
+        .update({
+          'title': property.title,
+          'description': property.description,
+          'latitude': property.latitude,
+          'longitude': property.longitude,
+          'amenities': property.amenities.map((e) => e.name).toList(),
+          'availability_status': property.status.name,
+        })
+        .eq('id', property.id);
+  }
+
+  //============================================================================
+  //! DELETE PROPERTY
+  //============================================================================
+
+  @override
+  Future<void> delete(String propertyId) async {
+    await _supabase.from('properties').delete().eq('id', propertyId);
+  }
+
+  //============================================================================
   //! PROPERTY CARDS
   //============================================================================
 
@@ -102,25 +153,15 @@ class SupabasePropertyRepository implements PropertyRepository {
     return properties.map((property) {
       return TenantPropertyCardData(
         id: property.id,
-
         title: property.title,
-
         coverImageUrl: property.imageUrls.firstOrNull ?? '',
-
         minimumPrice: 0,
-
         roomCount: 0,
-
         status: property.status,
-
         genderPreference: property.genderPreference,
-
         favoriteCount: property.favoriteCount,
-
         distance: 0,
-
         amenities: property.amenities,
-
         isFavorite: false,
       );
     }).toList();
@@ -153,31 +194,20 @@ class SupabasePropertyRepository implements PropertyRepository {
 
     return PropertyModel(
       id: property['id'],
-
       landlordId: property['owner_id'],
-
       title: property['title'],
-
       description: property['description'] ?? '',
-
       address: '',
-
-      latitude: property['latitude'],
-
-      longitude: property['longitude'],
-
+      latitude: (property['latitude'] as num).toDouble(),
+      longitude: (property['longitude'] as num).toDouble(),
       imageUrls: (property['property_images'] as List)
           .map((image) => image['storage_path'] as String)
           .toList(),
-
       amenities: (property['amenities'] as List)
           .map((item) => Amenity.values.firstWhere((e) => e.name == item))
           .toList(),
-
       genderPreference: _calculateGenderPreference(rooms),
-
       favoriteCount: 0,
-
       status: property['availability_status'] == 'available'
           ? PropertyStatus.available
           : PropertyStatus.occupied,

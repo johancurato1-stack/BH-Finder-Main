@@ -5,7 +5,7 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet_secondary/filter_bottom_sheet_secondary.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_availability_notice_card.dart';
+import 'package:bh_finder/shared/widgets/cards/information_notice_card.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
 
@@ -69,7 +69,12 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
                     ),
                   ),
 
-                  const ViewRoomsAvailabilityNoticeCard(),
+                  InformationNoticeCard(
+                    icon: Icons.info_rounded,
+                    message:
+                        'Availability changes fast.\n'
+                        'Inquire now to get the latest update from the owner.',
+                  ),
                 ],
               ),
             ),

@@ -59,7 +59,18 @@ class AddPropertyPhotosSection extends StatelessWidget {
         //==============================================================
         //! MAIN IMAGE
         //==============================================================
-        ImageCard(imageUrl: images[selectedImage]),
+        if (images.isNotEmpty)
+          ImageCard(imageUrl: images[selectedImage])
+        else
+          Container(
+            height: 250,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Colors.grey.shade200,
+            ),
+            alignment: Alignment.center,
+            child: const Text('No photos selected'),
+          ),
 
         const SizedBox(height: 16),
 

@@ -16,6 +16,7 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 //* - Secondary (outlined) button
 //* - Optional leading icon
 //* - Loading state
+//* - Optional custom background color
 //
 //==============================================================================
 
@@ -32,6 +33,12 @@ class PrimaryButton extends StatelessWidget {
 
   final bool isLoading;
 
+  //----------------------------------------------------------------------------
+  //! Styling
+  //----------------------------------------------------------------------------
+
+  final Color? backgroundColor;
+
   const PrimaryButton({
     super.key,
     required this.text,
@@ -40,6 +47,7 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
     this.iconColor,
     this.isLoading = false,
+    this.backgroundColor,
   });
 
   @override
@@ -107,10 +115,12 @@ class PrimaryButton extends StatelessWidget {
 
   /// Style used by the primary button.
   ButtonStyle _primaryButtonStyle() {
+    final color = backgroundColor ?? AppColors.primary;
+
     return ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primary,
+      backgroundColor: color,
       foregroundColor: Colors.white,
-      disabledBackgroundColor: AppColors.primary,
+      disabledBackgroundColor: color,
       disabledForegroundColor: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(

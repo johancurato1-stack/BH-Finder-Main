@@ -50,6 +50,40 @@ class MockPropertyRepository implements PropertyRepository {
   }
 
   //============================================================================
+  //! CREATE PROPERTY
+  //============================================================================
+
+  @override
+  Future<String> create(PropertyModel property) async {
+    mockProperties.add(property);
+    return property.id;
+  }
+
+  //============================================================================
+  //! UPDATE PROPERTY
+  //============================================================================
+
+  @override
+  Future<void> update(PropertyModel property) async {
+    final index = mockProperties.indexWhere((p) => p.id == property.id);
+
+    if (index == -1) {
+      throw Exception('Property not found.');
+    }
+
+    mockProperties[index] = property;
+  }
+
+  //============================================================================
+  //! DELETE PROPERTY
+  //============================================================================
+
+  @override
+  Future<void> delete(String propertyId) async {
+    mockProperties.removeWhere((property) => property.id == propertyId);
+  }
+
+  //============================================================================
   //! PROPERTY CARDS
   //============================================================================
 
@@ -65,25 +99,15 @@ class MockPropertyRepository implements PropertyRepository {
       cards.add(
         TenantPropertyCardData(
           id: property.id,
-
           title: property.title,
-
           coverImageUrl: property.imageUrls.first,
-
           minimumPrice: minimumPrice,
-
           roomCount: roomCount,
-
           status: property.status,
-
           genderPreference: property.genderPreference,
-
           favoriteCount: property.favoriteCount,
-
           distance: 0,
-
           amenities: property.amenities,
-
           isFavorite: false,
         ),
       );
@@ -106,23 +130,14 @@ class MockPropertyRepository implements PropertyRepository {
       cards.add(
         LandlordPropertyCardData(
           id: property.id,
-
           title: property.title,
-
           coverImageUrl: property.imageUrls.first,
-
           status: property.status,
-
           distance: 0,
-
           totalRooms: roomCount,
-
           totalViews: 0,
-
           totalFavorites: property.favoriteCount,
-
           totalInquiries: 0,
-
           isVerified:
               landlord.verificationStatus == VerificationStatus.verified,
         ),
@@ -150,33 +165,19 @@ class MockPropertyRepository implements PropertyRepository {
 
     return PropertyDetailData(
       id: property.id,
-
       title: property.title,
-
       description: property.description,
-
       imageUrls: property.imageUrls,
-
       minimumPrice: await _roomRepository.getMinimumPrice(property.id),
-
       roomCount: await _roomRepository.getRoomCount(property.id),
-
       rooms: await _roomRepository.getByProperty(property.id),
-
       status: property.status,
-
       genderPreference: property.genderPreference,
-
       amenities: property.amenities,
-
       favoriteCount: property.favoriteCount,
-
       distance: 0,
-
       latitude: property.latitude,
-
       longitude: property.longitude,
-
       landlord: landlord,
     );
   }

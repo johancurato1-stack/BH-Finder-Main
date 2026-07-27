@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Location Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:label="bh_finder"
         android:name="${applicationName}"
@@ -28,28 +32,28 @@
             </intent-filter>
 
             <!-- Password Reset Deep Link -->
-<intent-filter>
-    <action android:name="android.intent.action.VIEW" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-    <data
-        android:scheme="bhfinder"
-        android:host="reset-password" />
-</intent-filter>
+                <data
+                    android:scheme="bhfinder"
+                    android:host="reset-password" />
+            </intent-filter>
 
-<!-- Email Verification Deep Link -->
-<intent-filter>
-    <action android:name="android.intent.action.VIEW" />
+            <!-- Email Verification Deep Link -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-    <data
-        android:scheme="bhfinder"
-        android:host="confirmation" />
-</intent-filter>
+                <data
+                    android:scheme="bhfinder"
+                    android:host="confirmation" />
+            </intent-filter>
 
         </activity>
 

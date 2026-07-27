@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_radius.dart';
@@ -27,14 +29,23 @@ class ImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final image = imageUrl.startsWith('http')
+        ? Image.network(
+            imageUrl,
+            width: double.infinity,
+            height: height,
+            fit: BoxFit.cover,
+          )
+        : Image.file(
+            File(imageUrl),
+            width: double.infinity,
+            height: height,
+            fit: BoxFit.cover,
+          );
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppRadius.lg),
-      child: Image.network(
-        imageUrl,
-        width: double.infinity,
-        height: height,
-        fit: BoxFit.cover,
-      ),
+      child: image,
     );
   }
 }

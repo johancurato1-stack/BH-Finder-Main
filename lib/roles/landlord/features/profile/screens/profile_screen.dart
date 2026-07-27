@@ -1,4 +1,3 @@
-import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/models/user_model.dart';
@@ -12,7 +11,6 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
-import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
 import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';

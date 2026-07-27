@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_radius.dart';
@@ -75,7 +76,9 @@ class PhotoThumbnails extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppRadius.md - 2),
-                child: Image.network(images[index], fit: BoxFit.cover),
+                child: images[index].startsWith('http')
+                    ? Image.network(images[index], fit: BoxFit.cover)
+                    : Image.file(File(images[index]), fit: BoxFit.cover),
               ),
             ),
           );

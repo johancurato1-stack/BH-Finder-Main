@@ -69,7 +69,7 @@ class AddPropertyInformationSection extends StatelessWidget {
         //! DESCRIPTION
         //==============================================================
         const Text(
-          'Description',
+          'Description (Optional)',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,

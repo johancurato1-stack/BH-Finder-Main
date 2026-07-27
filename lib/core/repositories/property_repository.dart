@@ -20,6 +20,16 @@ abstract class PropertyRepository {
   Future<List<PropertyModel>> getByLandlord(String landlordId);
 
   //============================================================================
+  //! CRUD
+  //============================================================================
+
+  Future<String> create(PropertyModel property);
+
+  Future<void> update(PropertyModel property);
+
+  Future<void> delete(String propertyId);
+
+  //============================================================================
   //! PROPERTY CARDS
   //============================================================================
 
