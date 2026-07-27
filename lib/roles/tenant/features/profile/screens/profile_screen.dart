@@ -9,14 +9,13 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
-import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
-import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
 import 'package:bh_finder/core/view_models/auth_view_model.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
 import 'package:bh_finder/core/view_models/profile_view_model.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
+import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';
 
 class ProfileScreen extends StatefulWidget {
   //============================================================================
@@ -126,221 +125,233 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = _profileViewModel.profile;
+    return AnimatedBuilder(
+      animation: _profileViewModel,
 
-    if (profile == null) {
-      return const LoadingScreen();
-    }
+      builder: (context, _) {
+        final profile = _profileViewModel.profile;
 
-    return Scaffold(
-      backgroundColor: AppColors.primary,
+        if (_profileViewModel.loading || profile == null) {
+          return const LoadingScreen();
+        }
 
-      body: SafeArea(
-        bottom: false,
+        return Scaffold(
+          backgroundColor: AppColors.primary,
 
-        child: Column(
-          children: [
-            //==========================================================================
-            //! HEADER
-            //==========================================================================
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xxl,
-                vertical: AppSpacing.xl,
-              ),
+          body: SafeArea(
+            bottom: false,
 
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  //==============================================================
-                  //! PROFILE AVATAR
-                  //==============================================================
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundColor: AppColors.white,
-
-                    child: Icon(
-                      Icons.person,
-                      size: 45,
-                      color: AppColors.tertiary,
-                    ),
+            child: Column(
+              children: [
+                //==========================================================================
+                //! HEADER
+                //==========================================================================
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xxl,
+                    vertical: AppSpacing.xl,
                   ),
 
-                  const SizedBox(width: AppSpacing.lg),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                  //==============================================================
-                  //! USER INFORMATION
-                  //==============================================================
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //==============================================================
+                      //! PROFILE AVATAR
+                      //==============================================================
+                      const CircleAvatar(
+                        radius: 35,
+                        backgroundColor: AppColors.white,
+
+                        child: Icon(
+                          Icons.person,
+                          size: 45,
+                          color: AppColors.tertiary,
+                        ),
+                      ),
+
+                      const SizedBox(width: AppSpacing.lg),
+
+                      //==============================================================
+                      //! USER INFORMATION
+                      //==============================================================
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+                            Text(
+                              '${profile['first_name']} ${profile['last_name']}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+
+                              style: AppTextStyles.heading2.copyWith(
+                                color: AppColors.white,
+                                height: 1.1,
+                              ),
+                            ),
+
+                            Text(
+                              profile['email'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+
+                              style: AppTextStyles.caption.copyWith(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+
+                            const SizedBox(height: AppSpacing.sm),
+
+                            _buildVerificationBadge(_getVerificationStatus()),
+                          ],
+                        ),
+                      ),
+
+                      //==============================================================
+                      //! SETTINGS BUTTON
+                      //==============================================================
+                      IconButton(
+                        onPressed: () => _openSettings(context),
+
+                        icon: const Icon(
+                          Icons.settings_outlined,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //==========================================================================
+                //! MENU
+                //==========================================================================
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+
+                    decoration: const BoxDecoration(
+                      color: AppColors.background,
+
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppRadius.xl),
+                        topRight: Radius.circular(AppRadius.xl),
+                      ),
+                    ),
+
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl,
+                        vertical: 18,
+                      ),
 
                       children: [
-                        Text(
-                          '${profile['first_name']} ${profile['last_name']}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        //==========================================================
+                        //! FAVORITES
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.favorite_rounded,
+                          title: 'My Favorites',
+                          subtitle:
+                              '${_profileViewModel.favoritesCount} listings',
 
-                          style: AppTextStyles.heading2.copyWith(
-                            color: AppColors.white,
-                            height: 1.1,
-                          ),
+                          onTap: () {
+                            widget.onNavigateToTab(2);
+                          },
                         ),
 
-                        Text(
-                          profile['email'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        //==========================================================
+                        //! MY INQUIRIES
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.email_rounded,
+                          title: 'My Inquiries',
+                          subtitle:
+                              '${_profileViewModel.inquiriesCount} inquiries',
 
-                          style: AppTextStyles.caption.copyWith(
-                            color: Colors.white70,
-                            fontSize: 13,
-                          ),
+                          onTap: () {
+                            widget.onNavigateToTab(3);
+                          },
                         ),
 
-                        const SizedBox(height: AppSpacing.sm),
+                        const Divider(height: 30, color: Colors.black12),
 
-                        _buildVerificationBadge(_getVerificationStatus()),
+                        //==========================================================
+                        //! BECOME LANDLORD
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.apartment,
+                          title: 'Become A Landlord',
+
+                          onTap: () async {
+                            await _profileViewModel.updateLastActiveRole(
+                              'landlord',
+                            );
+
+                            if (!context.mounted) return;
+
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AuthCoordinator(),
+                              ),
+                              (route) => false,
+                            );
+                          },
+                        ),
+
+                        const Divider(height: 30, color: Colors.black12),
+
+                        //==========================================================
+                        //! HELP CENTER (COMING SOON)
+                        //==========================================================
+                        //MenuListTile(
+                        //icon: Icons.help_center_rounded,
+                        //title: 'Help Center',
+
+                        //onTap: () {
+                        // TODO: Navigate to Help Center
+                        //},
+                        //),
+
+                        //==========================================================
+                        //! ABOUT BH FINDER
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.info_rounded,
+                          title: 'About BH Finder',
+
+                          onTap: () {
+                            // TODO: Navigate to About Screen
+                          },
+                        ),
+
+                        const Divider(height: 34, color: Colors.black12),
+
+                        //==========================================================
+                        //! LOG OUT
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.logout_rounded,
+                          title: 'Log Out',
+                          textColor: Colors.red,
+                          iconColor: Colors.red,
+                          hideArrow: true,
+
+                          onTap: () async {
+                            await _logout();
+                          },
+                        ),
                       ],
                     ),
                   ),
-
-                  //==============================================================
-                  //! SETTINGS BUTTON
-                  //==============================================================
-                  IconButton(
-                    onPressed: () => _openSettings(context),
-
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            //==========================================================================
-            //! MENU
-            //==========================================================================
-            Expanded(
-              child: Container(
-                width: double.infinity,
-
-                decoration: const BoxDecoration(
-                  color: AppColors.background,
-
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppRadius.xl),
-                    topRight: Radius.circular(AppRadius.xl),
-                  ),
                 ),
-
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xxl,
-                    vertical: 18,
-                  ),
-
-                  children: [
-                    //==========================================================
-                    //! FAVORITES
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.favorite_rounded,
-                      title: 'My Favorites',
-                      subtitle: '${_profileViewModel.favoritesCount} listings',
-
-                      onTap: () {
-                        widget.onNavigateToTab(2);
-                      },
-                    ),
-
-                    //==========================================================
-                    //! MY INQUIRIES
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.email_rounded,
-                      title: 'My Inquiries',
-                      subtitle: '${_profileViewModel.inquiriesCount} inquiries',
-
-                      onTap: () {
-                        widget.onNavigateToTab(3);
-                      },
-                    ),
-
-                    const Divider(height: 30, color: Colors.black12),
-
-                    //==========================================================
-                    //! BECOME LANDLORD
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.apartment,
-                      title: 'Become A Landlord',
-
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SplashScreen(
-                              destination: LandlordNavigationScreen(),
-                            ),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                    ),
-
-                    const Divider(height: 30, color: Colors.black12),
-
-                    //==========================================================
-                    //! HELP CENTER (COMING SOON)
-                    //==========================================================
-                    //MenuListTile(
-                    //icon: Icons.help_center_rounded,
-                    //title: 'Help Center',
-
-                    //onTap: () {
-                    // TODO: Navigate to Help Center
-                    //},
-                    //),
-
-                    //==========================================================
-                    //! ABOUT BH FINDER
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.info_rounded,
-                      title: 'About BH Finder',
-
-                      onTap: () {
-                        // TODO: Navigate to About Screen
-                      },
-                    ),
-
-                    const Divider(height: 34, color: Colors.black12),
-
-                    //==========================================================
-                    //! LOG OUT
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.logout_rounded,
-                      title: 'Log Out',
-                      textColor: Colors.red,
-                      iconColor: Colors.red,
-                      hideArrow: true,
-
-                      onTap: () async {
-                        await _logout();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

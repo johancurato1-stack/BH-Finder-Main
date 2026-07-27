@@ -7,6 +7,7 @@ import 'package:bh_finder/core/view_models/auth_state_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
 import 'package:bh_finder/roles/tenant/features/auth/forgot_password/screens/reset_password_screen.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -195,9 +196,7 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
             return const TenantNavigationScreen();
 
           case 'landlord':
-            return const Scaffold(
-              body: Center(child: Text('Landlord Dashboard')),
-            );
+            return const LandlordNavigationScreen();
 
           default:
             return const Scaffold(body: Center(child: Text('Unknown Role')));

@@ -1,8 +1,9 @@
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock/user/mock_user.dart';
 import 'package:bh_finder/core/models/user_model.dart';
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/view_models/profile_view_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_radius.dart';
@@ -12,8 +13,13 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/splash_screen.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
+import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';
+
+class ProfileScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
@@ -21,6 +27,42 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.onNavigateToTab});
 
   final ValueChanged<int> onNavigateToTab;
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  //============================================================================
+  //! VIEW MODELS
+  //============================================================================
+
+  final ProfileViewModel _profileViewModel = ProfileViewModel(
+    repository: SupabaseProfileRepository(),
+  );
+
+  final AuthViewModel _authViewModel = AuthViewModel(
+    repository: SupabaseAuthRepository(),
+  );
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _profileViewModel.loadProfile();
+  }
+
+  //============================================================================
+  //! LOGOUT
+  //============================================================================
+
+  Future<void> _logout() async {
+    await _authViewModel.signOut();
+  }
 
   //============================================================================
   //! METHODS
@@ -76,204 +118,191 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = mockUser;
+    return AnimatedBuilder(
+      animation: _profileViewModel,
+      builder: (context, _) {
+        final profile = _profileViewModel.profile;
 
-    return Scaffold(
-      backgroundColor: AppColors.primary,
+        if (_profileViewModel.loading || profile == null) {
+          return const LoadingScreen();
+        }
 
-      body: SafeArea(
-        bottom: false,
-
-        child: Column(
-          children: [
-            //==========================================================================
-            //! HEADER
-            //==========================================================================
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xxl,
-                vertical: AppSpacing.xl,
-              ),
-
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  //==============================================================
-                  //! PROFILE AVATAR
-                  //==============================================================
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundColor: AppColors.white,
-
-                    child: Icon(
-                      Icons.person,
-                      size: 45,
-                      color: AppColors.tertiary,
-                    ),
+        return Scaffold(
+          backgroundColor: AppColors.primary,
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                //==========================================================================
+                //! HEADER
+                //==========================================================================
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xxl,
+                    vertical: AppSpacing.xl,
                   ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //==============================================================
+                      //! PROFILE AVATAR
+                      //==============================================================
+                      const CircleAvatar(
+                        radius: 35,
+                        backgroundColor: AppColors.white,
+                        child: Icon(
+                          Icons.person,
+                          size: 45,
+                          color: AppColors.tertiary,
+                        ),
+                      ),
 
-                  const SizedBox(width: AppSpacing.lg),
+                      const SizedBox(width: AppSpacing.lg),
 
-                  //==============================================================
-                  //! USER INFORMATION
-                  //==============================================================
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //==============================================================
+                      //! USER INFORMATION
+                      //==============================================================
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${profile['first_name']} ${profile['last_name']}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.heading2.copyWith(
+                                color: AppColors.white,
+                                height: 1.1,
+                              ),
+                            ),
 
+                            Text(
+                              profile['email'] ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.caption.copyWith(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+
+                            const SizedBox(height: AppSpacing.sm),
+
+                            _buildVerificationBadge(
+                              VerificationStatus.unverified,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //==============================================================
+                      //! SETTINGS BUTTON
+                      //==============================================================
+                      IconButton(
+                        onPressed: () => _openSettings(context),
+                        icon: const Icon(
+                          Icons.settings_outlined,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //==========================================================================
+                //! MENU
+                //==========================================================================
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppRadius.xl),
+                        topRight: Radius.circular(AppRadius.xl),
+                      ),
+                    ),
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl,
+                        vertical: 18,
+                      ),
                       children: [
-                        Text(
-                          user.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-
-                          style: AppTextStyles.heading2.copyWith(
-                            color: AppColors.white,
-                            height: 1.1,
-                          ),
+                        //==========================================================
+                        //! MY PROPERTIES
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.apartment,
+                          title: 'My Properties',
+                          subtitle:
+                              '${_profileViewModel.propertiesCount} Properties',
+                          onTap: () {
+                            widget.onNavigateToTab(1);
+                          },
                         ),
 
-                        Text(
-                          user.email,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        const Divider(height: 30, color: Colors.black12),
 
-                          style: AppTextStyles.caption.copyWith(
-                            color: Colors.white70,
-                            fontSize: 13,
-                          ),
+                        //==========================================================
+                        //! BECOME TENANT
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.house,
+                          title: 'Become A Tenant',
+                          onTap: () async {
+                            await _profileViewModel.updateLastActiveRole(
+                              'tenant',
+                            );
+
+                            if (!context.mounted) return;
+
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AuthCoordinator(),
+                              ),
+                              (route) => false,
+                            );
+                          },
                         ),
 
-                        const SizedBox(height: AppSpacing.sm),
+                        const Divider(height: 30, color: Colors.black12),
 
-                        _buildVerificationBadge(user.verificationStatus),
+                        //==========================================================
+                        //! ABOUT BH FINDER
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.info_rounded,
+                          title: 'About BH Finder',
+                          onTap: () {
+                            // TODO: Navigate to About Screen
+                          },
+                        ),
+
+                        const Divider(height: 34, color: Colors.black12),
+
+                        //==========================================================
+                        //! LOG OUT
+                        //==========================================================
+                        MenuListTile(
+                          icon: Icons.logout_rounded,
+                          title: 'Log Out',
+                          textColor: Colors.red,
+                          iconColor: Colors.red,
+                          hideArrow: true,
+                          onTap: () async {
+                            await _logout();
+                          },
+                        ),
                       ],
                     ),
                   ),
-
-                  //==============================================================
-                  //! SETTINGS BUTTON
-                  //==============================================================
-                  IconButton(
-                    onPressed: () => _openSettings(context),
-
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            //==========================================================================
-            //! MENU
-            //==========================================================================
-            Expanded(
-              child: Container(
-                width: double.infinity,
-
-                decoration: const BoxDecoration(
-                  color: AppColors.background,
-
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppRadius.xl),
-                    topRight: Radius.circular(AppRadius.xl),
-                  ),
                 ),
-
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xxl,
-                    vertical: 18,
-                  ),
-
-                  children: [
-                    //==========================================================
-                    //! SAVED
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.apartment,
-                      title: 'My Properties',
-                      subtitle: '0 Properties',
-
-                      onTap: () {
-                        onNavigateToTab(1);
-                      },
-                    ),
-
-                    const Divider(height: 30, color: Colors.black12),
-
-                    //==========================================================
-                    //! BECOME TENANT
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.house,
-                      title: 'Become A Tenant',
-
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SplashScreen(
-                              destination: TenantNavigationScreen(),
-                            ),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                    ),
-
-                    const Divider(height: 30, color: Colors.black12),
-
-                    //==========================================================
-                    //! HELP CENTER (COMING SOON)
-                    //==========================================================
-                    //MenuListTile(
-                    //icon: Icons.help_center_rounded,
-                    //title: 'Help Center',
-
-                    //onTap: () {
-                    // TODO: Navigate to Help Center
-                    //},
-                    //),
-
-                    //==========================================================
-                    //! ABOUT BH FINDER
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.info_rounded,
-                      title: 'About BH Finder',
-
-                      onTap: () {
-                        // TODO: Navigate to About Screen
-                      },
-                    ),
-
-                    const Divider(height: 34, color: Colors.black12),
-
-                    //==========================================================
-                    //! LOG OUT
-                    //==========================================================
-                    MenuListTile(
-                      icon: Icons.logout_rounded,
-                      title: 'Log Out',
-                      textColor: Colors.red,
-                      iconColor: Colors.red,
-                      hideArrow: true,
-
-                      onTap: () {
-                        // TODO: Implement Logout
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

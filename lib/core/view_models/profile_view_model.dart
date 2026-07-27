@@ -28,6 +28,10 @@ class ProfileViewModel extends ChangeNotifier {
 
   int get inquiriesCount => _inquiriesCount;
 
+  int _propertiesCount = 0;
+
+  int get propertiesCount => _propertiesCount;
+
   bool _loading = false;
 
   bool get loading => _loading;
@@ -47,8 +51,24 @@ class ProfileViewModel extends ChangeNotifier {
 
     _inquiriesCount = await _repository.getInquiriesCount();
 
+    _propertiesCount = await _repository.getPropertiesCount();
+
     _loading = false;
 
     notifyListeners();
+  }
+
+  //============================================================================
+  //! ROLE
+  //============================================================================
+
+  Future<void> updateLastActiveRole(String role) async {
+    await _repository.updateLastActiveRole(role);
+
+    if (_profile != null) {
+      _profile!['last_active_role'] = role;
+
+      notifyListeners();
+    }
   }
 }
