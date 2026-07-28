@@ -12,9 +12,7 @@ class SocialLoginSection extends StatelessWidget {
   //! GOOGLE LOGIN
   //============================================================================
 
-  void _googleLogin() {
-    print('Google Login Tapped');
-  }
+  void _googleLogin() {}
 
   //============================================================================
   //! BUILD

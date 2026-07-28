@@ -132,9 +132,6 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
         _loading = false;
       });
     } catch (e, stackTrace) {
-      debugPrint('PROFILE ERROR: $e');
-      debugPrintStack(stackTrace: stackTrace);
-
       if (!mounted) return;
 
       setState(() {

@@ -125,8 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
               } catch (error) {
                 if (!mounted) return;
 
-                debugPrint('Resend verification error: $error');
-
                 await showDialog(
                   context: context,
                   builder: (_) => PrimaryDialog(

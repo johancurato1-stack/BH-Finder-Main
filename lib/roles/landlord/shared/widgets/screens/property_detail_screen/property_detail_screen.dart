@@ -81,6 +81,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   Future<void> _loadProperty() async {
     final data = await _propertyRepository.getPropertyDetail(widget.propertyId);
 
+    for (var i = 0; i < data.images.length; i++) {}
+
     if (!mounted) return;
 
     setState(() {
@@ -246,6 +248,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                       if (updated == true) {
                         await _loadProperty();
+
+                        if (!mounted) return;
+
+                        Navigator.pop(context, true);
                       }
                     },
                     onDeletePressed: () {

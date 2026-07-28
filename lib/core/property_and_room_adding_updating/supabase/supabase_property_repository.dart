@@ -355,7 +355,7 @@ class SupabasePropertyRepository implements PropertyRepository {
           .from('property_images')
           .select('storage_path')
           .eq('property_id', property.id)
-          .order('display_order')
+          .order('display_order', ascending: true)
           .limit(1)
           .maybeSingle();
 
@@ -440,7 +440,7 @@ class SupabasePropertyRepository implements PropertyRepository {
           .from('property_images')
           .select('storage_path')
           .eq('property_id', property.id)
-          .order('display_order')
+          .order('display_order', ascending: true)
           .limit(1)
           .maybeSingle();
 
@@ -505,7 +505,7 @@ class SupabasePropertyRepository implements PropertyRepository {
         .from('property_images')
         .select()
         .eq('property_id', propertyId)
-        .order('display_order');
+        .order('display_order', ascending: true);
 
     final images = imageRows.map((image) {
       final storagePath = image['storage_path'] as String;

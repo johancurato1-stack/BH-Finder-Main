@@ -93,12 +93,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //============================================================================
 
   Future<void> _loadProperty() async {
-    debugPrint('START LOADING PROPERTY: ${widget.propertyId}');
-
     try {
       final data = await widget.repository.getPropertyDetail(widget.propertyId);
-
-      debugPrint('PROPERTY LOADED: ${data.title}');
 
       if (!mounted) return;
 
@@ -110,13 +106,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
         _loading = false;
       });
 
-      debugPrint('LOADING FINISHED');
-
       _startAutoScroll();
     } catch (e, stackTrace) {
-      debugPrint('PROPERTY DETAIL ERROR: $e');
-      debugPrint(stackTrace.toString());
-
       if (!mounted) return;
 
       setState(() {

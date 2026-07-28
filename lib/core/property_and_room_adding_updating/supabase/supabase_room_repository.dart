@@ -86,7 +86,7 @@ class SupabaseRoomRepository implements RoomRepository {
           .from('room_images')
           .select()
           .eq('room_id', row['id'])
-          .order('display_order');
+          .order('display_order', ascending: true);
 
       final imageUrls = imageRows
           .map<String>(
@@ -168,7 +168,7 @@ class SupabaseRoomRepository implements RoomRepository {
         .from('room_images')
         .select()
         .eq('room_id', roomId)
-        .order('display_order');
+        .order('display_order', ascending: true);
 
     final images = imageRows.map((image) {
       final storagePath = image['storage_path'] as String;

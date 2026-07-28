@@ -125,8 +125,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _currentPage = page;
                   });
                 },
-                onPropertyTap: (property) {
-                  Navigator.push(
+                onPropertyTap: (property) async {
+                  final updated = await Navigator.push<bool>(
                     context,
                     PageRouteBuilder(
                       pageBuilder: (_, __, ___) =>
@@ -151,6 +151,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           },
                     ),
                   );
+
+                  if (!mounted || updated != true) return;
+
+                  setState(() {
+                    _loading = true;
+                  });
+
+                  await _loadProperties();
                 },
                 onAddProperty: () async {
                   final created = await Navigator.push<bool>(
