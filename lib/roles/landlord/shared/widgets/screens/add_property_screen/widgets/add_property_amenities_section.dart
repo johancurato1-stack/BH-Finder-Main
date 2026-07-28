@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/constants/amenities.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_amenity_button.dart';
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
@@ -23,9 +25,9 @@ class AddPropertyAmenitiesSection extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final List<String> selectedAmenities;
+  final List<Amenity> selectedAmenities;
 
-  final ValueChanged<String> onAmenityToggled;
+  final ValueChanged<Amenity> onAmenityToggled;
 
   //============================================================================
   //! BUILD
@@ -56,8 +58,8 @@ class AddPropertyAmenitiesSection extends StatelessWidget {
             return AddPropertyAmenityButton(
               icon: amenity.icon,
               label: amenity.label,
-              isSelected: selectedAmenities.contains(amenity.label),
-              onTap: () => onAmenityToggled(amenity.label),
+              isSelected: selectedAmenities.contains(amenity.type),
+              onTap: () => onAmenityToggled(amenity.type),
             );
           },
         ),

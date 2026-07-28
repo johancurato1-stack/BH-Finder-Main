@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 
 //============================================================================
 //! PROPERTY LIST VIEW

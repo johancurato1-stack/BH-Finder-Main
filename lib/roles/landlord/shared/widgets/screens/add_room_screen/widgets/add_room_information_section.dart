@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/shared/widgets/textfields/primary_form_text_field.dart';
-import 'package:bh_finder/shared/widgets/others/section_title.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/shared/widgets/others/section_title.dart';
+import 'package:bh_finder/shared/widgets/textfields/primary_form_text_field.dart';
+
 //============================================================================
-//! ADD PROPERTY INFORMATION SECTION
+//! ADD ROOM INFORMATION SECTION
 //============================================================================
 
 class AddRoomInformationSection extends StatelessWidget {
@@ -16,8 +17,9 @@ class AddRoomInformationSection extends StatelessWidget {
   const AddRoomInformationSection({
     super.key,
     required this.titleController,
-    required this.descriptionController,
     required this.priceController,
+    required this.capacityController,
+    required this.descriptionController,
   });
 
   //============================================================================
@@ -26,9 +28,11 @@ class AddRoomInformationSection extends StatelessWidget {
 
   final TextEditingController titleController;
 
-  final TextEditingController descriptionController;
-
   final TextEditingController priceController;
+
+  final TextEditingController capacityController;
+
+  final TextEditingController descriptionController;
 
   //============================================================================
   //! BUILD
@@ -47,7 +51,7 @@ class AddRoomInformationSection extends StatelessWidget {
         const SizedBox(height: 20),
 
         //==============================================================
-        //! PROPERTY TITLE
+        //! ROOM TITLE
         //==============================================================
         const Text(
           'Room Title',
@@ -68,9 +72,9 @@ class AddRoomInformationSection extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        //============================================================================
+        //==============================================================
         //! ROOM PRICE
-        //============================================================================
+        //==============================================================
         const Text(
           'Room Price',
           style: TextStyle(
@@ -86,6 +90,29 @@ class AddRoomInformationSection extends StatelessWidget {
           controller: priceController,
           hintText: 'Enter room price',
           keyboardType: TextInputType.number,
+        ),
+
+        const SizedBox(height: 20),
+
+        //==============================================================
+        //! CAPACITY
+        //==============================================================
+        const Text(
+          'Capacity',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.secondary,
+          ),
+        ),
+
+        const SizedBox(height: 8),
+
+        PrimaryFormField(
+          controller: capacityController,
+          hintText: 'Maximum occupants',
+          keyboardType: TextInputType.number,
+          prefixIcon: Icons.people_rounded,
         ),
 
         const SizedBox(height: 20),

@@ -11,8 +11,8 @@ import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
 import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
 import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
-import 'package:bh_finder/core/view_models/auth_view_model.dart';
-import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
 import 'package:bh_finder/core/view_models/profile_view_model.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';

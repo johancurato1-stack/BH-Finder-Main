@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 
-import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/property_card_horizontal.dart';
 

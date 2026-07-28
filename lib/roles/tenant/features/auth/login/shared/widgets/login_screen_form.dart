@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
-import 'package:bh_finder/core/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/shared/widgets/textfields/primary_text_field.dart';

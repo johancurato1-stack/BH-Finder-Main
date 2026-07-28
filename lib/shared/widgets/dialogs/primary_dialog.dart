@@ -6,6 +6,7 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+import 'package:bh_finder/shared/widgets/buttons/secondary_button.dart';
 
 //==============================================================================
 //! PRIMARY DIALOG
@@ -25,13 +26,12 @@ import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 class PrimaryDialog extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
-
   final String title;
   final String message;
-
   final String buttonText;
-
   final VoidCallback onPressed;
+  final String? secondaryButtonText;
+  final VoidCallback? onSecondaryPressed;
 
   const PrimaryDialog({
     super.key,
@@ -41,6 +41,8 @@ class PrimaryDialog extends StatelessWidget {
     required this.message,
     required this.buttonText,
     required this.onPressed,
+    this.secondaryButtonText,
+    this.onSecondaryPressed,
   });
 
   @override
@@ -87,7 +89,28 @@ class PrimaryDialog extends StatelessWidget {
             //==============================================================
             //! BUTTON
             //==============================================================
-            PrimaryButton(text: buttonText, onPressed: onPressed),
+            if (secondaryButtonText != null && onSecondaryPressed != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      text: secondaryButtonText!,
+                      onPressed: onSecondaryPressed!,
+                    ),
+                  ),
+
+                  const SizedBox(width: AppSpacing.md),
+
+                  Expanded(
+                    child: PrimaryButton(
+                      text: buttonText,
+                      onPressed: onPressed,
+                    ),
+                  ),
+                ],
+              )
+            else
+              PrimaryButton(text: buttonText, onPressed: onPressed),
           ],
         ),
       ),

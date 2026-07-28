@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 
 //============================================================================
 //! PROPERTY MODEL
@@ -20,10 +21,10 @@ class PropertyModel {
     required this.address,
     required this.latitude,
     required this.longitude,
-    required this.imageUrls,
+    required this.images,
     required this.amenities,
     required this.genderPreference,
-    required this.favoriteCount,
+    required this.views,
     required this.status,
   });
 
@@ -53,7 +54,7 @@ class PropertyModel {
   final double longitude;
 
   /// Property images.
-  final List<String> imageUrls;
+  final List<ImageModel> images;
 
   /// Available amenities.
   final List<Amenity> amenities;
@@ -61,8 +62,8 @@ class PropertyModel {
   /// Male, Female, or Mixed.
   final GenderPreference genderPreference;
 
-  /// Cached number of users who have favorited this property.
-  final int favoriteCount;
+  /// Cached number of property views.
+  final int views;
 
   /// Available, Occupied.
   final PropertyStatus status;

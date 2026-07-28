@@ -16,12 +16,16 @@ enum PropertyStatus { available, occupied }
 
 enum Amenity {
   wifi,
-  parking,
-  laundry,
-  kitchen,
   airConditioning,
+  privateBathroom,
+  kitchen,
+  laundry,
   studyArea,
+  desk,
+  cabinet,
   cctv,
+  security,
+  parking,
   waterIncluded,
   electricityIncluded,
 }

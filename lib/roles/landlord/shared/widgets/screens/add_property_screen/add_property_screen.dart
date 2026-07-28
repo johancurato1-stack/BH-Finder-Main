@@ -18,6 +18,14 @@ import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
 
 import 'package:bh_finder/shared/widgets/services/location_service.dart';
 
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/add_property_view_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/add_property_request.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_availability_section.dart';
+import 'package:bh_finder/core/models/image_model.dart';
+
 //============================================================================
 //! LOCATION STATUS
 //============================================================================
@@ -40,8 +48,9 @@ class AddPropertyScreen extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
+  const AddPropertyScreen({super.key, this.property});
 
-  const AddPropertyScreen({super.key});
+  final PropertyDetailData? property;
 
   @override
   State<AddPropertyScreen> createState() => _AddPropertyScreenState();
@@ -72,13 +81,17 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
   int _selectedImage = 0;
 
-  final List<String> _images = [];
+  final List<ImageModel> _images = [];
 
   final ImagePicker _imagePicker = ImagePicker();
 
   final LocationService _locationService = LocationService();
 
-  final List<String> _selectedAmenities = [];
+  final AddPropertyViewModel _viewModel = AddPropertyViewModel(
+    propertyRepository: Repositories.instance.propertyRepository,
+  );
+
+  final List<Amenity> _selectedAmenities = [];
 
   LocationOption? _locationOption;
 
@@ -108,11 +121,77 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       _locationStatus == LocationStatus.gpsSelected ||
       _locationStatus == LocationStatus.manualSelected;
 
+  bool get _isEditing => widget.property != null;
+
+  PropertyStatus _selectedStatus = PropertyStatus.available;
+
+  Future<void> _deleteSelectedPhoto() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return PrimaryDialog(
+          icon: Icons.delete_rounded,
+          iconColor: Colors.red,
+
+          title: 'Delete Photo',
+
+          message: 'Are you sure you want to delete this photo?',
+
+          secondaryButtonText: 'Cancel',
+          onSecondaryPressed: () {
+            Navigator.pop(context, false);
+          },
+
+          buttonText: 'Delete',
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+        );
+      },
+    );
+
+    if (shouldDelete != true) return;
+
+    if (_images.length == 1) {
+      if (!mounted) return;
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return PrimaryDialog(
+            icon: Icons.photo_library_rounded,
+            iconColor: Colors.orange,
+
+            title: 'Property Photo Required',
+
+            message: 'A property must have at least one photo.',
+
+            buttonText: 'OK',
+
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        },
+      );
+
+      return;
+    }
+
+    setState(() {
+      _images.removeAt(_selectedImage);
+
+      if (_selectedImage >= _images.length) {
+        _selectedImage = _images.length - 1;
+      }
+    });
+  }
+
   //============================================================================
   //! METHODS
   //============================================================================
 
-  void _toggleAmenity(String amenity) {
+  void _toggleAmenity(Amenity amenity) {
     setState(() {
       if (_selectedAmenities.contains(amenity)) {
         _selectedAmenities.remove(amenity);
@@ -128,7 +207,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     if (images.isEmpty) return;
 
     setState(() {
-      _images.addAll(images.map((image) => image.path));
+      _images.addAll(
+        images.map((image) => ImageModel(path: image.path, isLocal: true)),
+      );
     });
   }
 
@@ -274,22 +355,164 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     });
   }
 
+  Future<void> _publishProperty() async {
+    //==============================================================
+    //! PROPERTY PHOTOS
+    //==============================================================
+
+    if (_images.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => PrimaryDialog(
+          icon: Icons.photo_library_rounded,
+          iconColor: Colors.orange,
+          title: 'Property Photos Required',
+          message: 'Please add at least one photo of your property.',
+          buttonText: 'OK',
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+
+      return;
+    }
+
+    //==============================================================
+    //! PROPERTY INFORMATION
+    //==============================================================
+
+    if (_titleController.text.trim().isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => PrimaryDialog(
+          icon: Icons.home_rounded,
+          iconColor: Colors.orange,
+          title: 'Property Title Required',
+          message: 'Please enter a title for your property.',
+          buttonText: 'OK',
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+
+      return;
+    }
+
+    if (_descriptionController.text.trim().isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => PrimaryDialog(
+          icon: Icons.description_rounded,
+          iconColor: Colors.orange,
+          title: 'Property Description Required',
+          message: 'Please enter a description for your property.',
+          buttonText: 'OK',
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+
+      return;
+    }
+
+    //==============================================================
+    //! LOCATION
+    //==============================================================
+
+    if (_locationStatus != LocationStatus.gpsSelected &&
+        _locationStatus != LocationStatus.manualSelected) {
+      showDialog(
+        context: context,
+        builder: (context) => PrimaryDialog(
+          icon: Icons.location_on_rounded,
+          iconColor: Colors.orange,
+          title: 'Property Location Required',
+          message: 'Please save your property location before publishing.',
+          buttonText: 'OK',
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+
+      return;
+    }
+
+    //==============================================================
+    //! AMENITIES
+    //==============================================================
+
+    if (_selectedAmenities.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => PrimaryDialog(
+          icon: Icons.checklist_rounded,
+          iconColor: Colors.orange,
+          title: 'Amenities Required',
+          message: 'Please select at least one amenity.',
+          buttonText: 'OK',
+          onPressed: () => Navigator.pop(context),
+        ),
+      );
+
+      return;
+    }
+
+    //==============================================================
+    //! CREATE REQUEST
+    //==============================================================
+
+    final request = AddPropertyRequest(
+      title: _titleController.text.trim(),
+      description: _descriptionController.text.trim(),
+      address: _detectedAddress!,
+      latitude: _latitude!,
+      longitude: _longitude!,
+      images: _images,
+      amenities: _selectedAmenities,
+      status: _selectedStatus,
+    );
+
+    bool success;
+
+    if (_isEditing) {
+      success = await _viewModel.updateProperty(
+        propertyId: widget.property!.id,
+        request: request,
+      );
+    } else {
+      success = await _viewModel.createProperty(request);
+    }
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pop(context, true);
+    }
+  }
+
   //============================================================================
   //! LIFECYCLE
   //============================================================================
 
   @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+  void initState() {
+    super.initState();
 
-    _provinceController.dispose();
-    _cityController.dispose();
-    _barangayController.dispose();
-    _streetController.dispose();
-    _landmarkController.dispose();
+    if (!_isEditing) return;
 
-    super.dispose();
+    final property = widget.property!;
+
+    _titleController.text = property.title;
+    _descriptionController.text = property.description;
+
+    _selectedStatus = property.status;
+
+    _images.addAll(property.images);
+
+    _selectedAmenities.addAll(property.amenities);
+
+    _detectedAddress = property.address;
+    _latitude = property.latitude;
+    _longitude = property.longitude;
+
+    _locationOption = LocationOption.gps;
+    _locationStatus = LocationStatus.gpsSelected;
   }
 
   //============================================================================
@@ -314,9 +537,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             //==============================================================
             //! TITLE
             //==============================================================
-            const Text(
-              'Add Property',
-              style: TextStyle(
+            Text(
+              _isEditing ? 'Edit Property' : 'Add Property',
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: AppColors.secondary,
@@ -332,14 +555,29 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               images: _images,
               selectedImage: _selectedImage,
               onImageSelected: (index) {
-                setState(() {
-                  _selectedImage = index;
-                });
+                setState(() => _selectedImage = index);
               },
               onAddPhoto: _pickImages,
+              onDeletePhoto: _deleteSelectedPhoto,
             ),
 
             const SizedBox(height: 32),
+
+            //==============================================================
+            //! AVAILABILITY
+            //==============================================================
+            if (_isEditing) ...[
+              AddPropertyAvailabilitySection(
+                status: _selectedStatus,
+                onChanged: (status) {
+                  setState(() {
+                    _selectedStatus = status;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 32),
+            ],
 
             //==============================================================
             //! PROPERTY INFORMATION
@@ -431,25 +669,23 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             //==============================================================
             //! INFORMATION NOTICE CARD
             //==============================================================
-            InformationNoticeCard(
-              icon: Icons.auto_awesome_rounded,
-              message:
-                  'Starting price and preferred gender are automatically '
-                  'calculated from your rooms. Property availability can '
-                  'be updated anytime from the property settings.',
-            ),
+            if (!_isEditing)
+              InformationNoticeCard(
+                icon: Icons.auto_awesome_rounded,
+                message:
+                    'Starting price and preferred gender are automatically '
+                    'calculated from your rooms. Property availability can '
+                    'be updated anytime from the property settings.',
+              ),
 
-            const SizedBox(height: 12),
+            if (!_isEditing) const SizedBox(height: 20),
 
             //==============================================================
-            //! PUBLISH PROPERTY
+            //! PUBLISH/UPDATE PROPERTY
             //==============================================================
             PrimaryButton(
-              text: 'Publish Property',
-              onPressed: () {
-                // TODO:
-                // Publish property.
-              },
+              text: _isEditing ? 'Update Property' : 'Publish Property',
+              onPressed: _publishProperty,
             ),
 
             const SizedBox(height: 20),

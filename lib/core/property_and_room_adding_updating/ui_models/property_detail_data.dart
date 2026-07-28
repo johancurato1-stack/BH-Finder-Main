@@ -1,6 +1,7 @@
 import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 import 'package:bh_finder/core/models/landlord_model.dart';
-import 'package:bh_finder/core/models/room_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
 
 //============================================================================
 //! PROPERTY DETAIL DATA
@@ -15,7 +16,7 @@ class PropertyDetailData {
     required this.id,
     required this.title,
     required this.description,
-    required this.imageUrls,
+    required this.images,
     required this.minimumPrice,
     required this.roomCount,
     required this.genderPreference,
@@ -25,8 +26,10 @@ class PropertyDetailData {
     required this.longitude,
     required this.landlord,
     required this.status,
-    required this.distance,
     required this.rooms,
+    required this.address,
+    required this.totalViews,
+    required this.totalInquiries,
   });
 
   //============================================================================
@@ -39,7 +42,7 @@ class PropertyDetailData {
 
   final String description;
 
-  final List<String> imageUrls;
+  final List<ImageModel> images;
 
   final double minimumPrice;
 
@@ -59,7 +62,11 @@ class PropertyDetailData {
 
   final PropertyStatus status;
 
-  final double distance;
-
   final List<RoomModel> rooms;
+
+  final String address;
+
+  final int totalViews;
+
+  final int totalInquiries;
 }

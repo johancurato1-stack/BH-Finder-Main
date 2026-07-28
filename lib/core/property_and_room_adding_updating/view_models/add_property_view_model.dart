@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/models/property_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/add_property_request.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/property_model.dart';
+
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 
 //============================================================================
 //! ADD PROPERTY VALIDATION RESULT
@@ -40,11 +43,69 @@ class AddPropertyViewModel extends ChangeNotifier {
   //! CREATE PROPERTY
   //============================================================================
 
-  Future<bool> createProperty(PropertyModel property) async {
+  Future<bool> createProperty(AddPropertyRequest request) async {
     _setLoading(true);
 
     try {
+      final property = PropertyModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        landlordId: '',
+        title: request.title,
+        description: request.description,
+        address: request.address,
+        latitude: request.latitude,
+        longitude: request.longitude,
+        images: request.images,
+        amenities: request.amenities,
+        genderPreference: GenderPreference.mixed,
+        views: 0,
+        status: request.status,
+      );
+
       await _propertyRepository.create(property);
+
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  //============================================================================
+  //! UPDATE PROPERTY
+  //============================================================================
+
+  Future<bool> updateProperty({
+    required String propertyId,
+    required AddPropertyRequest request,
+  }) async {
+    _setLoading(true);
+
+    try {
+      final existing = await _propertyRepository.getById(propertyId);
+
+      if (existing == null) {
+        return false;
+      }
+
+      final property = PropertyModel(
+        id: existing.id,
+        landlordId: existing.landlordId,
+        title: request.title,
+        description: request.description,
+        address: request.address,
+        latitude: request.latitude,
+        longitude: request.longitude,
+        images: request.images,
+        amenities: request.amenities,
+        genderPreference: existing.genderPreference,
+        views: existing.views,
+        status: request.status,
+      );
+
+      await _propertyRepository.update(property);
+
       return true;
     } catch (_) {
       return false;

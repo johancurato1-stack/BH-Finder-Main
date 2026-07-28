@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/models/room_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet_secondary/filter_bottom_sheet_secondary.dart';
@@ -9,7 +9,7 @@ import 'package:bh_finder/shared/widgets/cards/information_notice_card.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
 
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 
 class ViewRoomsScreen extends StatefulWidget {
   //============================================================================

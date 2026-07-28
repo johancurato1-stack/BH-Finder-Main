@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
-import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 
 //============================================================================
 //! PROPERTY AMENITIES
@@ -53,6 +53,18 @@ class PropertyCardAmenities extends StatelessWidget {
 
       case Amenity.electricityIncluded:
         return Icons.bolt;
+
+      case Amenity.privateBathroom:
+        return Icons.bathroom;
+
+      case Amenity.desk:
+        return Icons.desk;
+
+      case Amenity.cabinet:
+        return Icons.shelves;
+
+      case Amenity.security:
+        return Icons.security;
     }
   }
 

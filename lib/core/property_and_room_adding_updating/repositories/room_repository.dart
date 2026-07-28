@@ -1,5 +1,5 @@
-import 'package:bh_finder/core/models/room_model.dart';
-import 'package:bh_finder/core/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 
 //============================================================================
 //! ROOM REPOSITORY
@@ -27,4 +27,17 @@ abstract class RoomRepository {
 
   /// Returns data used by the room detail screen.
   Future<RoomDetailData> getRoomDetail(String roomId);
+
+  //============================================================================
+  //! COMMANDS
+  //============================================================================
+
+  /// Creates a room.
+  Future<void> create(RoomModel room);
+
+  /// Updates a room.
+  Future<void> update(RoomModel room);
+
+  /// Deletes a room.
+  Future<void> delete(String roomId);
 }

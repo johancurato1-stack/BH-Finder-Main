@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/theme/app_colors.dart';
-
 import 'package:bh_finder/core/data/mock/user/mock_user.dart';
 
-import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_header.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
+
+import 'package:bh_finder/core/theme/app_colors.dart';
+
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_greeting_section.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_carousel.dart';
-import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_header.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_recent_inquiries_section.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_carousel.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
 
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
 //============================================================================
 //! DASHBOARD SCREEN
@@ -26,19 +28,7 @@ class DashboardScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const DashboardScreen({
-    super.key,
-    required this.propertyRepository,
-    required this.roomRepository,
-  });
-
-  //==========================================================================
-  //! PROPERTIES
-  //==========================================================================
-
-  final PropertyRepository propertyRepository;
-
-  final RoomRepository roomRepository;
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -49,6 +39,13 @@ class DashboardScreen extends StatefulWidget {
 //============================================================================
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  //==========================================================================
+  //! REPOSITORY
+  //==========================================================================
+
+  final PropertyRepository _propertyRepository =
+      Repositories.instance.propertyRepository;
+
   //==========================================================================
   //! VARIABLES
   //==========================================================================
@@ -75,14 +72,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   //==========================================================================
 
   Future<void> _loadProperties() async {
-    final properties = await widget.propertyRepository
-        .getLandlordPropertyCards();
+    final properties = await _propertyRepository.getLandlordPropertyCards();
 
     if (!mounted) return;
 
     setState(() {
       _properties = properties;
-
       _loading = false;
     });
   }
@@ -96,7 +91,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (_loading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-
         body: Center(child: CircularProgressIndicator()),
       );
     }
@@ -105,7 +99,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -127,83 +120,71 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               PropertyCardCarousel(
                 properties: properties,
-
                 onPageChanged: (page) {
                   setState(() {
                     _currentPage = page;
                   });
                 },
-
                 onPropertyTap: (property) {
                   Navigator.push(
                     context,
-
                     PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => PropertyDetailScreen(
-                        propertyId: property.id,
-
-                        repository: widget.propertyRepository,
-
-                        roomRepository: widget.roomRepository,
-                      ),
-
+                      pageBuilder: (_, __, ___) =>
+                          PropertyDetailScreen(propertyId: property.id),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                             const begin = Offset(0, 1);
-
                             const end = Offset.zero;
-
                             const curve = Curves.easeOut;
 
                             final offsetAnimation = animation.drive(
                               Tween(
                                 begin: begin,
-
                                 end: end,
                               ).chain(CurveTween(curve: curve)),
                             );
 
                             return SlideTransition(
                               position: offsetAnimation,
-
                               child: child,
                             );
                           },
                     ),
                   );
                 },
-
-                onAddProperty: () {
-                  Navigator.push(
+                onAddProperty: () async {
+                  final created = await Navigator.push<bool>(
                     context,
-
                     PageRouteBuilder(
                       pageBuilder: (_, __, ___) => const AddPropertyScreen(),
-
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                             const begin = Offset(0, 1);
-
                             const end = Offset.zero;
-
                             const curve = Curves.easeOut;
 
                             final offsetAnimation = animation.drive(
                               Tween(
                                 begin: begin,
-
                                 end: end,
                               ).chain(CurveTween(curve: curve)),
                             );
 
                             return SlideTransition(
                               position: offsetAnimation,
-
                               child: child,
                             );
                           },
                     ),
                   );
+
+                  if (!mounted || created != true) return;
+
+                  setState(() {
+                    _loading = true;
+                  });
+
+                  await _loadProperties();
                 },
               ),
 
@@ -212,7 +193,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //==============================================================
               PageIndicator(
                 currentPage: _currentPage,
-
                 pageCount: properties.length + 1,
               ),
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
@@ -12,7 +12,7 @@ import 'package:bh_finder/roles/tenant/features/search/screens/search_results_sc
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 
 //============================================================================
 //! SEARCH SCREEN

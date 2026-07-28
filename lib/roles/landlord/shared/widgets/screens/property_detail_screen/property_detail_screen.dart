@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_detail_data.dart';
 
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/manage_rooms_screen.dart';
+
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/back_button_header.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/image_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/photo_thumbnails.dart';
 
-import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/manage_rooms_screen.dart';
-import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/back_button_header.dart';
-
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_action_button.dart';
-import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_description_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_bottom_button.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_description_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_header.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_meta_row.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_performance_section.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
 
 //============================================================================
 //! PROPERTY DETAIL SCREEN
@@ -28,22 +29,13 @@ class PropertyDetailScreen extends StatefulWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyDetailScreen({
-    super.key,
-    required this.propertyId,
-    required this.repository,
-    required this.roomRepository,
-  });
+  const PropertyDetailScreen({super.key, required this.propertyId});
 
   //==========================================================================
   //! PROPERTIES
   //==========================================================================
 
   final String propertyId;
-
-  final PropertyRepository repository;
-
-  final RoomRepository roomRepository;
 
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
@@ -54,6 +46,13 @@ class PropertyDetailScreen extends StatefulWidget {
 //============================================================================
 
 class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
+  //==========================================================================
+  //! REPOSITORIES
+  //==========================================================================
+
+  final PropertyRepository _propertyRepository =
+      Repositories.instance.propertyRepository;
+
   //==========================================================================
   //! STATE
   //==========================================================================
@@ -80,13 +79,12 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //==========================================================================
 
   Future<void> _loadProperty() async {
-    final data = await widget.repository.getPropertyDetail(widget.propertyId);
+    final data = await _propertyRepository.getPropertyDetail(widget.propertyId);
 
     if (!mounted) return;
 
     setState(() {
       _data = data;
-
       _loading = false;
     });
   }
@@ -100,16 +98,16 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
     Navigator.push(
       context,
-
       MaterialPageRoute(
         builder: (_) => ManageRoomsScreen(
-          PropertyName: _data!.title,
+          propertyId: _data!.id,
+          propertyName: _data!.title,
           rooms: _data!.rooms,
-          roomRepository: widget.roomRepository,
         ),
       ),
     );
   }
+
   //==========================================================================
   //! BUILD
   //==========================================================================
@@ -119,7 +117,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     if (_loading || _data == null) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-
         body: Center(child: CircularProgressIndicator()),
       );
     }
@@ -128,21 +125,18 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(20),
-
                 children: [
                   //==========================================================
                   //! TOP BAR
                   //==========================================================
                   BackButtonHeader(
                     onBackPressed: () => Navigator.pop(context),
-
                     onSharePressed: () {
                       // TODO: Share Property
                     },
@@ -153,7 +147,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! PROPERTY IMAGE
                   //==========================================================
-                  ImageCard(imageUrl: data.imageUrls[_selectedImage]),
+                  ImageCard(imageUrl: data.images[_selectedImage].path),
 
                   const SizedBox(height: 16),
 
@@ -161,18 +155,12 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //! PHOTO THUMBNAILS
                   //==========================================================
                   PhotoThumbnails(
-                    images: data.imageUrls,
-
+                    images: data.images,
                     selectedIndex: _selectedImage,
-
                     onImageSelected: (index) {
                       setState(() {
                         _selectedImage = index;
                       });
-                    },
-
-                    onAddPhoto: () {
-                      // TODO: Add Photo
                     },
                   ),
 
@@ -189,9 +177,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   const Divider(
                     height: 32,
-
                     thickness: .5,
-
                     color: AppColors.tertiary,
                   ),
 
@@ -202,9 +188,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   const Divider(
                     height: 32,
-
                     thickness: .5,
-
                     color: AppColors.tertiary,
                   ),
 
@@ -215,9 +199,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   const Divider(
                     height: 32,
-
                     thickness: .5,
-
                     color: AppColors.tertiary,
                   ),
 
@@ -230,9 +212,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   const Divider(
                     height: 32,
-
                     thickness: .5,
-
                     color: AppColors.tertiary,
                   ),
 
@@ -241,7 +221,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   PropertyDetailBottomButton(
                     roomCount: data.roomCount,
-
                     onPressed: _viewRooms,
                   ),
 
@@ -249,9 +228,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                   const Divider(
                     height: 32,
-
                     thickness: .5,
-
                     color: AppColors.tertiary,
                   ),
 
@@ -259,10 +236,18 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //! ACTION BUTTONS
                   //==========================================================
                   PropertyDetailActionButtons(
-                    onEditPressed: () {
-                      // TODO: Edit Property
-                    },
+                    onEditPressed: () async {
+                      final updated = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AddPropertyScreen(property: data),
+                        ),
+                      );
 
+                      if (updated == true) {
+                        await _loadProperty();
+                      }
+                    },
                     onDeletePressed: () {
                       // TODO: Delete Property
                     },

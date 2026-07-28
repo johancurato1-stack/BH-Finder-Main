@@ -1,8 +1,8 @@
-import 'package:bh_finder/core/models/property_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/property_model.dart';
 
-import 'package:bh_finder/core/view_models/tenant_property_card_data.dart';
-import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
-import 'package:bh_finder/core/view_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
 
 //============================================================================
 //! PROPERTY REPOSITORY

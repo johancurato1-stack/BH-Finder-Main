@@ -1,23 +1,25 @@
 import 'package:bh_finder/core/enums/enums.dart';
 
 //============================================================================
-//! ROOM DETAIL DATA
+//! LANDLORD PROPERTY CARD DATA
 //============================================================================
 
-class RoomDetailData {
+class LandlordPropertyCardData {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomDetailData({
+  const LandlordPropertyCardData({
     required this.id,
-    required this.propertyId,
-    required this.roomNumber,
-    required this.description,
-    required this.price,
-    required this.capacity,
-    required this.genderPreference,
-    required this.imageUrls,
+    required this.title,
+    required this.coverImageUrl,
+    required this.status,
+    required this.address,
+    required this.totalRooms,
+    required this.totalViews,
+    required this.totalFavorites,
+    required this.totalInquiries,
+    this.isVerified = false,
   });
 
   //============================================================================
@@ -26,17 +28,21 @@ class RoomDetailData {
 
   final String id;
 
-  final String propertyId;
+  final String title;
 
-  final String roomNumber;
+  final String coverImageUrl;
 
-  final String description;
+  final PropertyStatus status;
 
-  final double price;
+  final String address;
 
-  final int capacity;
+  final int totalRooms;
 
-  final GenderPreference genderPreference;
+  final int totalViews;
 
-  final List<String> imageUrls;
+  final int totalFavorites;
+
+  final int totalInquiries;
+
+  final bool isVerified;
 }

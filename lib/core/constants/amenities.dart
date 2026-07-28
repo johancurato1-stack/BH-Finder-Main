@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_amenity_option.dart';
 
 //============================================================================
@@ -7,30 +9,73 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_scr
 //============================================================================
 
 class Amenities {
+  Amenities._();
+
   static const List<AddPropertyAmenityOption> values = [
-    AddPropertyAmenityOption(label: 'Wi-Fi', icon: Icons.wifi),
-
-    AddPropertyAmenityOption(label: 'Aircon', icon: Icons.ac_unit),
-
-    AddPropertyAmenityOption(label: 'Own CR', icon: Icons.bathroom),
-
-    AddPropertyAmenityOption(label: 'Kitchen', icon: Icons.countertops),
+    AddPropertyAmenityOption(
+      type: Amenity.wifi,
+      label: 'Wi-Fi',
+      icon: Icons.wifi,
+    ),
 
     AddPropertyAmenityOption(
+      type: Amenity.airConditioning,
+      label: 'Aircon',
+      icon: Icons.ac_unit,
+    ),
+
+    AddPropertyAmenityOption(
+      type: Amenity.privateBathroom,
+      label: 'Own CR',
+      icon: Icons.bathroom,
+    ),
+
+    AddPropertyAmenityOption(
+      type: Amenity.kitchen,
+      label: 'Kitchen',
+      icon: Icons.countertops,
+    ),
+
+    AddPropertyAmenityOption(
+      type: Amenity.laundry,
       label: 'Laundry',
       icon: Icons.local_laundry_service,
     ),
 
-    AddPropertyAmenityOption(label: 'Study', icon: Icons.menu_book),
+    AddPropertyAmenityOption(
+      type: Amenity.studyArea,
+      label: 'Study',
+      icon: Icons.menu_book,
+    ),
 
-    AddPropertyAmenityOption(label: 'Desk', icon: Icons.desk),
+    AddPropertyAmenityOption(
+      type: Amenity.desk,
+      label: 'Desk',
+      icon: Icons.desk,
+    ),
 
-    AddPropertyAmenityOption(label: 'Cabinet', icon: Icons.shelves),
+    AddPropertyAmenityOption(
+      type: Amenity.cabinet,
+      label: 'Cabinet',
+      icon: Icons.shelves,
+    ),
 
-    AddPropertyAmenityOption(label: 'CCTV', icon: Icons.videocam),
+    AddPropertyAmenityOption(
+      type: Amenity.cctv,
+      label: 'CCTV',
+      icon: Icons.videocam,
+    ),
 
-    AddPropertyAmenityOption(label: 'Security', icon: Icons.security),
+    AddPropertyAmenityOption(
+      type: Amenity.security,
+      label: 'Security',
+      icon: Icons.security,
+    ),
 
-    AddPropertyAmenityOption(label: 'Parking', icon: Icons.directions_car),
+    AddPropertyAmenityOption(
+      type: Amenity.parking,
+      label: 'Parking',
+      icon: Icons.directions_car,
+    ),
   ];
 }

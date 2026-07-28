@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
-import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
+
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_stats_row.dart';
 
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_info.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_preview.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_stats_row.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
-
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
 
 //============================================================================
 //! PROPERTY CARD VERTICAL
@@ -22,22 +21,13 @@ class PropertyCardVertical extends StatelessWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyCardVertical({
-    super.key,
-    required this.data,
-    required this.repository,
-    required this.roomRepository,
-  });
+  const PropertyCardVertical({super.key, required this.data});
 
   //==========================================================================
   //! PROPERTIES
   //==========================================================================
 
   final LandlordPropertyCardData data;
-
-  final PropertyRepository repository;
-
-  final RoomRepository roomRepository;
 
   //==========================================================================
   //! BUILD
@@ -50,11 +40,8 @@ class PropertyCardVertical extends StatelessWidget {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) => PropertyDetailScreen(
-              propertyId: data.id,
-              repository: repository,
-              roomRepository: roomRepository,
-            ),
+            pageBuilder: (_, __, ___) =>
+                PropertyDetailScreen(propertyId: data.id),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0, 1);

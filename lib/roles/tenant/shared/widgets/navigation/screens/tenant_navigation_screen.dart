@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+
+import 'package:bh_finder/roles/tenant/features/favorites/screens/favorites_screen.dart';
 import 'package:bh_finder/roles/tenant/features/home/screens/home_screen.dart';
 import 'package:bh_finder/roles/tenant/features/messages/screens/messages_screen.dart';
 import 'package:bh_finder/roles/tenant/features/profile/screens/profile_screen.dart';
-import 'package:bh_finder/roles/tenant/features/favorites/screens/favorites_screen.dart';
 import 'package:bh_finder/roles/tenant/features/search/screens/search_screen.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/app_bottom_navigation_bar.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
-
-import 'package:bh_finder/core/repositories/mock/mock_property_repository.dart';
-import 'package:bh_finder/core/repositories/mock/mock_room_repository.dart';
+//============================================================================
+//! TENANT NAVIGATION SCREEN
+//============================================================================
 
 class TenantNavigationScreen extends StatefulWidget {
   const TenantNavigationScreen({super.key});
 
-  //============================================================================
-  //! MAIN NAVIGATION WRAPPER
-  //============================================================================
   @override
   State<TenantNavigationScreen> createState() =>
       _TenantNavigationWrapperState();
@@ -27,16 +26,22 @@ class TenantNavigationScreen extends StatefulWidget {
 
 class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
   //============================================================================
+  //! REPOSITORIES
+  //============================================================================
+
+  final PropertyRepository _propertyRepository =
+      Repositories.instance.propertyRepository;
+
+  final RoomRepository _roomRepository = Repositories.instance.roomRepository;
+
+  //============================================================================
   //! STATE
   //============================================================================
 
   int _currentIndex = 0;
 
-  final PropertyRepository _propertyRepository = MockPropertyRepository();
-
-  final RoomRepository _roomRepository = MockRoomRepository();
-
   bool _hasUnreadNotifications = true;
+
   bool _hasUnreadLandlordMessages = true;
 
   bool get _showMessagesTabBadge =>
@@ -51,21 +56,17 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
     final screens = [
       HomeScreen(
         hasNotification: _hasUnreadNotifications,
-
         onNotificationsRead: () {
           setState(() {
             _hasUnreadNotifications = false;
           });
         },
-
         onSearchPressed: () {
           setState(() {
             _currentIndex = 1;
           });
         },
-
         propertyRepository: _propertyRepository,
-
         roomRepository: _roomRepository,
       ),
 
@@ -75,9 +76,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
             _currentIndex = 0;
           });
         },
-
         propertyRepository: _propertyRepository,
-
         roomRepository: _roomRepository,
       ),
 
@@ -87,9 +86,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
             _currentIndex = 0;
           });
         },
-
         propertyRepository: _propertyRepository,
-
         roomRepository: _roomRepository,
       ),
 
@@ -112,12 +109,9 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
 
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: screens),
-
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: _currentIndex,
-
         showMessagesBadge: _showMessagesTabBadge,
-
         onTap: (index) {
           setState(() {
             _currentIndex = index;

@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 
 import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
@@ -61,7 +62,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
   Timer? _timer;
 
-  List<String> _images = [];
+  List<ImageModel> _images = [];
 
   int _currentPage = 0;
   //============================================================================
@@ -89,7 +90,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     setState(() {
       _data = data;
 
-      _images = data.imageUrls;
+      _images = data.images;
 
       _loading = false;
     });
@@ -164,9 +165,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                     children: [
                       ImageCarousel(
                         pageController: _pageController,
-
-                        images: _images,
-
+                        images: _images.map((image) => image.path).toList(),
                         onPageChanged: (index) {
                           setState(() {
                             _currentPage = index;

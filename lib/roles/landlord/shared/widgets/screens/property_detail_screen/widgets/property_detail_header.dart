@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
 
 //============================================================================
 //! PROPERTY HEADER
@@ -125,6 +125,7 @@ class PropertyDetailHeader extends StatelessWidget {
         //! DISTANCE
         //======================================================================
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.location_on, size: 16, color: AppColors.tertiary),
 
@@ -132,8 +133,12 @@ class PropertyDetailHeader extends StatelessWidget {
 
             Expanded(
               child: Text(
-                '${data.distance.toStringAsFixed(1)} km away',
-                style: const TextStyle(fontSize: 13, color: AppColors.tertiary),
+                data.address,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.tertiary,
+                  fontFamily: 'Roboto',
+                ),
               ),
             ),
           ],

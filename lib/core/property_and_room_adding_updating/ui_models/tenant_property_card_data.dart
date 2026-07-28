@@ -14,7 +14,7 @@ class TenantPropertyCardData {
     required this.status,
     required this.genderPreference,
     required this.favoriteCount,
-    required this.distance,
+    required this.address,
     required this.amenities,
     required this.isFavorite,
   });
@@ -35,7 +35,7 @@ class TenantPropertyCardData {
 
   final int favoriteCount;
 
-  final double distance;
+  final String address;
 
   final List<Amenity> amenities;
 

@@ -1,4 +1,4 @@
-import 'package:bh_finder/core/repositories/auth_repository.dart';
+import 'package:bh_finder/core/authentication/repositories/auth_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   @override

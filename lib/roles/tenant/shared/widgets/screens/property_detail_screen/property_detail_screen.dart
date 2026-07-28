@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/view_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_bottom_button.dart';
@@ -66,7 +67,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   late final PageController _pageController;
 
-  List<String> _images = [];
+  List<ImageModel> _images = [];
 
   Timer? _autoScrollTimer;
 
@@ -104,7 +105,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       setState(() {
         _data = data;
 
-        _images = data.imageUrls;
+        _images = data.images;
 
         _loading = false;
       });
@@ -208,7 +209,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       ImageCarousel(
                         pageController: _pageController,
 
-                        images: _images,
+                        images: _images.map((image) => image.path).toList(),
 
                         onPageChanged: (index) {
                           setState(() {

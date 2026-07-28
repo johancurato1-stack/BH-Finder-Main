@@ -13,7 +13,12 @@ class ImageCard extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const ImageCard({super.key, required this.imageUrl, this.height = 250});
+  const ImageCard({
+    super.key,
+    required this.imageUrl,
+    this.height = 250,
+    this.onDelete,
+  });
 
   //============================================================================
   //! PROPERTIES
@@ -22,6 +27,8 @@ class ImageCard extends StatelessWidget {
   final String imageUrl;
 
   final double height;
+
+  final VoidCallback? onDelete;
 
   //============================================================================
   //! BUILD
@@ -45,7 +52,34 @@ class ImageCard extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppRadius.lg),
-      child: image,
+      child: Stack(
+        children: [
+          image,
+
+          if (onDelete != null)
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Material(
+                color: Colors.red,
+                shape: const CircleBorder(),
+                elevation: 4,
+                child: InkWell(
+                  onTap: onDelete,
+                  customBorder: const CircleBorder(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.delete_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

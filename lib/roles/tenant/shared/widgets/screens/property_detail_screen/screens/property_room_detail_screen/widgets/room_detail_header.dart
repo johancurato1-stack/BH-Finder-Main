@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 
 //============================================================================
 //! ROOM HEADER
@@ -33,7 +33,7 @@ class RoomDetailHeader extends StatelessWidget {
         //! TITLE
         //======================================================================
         Text(
-          data.roomNumber,
+          data.title,
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w700,

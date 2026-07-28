@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/models/room_model.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/add_room_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/widgets/manage_rooms_header.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/widgets/manage_rooms_list_view.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/room_detail_screen.dart';
 
 //============================================================================
 //! MANAGE ROOMS SCREEN
@@ -18,30 +22,96 @@ class ManageRoomsScreen extends StatefulWidget {
 
   const ManageRoomsScreen({
     super.key,
-    required this.PropertyName,
+    required this.propertyId,
+    required this.propertyName,
     required this.rooms,
-    required this.roomRepository,
   });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final String PropertyName;
+  final String propertyName;
 
   final List<RoomModel> rooms;
 
-  final RoomRepository roomRepository;
+  final String propertyId;
 
   @override
   State<ManageRoomsScreen> createState() => _ManageRoomsScreenState();
 }
 
-//============================================================================
-//! STATE
-//============================================================================
-
 class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
+  //============================================================================
+  //! REPOSITORY
+  //============================================================================
+
+  final RoomRepository _roomRepository = Repositories.instance.roomRepository;
+
+  //============================================================================
+  //! STATE
+  //============================================================================
+
+  late List<RoomModel> _rooms;
+
+  //============================================================================
+  //! LOAD ROOMS
+  //============================================================================
+
+  Future<void> _loadRooms() async {
+    final rooms = await _roomRepository.getByProperty(widget.propertyId);
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _rooms = rooms;
+    });
+  }
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _rooms = List<RoomModel>.from(widget.rooms);
+  }
+
+  //============================================================================
+  //! OPEN ADD ROOM
+  //============================================================================
+
+  Future<void> _openAddRoom() async {
+    final created = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddRoomScreen(propertyId: widget.propertyId),
+      ),
+    );
+
+    if (created == true) {
+      await _loadRooms();
+    }
+  }
+
+  //============================================================================
+  //! OPEN ROOM
+  //============================================================================
+
+  void _openRoom(RoomModel room) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            RoomDetailScreen(roomId: room.id, repository: _roomRepository),
+      ),
+    );
+  }
+
   //============================================================================
   //! BUILD
   //============================================================================
@@ -50,7 +120,6 @@ class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: Column(
           children: [
@@ -58,25 +127,19 @@ class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
             //! HEADER
             //==================================================================
             ManageRoomsHeader(
-              title: widget.PropertyName,
-
+              title: widget.propertyName,
               onBack: () => Navigator.pop(context),
+              onAddRoom: _openAddRoom,
             ),
 
             //==================================================================
             //! CONTENT
             //==================================================================
             Expanded(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ManageRoomsListView(
-                      rooms: widget.rooms,
-
-                      roomRepository: widget.roomRepository,
-                    ),
-                  ),
-                ],
+              child: ManageRoomsListView(
+                rooms: _rooms,
+                onAddRoom: _openAddRoom,
+                onRoomTap: _openRoom,
               ),
             ),
           ],

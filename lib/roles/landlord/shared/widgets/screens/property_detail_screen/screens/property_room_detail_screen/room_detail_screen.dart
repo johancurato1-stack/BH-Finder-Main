@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/image_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/photo_thumbnails.dart';
@@ -115,7 +115,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             //! ROOM IMAGE
             //==============================================================
-            ImageCard(imageUrl: data.imageUrls[_selectedImage]),
+            ImageCard(imageUrl: data.images[_selectedImage].path),
 
             const SizedBox(height: 16),
 
@@ -123,7 +123,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //! PHOTO THUMBNAILS
             //==============================================================
             PhotoThumbnails(
-              images: data.imageUrls,
+              images: data.images,
 
               selectedIndex: _selectedImage,
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/models/image_model.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/image_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/photo_thumbnails.dart';
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
@@ -18,20 +20,23 @@ class AddPropertyPhotosSection extends StatelessWidget {
     required this.images,
     required this.selectedImage,
     required this.onImageSelected,
-    required this.onAddPhoto,
+    this.onAddPhoto,
+    this.onDeletePhoto,
   });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  final List<String> images;
+  final List<ImageModel> images;
 
   final int selectedImage;
 
   final ValueChanged<int> onImageSelected;
 
-  final VoidCallback onAddPhoto;
+  final VoidCallback? onAddPhoto;
+
+  final VoidCallback? onDeletePhoto;
 
   //============================================================================
   //! BUILD
@@ -60,7 +65,10 @@ class AddPropertyPhotosSection extends StatelessWidget {
         //! MAIN IMAGE
         //==============================================================
         if (images.isNotEmpty)
-          ImageCard(imageUrl: images[selectedImage])
+          ImageCard(
+            imageUrl: images[selectedImage].path,
+            onDelete: onDeletePhoto,
+          )
         else
           Container(
             height: 250,

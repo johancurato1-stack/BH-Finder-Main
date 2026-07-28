@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/repositories/profile_repository.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 
-import 'package:bh_finder/core/view_models/auth_state_view_model.dart';
+import 'package:bh_finder/core/authentication/view_models/auth_state_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';

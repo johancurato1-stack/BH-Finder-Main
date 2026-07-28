@@ -1,25 +1,24 @@
 import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 
 //============================================================================
-//! LANDLORD PROPERTY CARD DATA
+//! ROOM DETAIL DATA
 //============================================================================
 
-class LandlordPropertyCardData {
+class RoomDetailData {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
-  const LandlordPropertyCardData({
+  const RoomDetailData({
     required this.id,
+    required this.propertyId,
     required this.title,
-    required this.coverImageUrl,
-    required this.status,
-    required this.distance,
-    required this.totalRooms,
-    required this.totalViews,
-    required this.totalFavorites,
-    required this.totalInquiries,
-    this.isVerified = false,
+    required this.description,
+    required this.price,
+    required this.capacity,
+    required this.genderPreference,
+    required this.images,
   });
 
   //============================================================================
@@ -28,22 +27,17 @@ class LandlordPropertyCardData {
 
   final String id;
 
+  final String propertyId;
+
   final String title;
 
-  final String coverImageUrl;
+  final String description;
 
-  final PropertyStatus status;
+  final double price;
 
-  /// Distance to the target campus in meters.
-  final double distance;
+  final int capacity;
 
-  final int totalRooms;
+  final GenderPreference genderPreference;
 
-  final int totalViews;
-
-  final int totalFavorites;
-
-  final int totalInquiries;
-
-  final bool isVerified;
+  final List<ImageModel> images;
 }

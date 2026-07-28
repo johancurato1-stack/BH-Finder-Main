@@ -67,6 +67,9 @@ class PrimaryFormField extends StatelessWidget {
       readOnly: readOnly,
       maxLines: maxLines,
       style: AppTextStyles.body,
+      onTapOutside: (_) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       decoration: _buildInputDecoration(),
     );
   }

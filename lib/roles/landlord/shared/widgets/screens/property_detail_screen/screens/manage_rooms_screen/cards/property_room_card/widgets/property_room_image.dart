@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/models/room_model.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
 
 //============================================================================
 //! PROPERTY ROOM IMAGE
@@ -25,6 +25,14 @@ class PropertyRoomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (room.images.isEmpty) {
+      return const SizedBox(
+        width: 80,
+        height: 80,
+        child: Center(child: Icon(Icons.image_not_supported_outlined)),
+      );
+    }
+
     return ClipRRect(
       //======================================================================
       //! ROUNDED IMAGE
@@ -32,7 +40,7 @@ class PropertyRoomImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
 
       child: Image.network(
-        room.imageUrls.first,
+        room.images.first.path,
 
         width: 80,
         height: 80,

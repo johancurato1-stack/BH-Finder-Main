@@ -53,6 +53,18 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
 
       case Amenity.electricityIncluded:
         return Icons.bolt;
+
+      case Amenity.privateBathroom:
+        return Icons.bathroom;
+
+      case Amenity.desk:
+        return Icons.desk;
+
+      case Amenity.cabinet:
+        return Icons.shelves;
+
+      case Amenity.security:
+        return Icons.security;
     }
   }
 
@@ -89,6 +101,18 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
 
       case Amenity.electricityIncluded:
         return 'Electricity';
+
+      case Amenity.privateBathroom:
+        return 'Own CR';
+
+      case Amenity.desk:
+        return 'Desk';
+
+      case Amenity.cabinet:
+        return 'Cabinet';
+
+      case Amenity.security:
+        return 'Security';
     }
   }
 

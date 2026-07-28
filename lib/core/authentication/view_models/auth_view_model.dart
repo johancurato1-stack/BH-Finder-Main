@@ -1,4 +1,4 @@
-import 'package:bh_finder/core/repositories/auth_repository.dart';
+import 'package:bh_finder/core/authentication/repositories/auth_repository.dart';
 
 import 'package:bh_finder/roles/tenant/features/auth/validators/field_validation.dart';
 

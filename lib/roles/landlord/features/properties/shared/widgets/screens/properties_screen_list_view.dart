@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/view_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/add_property_card.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
 
 //============================================================================
 //! PROPERTIES SCREEN LIST VIEW
@@ -17,19 +17,13 @@ class PropertiesScreenListView extends StatefulWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertiesScreenListView({
-    super.key,
-    required this.propertyRepository,
-    required this.roomRepository,
-  });
+  const PropertiesScreenListView({super.key, required this.propertyRepository});
 
   //==========================================================================
   //! PROPERTIES
   //==========================================================================
 
   final PropertyRepository propertyRepository;
-
-  final RoomRepository roomRepository;
 
   @override
   State<PropertiesScreenListView> createState() =>
@@ -68,7 +62,6 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
 
     setState(() {
       _properties = properties;
-
       _loading = false;
     });
   }
@@ -87,9 +80,7 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
 
     return ListView.builder(
       padding: EdgeInsets.zero,
-
       itemCount: properties.length + 1,
-
       itemBuilder: (context, index) {
         //==============================================================
         //! ADD PROPERTY CARD
@@ -97,35 +88,38 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
 
         if (index == properties.length) {
           return AddPropertyCard(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              final created = await Navigator.push<bool>(
                 context,
-
                 PageRouteBuilder(
                   pageBuilder: (_, animation, __) => const AddPropertyScreen(),
-
                   transitionsBuilder: (_, animation, __, child) {
                     final offsetAnimation =
                         Tween<Offset>(
                           begin: const Offset(0, 1),
-
                           end: Offset.zero,
                         ).animate(
                           CurvedAnimation(
                             parent: animation,
-
                             curve: Curves.easeOut,
                           ),
                         );
 
                     return SlideTransition(
                       position: offsetAnimation,
-
                       child: child,
                     );
                   },
                 ),
               );
+
+              if (!mounted || created != true) return;
+
+              setState(() {
+                _loading = true;
+              });
+
+              await _loadProperties();
             },
           );
         }
@@ -136,13 +130,7 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
 
         final property = properties[index];
 
-        return PropertyCardVertical(
-          data: property,
-
-          repository: widget.propertyRepository,
-
-          roomRepository: widget.roomRepository,
-        );
+        return PropertyCardVertical(data: property);
       },
     );
   }

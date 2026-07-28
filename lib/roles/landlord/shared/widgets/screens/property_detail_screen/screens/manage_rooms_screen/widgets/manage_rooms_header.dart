@@ -11,6 +11,7 @@ class ManageRoomsHeader extends StatelessWidget {
     super.key,
     required this.title,
     required this.onBack,
+    required this.onAddRoom,
   });
 
   //============================================================================
@@ -19,6 +20,7 @@ class ManageRoomsHeader extends StatelessWidget {
 
   final String title;
   final VoidCallback onBack;
+  final VoidCallback onAddRoom;
 
   //============================================================================
   //! BUILD
@@ -55,11 +57,7 @@ class ManageRoomsHeader extends StatelessWidget {
           //! ADD ROOM
           //====================================================================
           IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Add Room coming soon!')),
-              );
-            },
+            onPressed: onAddRoom,
             icon: const Icon(Icons.add_rounded),
             color: AppColors.primary,
             iconSize: 26,

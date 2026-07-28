@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
 
 //============================================================================
-//! ADD PROPERTY GENDER SECTION
+//! ADD ROOM GENDER SECTION
 //============================================================================
 
 class AddRoomGenderSection extends StatelessWidget {
@@ -22,9 +24,9 @@ class AddRoomGenderSection extends StatelessWidget {
   //! PROPERTIES
   //============================================================================
 
-  final String selectedGender;
+  final GenderPreference selectedGender;
 
-  final ValueChanged<String> onGenderChanged;
+  final ValueChanged<GenderPreference> onGenderChanged;
 
   //============================================================================
   //! BUILD
@@ -48,13 +50,13 @@ class AddRoomGenderSection extends StatelessWidget {
           children: [
             FilterButton(
               label: 'Male',
-              isSelected: selectedGender == 'Male',
-              onTap: () => onGenderChanged('Male'),
+              isSelected: selectedGender == GenderPreference.male,
+              onTap: () => onGenderChanged(GenderPreference.male),
             ),
             FilterButton(
               label: 'Female',
-              isSelected: selectedGender == 'Female',
-              onTap: () => onGenderChanged('Female'),
+              isSelected: selectedGender == GenderPreference.female,
+              onTap: () => onGenderChanged(GenderPreference.female),
             ),
           ],
         ),

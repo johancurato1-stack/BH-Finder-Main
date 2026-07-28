@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/room_repository.dart';
-
-import 'package:bh_finder/core/repositories/mock/mock_property_repository.dart';
-import 'package:bh_finder/core/repositories/mock/mock_room_repository.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -40,9 +37,8 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
   //! REPOSITORIES
   //==========================================================================
 
-  final PropertyRepository _propertyRepository = MockPropertyRepository();
-
-  final RoomRepository _roomRepository = MockRoomRepository();
+  final PropertyRepository _propertyRepository =
+      Repositories.instance.propertyRepository;
 
   //==========================================================================
   //! VARIABLES
@@ -67,18 +63,11 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      DashboardScreen(
-        propertyRepository: _propertyRepository,
-
-        roomRepository: _roomRepository,
-      ),
+      const DashboardScreen(),
 
       PropertiesScreen(
         onBackPressed: _goToDashboard,
-
         propertyRepository: _propertyRepository,
-
-        roomRepository: _roomRepository,
       ),
 
       MessagesScreen(onBackPressed: _goToDashboard),
@@ -94,14 +83,10 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: IndexedStack(index: _currentIndex, children: screens),
-
       bottomNavigationBar: LandlordBottomNavigationBar(
         currentIndex: _currentIndex,
-
         showMessagesBadge: false,
-
         onTap: (index) {
           setState(() {
             _currentIndex = index;

@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:bh_finder/core/enums/enums.dart';
+import 'package:bh_finder/core/models/image_model.dart';
 
 //============================================================================
 //! ROOM MODEL
 //============================================================================
 
-@immutable
 class RoomModel {
   //============================================================================
   //! CONSTRUCTOR
@@ -15,39 +13,32 @@ class RoomModel {
   const RoomModel({
     required this.id,
     required this.propertyId,
-    required this.roomNumber,
+    required this.title,
     required this.description,
     required this.price,
     required this.capacity,
     required this.genderPreference,
-    required this.imageUrls,
+    required this.images,
   });
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
-  /// Unique room ID.
   final String id;
 
-  /// Property that owns this room.
   final String propertyId;
 
-  /// Example: 101
-  final String roomNumber;
+  final String title;
 
-  /// Room description.
   final String description;
 
-  /// Monthly rental price.
   final double price;
 
-  /// Maximum occupants.
   final int capacity;
 
-  /// Male, Female, or Mixed.
   final GenderPreference genderPreference;
 
-  /// Room photos.
-  final List<String> imageUrls;
+  /// Local files or uploaded images.
+  final List<ImageModel> images;
 }
