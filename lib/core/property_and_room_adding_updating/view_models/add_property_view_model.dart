@@ -115,6 +115,24 @@ class AddPropertyViewModel extends ChangeNotifier {
   }
 
   //============================================================================
+  //! DELETE PROPERTY
+  //============================================================================
+
+  Future<bool> deleteProperty(String propertyId) async {
+    _setLoading(true);
+
+    try {
+      await _propertyRepository.delete(propertyId);
+
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  //============================================================================
   //! VALIDATE PROPERTY
   //============================================================================
 

@@ -2,7 +2,7 @@ import 'package:bh_finder/core/property_and_room_adding_updating/models/property
 
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 
 //============================================================================
 //! PROPERTY REPOSITORY

@@ -22,7 +22,7 @@ import 'package:bh_finder/core/property_and_room_adding_updating/view_models/add
 import 'package:bh_finder/core/property_and_room_adding_updating/models/add_property_request.dart';
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/repositories/repositories.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_availability_section.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 
@@ -487,6 +487,54 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   }
 
   //============================================================================
+  //! DELETE PROPERTY
+  //============================================================================
+
+  Future<void> _deleteProperty() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (_) => PrimaryDialog(
+        icon: Icons.delete_rounded,
+        iconColor: Colors.red,
+        title: 'Delete Property?',
+        message:
+            'This will permanently delete:\n\n'
+            '• Property\n'
+            '• Rooms\n'
+            '• Images\n\n'
+            'This action cannot be undone.',
+        secondaryButtonText: 'Cancel',
+        onSecondaryPressed: () => Navigator.pop(context, false),
+        buttonText: 'Delete',
+        onPressed: () => Navigator.pop(context, true),
+      ),
+    );
+
+    if (shouldDelete != true) return;
+
+    final success = await _viewModel.deleteProperty(widget.property!.id);
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pop(context, true);
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      builder: (_) => PrimaryDialog(
+        icon: Icons.error_rounded,
+        iconColor: Colors.red,
+        title: 'Delete Failed',
+        message: 'Failed to delete property. Please try again.',
+        buttonText: 'OK',
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
+  }
+
+  //============================================================================
   //! LIFECYCLE
   //============================================================================
 
@@ -687,6 +735,33 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               text: _isEditing ? 'Update Property' : 'Publish Property',
               onPressed: _publishProperty,
             ),
+
+            const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
+
+            //==============================================================
+            //! DELETE PROPERTY
+            //==============================================================
+            if (_isEditing) ...[
+              const SizedBox(height: 12),
+
+              OutlinedButton(
+                onPressed: _deleteProperty,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 52),
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Delete Property',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 20),
           ],

@@ -4,8 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:bh_finder/core/enums/enums.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/theme/app_radius.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/models/add_room_request.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/add_room_view_model.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 import 'package:bh_finder/core/repositories/repositories.dart';
@@ -24,17 +26,11 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/
 //============================================================================
 
 class AddRoomScreen extends StatefulWidget {
-  //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-
-  const AddRoomScreen({super.key, required this.propertyId});
-
-  //============================================================================
-  //! PROPERTIES
-  //============================================================================
+  const AddRoomScreen({super.key, required this.propertyId, this.room});
 
   final String propertyId;
+
+  final RoomDetailData? room;
 
   @override
   State<AddRoomScreen> createState() => _AddRoomScreenState();
@@ -67,11 +63,13 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  int _selectedImage = 0;
-
   final List<ImageModel> _images = [];
 
-  GenderPreference _selectedGender = GenderPreference.male;
+  int _selectedImage = 0;
+
+  GenderPreference? _selectedGender;
+
+  bool get _isEditing => widget.room != null;
 
   //============================================================================
   //! IMAGE PICKER
@@ -96,16 +94,12 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         return PrimaryDialog(
           icon: Icons.delete_rounded,
           iconColor: Colors.red,
-
           title: 'Delete Photo',
-
           message: 'Are you sure you want to delete this photo?',
-
           secondaryButtonText: 'Cancel',
           onSecondaryPressed: () {
             Navigator.pop(context, false);
           },
-
           buttonText: 'Delete',
           onPressed: () {
             Navigator.pop(context, true);
@@ -125,13 +119,9 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
           return PrimaryDialog(
             icon: Icons.photo_library_rounded,
             iconColor: Colors.orange,
-
             title: 'Room Photo Required',
-
             message: 'A room must have at least one photo.',
-
             buttonText: 'OK',
-
             onPressed: () {
               Navigator.pop(context);
             },
@@ -156,6 +146,24 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
   //============================================================================
 
   @override
+  void initState() {
+    super.initState();
+
+    if (!_isEditing) return;
+
+    final room = widget.room!;
+
+    _titleController.text = room.title;
+    _priceController.text = room.price.toStringAsFixed(0);
+    _capacityController.text = room.capacity.toString();
+    _descriptionController.text = room.description;
+
+    _selectedGender = room.genderPreference;
+
+    _images.addAll(room.images);
+  }
+
+  @override
   void dispose() {
     _titleController.dispose();
     _priceController.dispose();
@@ -164,56 +172,111 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
 
     super.dispose();
   }
+
   //============================================================================
-  //! PUBLISH ROOM
+  //! SAVE ROOM
   //============================================================================
 
-  Future<void> _publishRoom() async {
+  Future<void> _saveRoom() async {
+    final title = _titleController.text.trim();
+
     final price = double.tryParse(_priceController.text.trim()) ?? 0;
 
     final capacity = int.tryParse(_capacityController.text.trim()) ?? 0;
 
-    final request = AddRoomRequest(
-      propertyId: widget.propertyId,
-      roomNumber: _titleController.text.trim(),
-      price: price,
-      capacity: capacity,
-      description: _descriptionController.text.trim(),
-      genderPreference: _selectedGender,
-      images: _images,
-    );
+    final description = _descriptionController.text.trim();
 
     final validation = _viewModel.validate(
       photoCount: _images.length,
-      title: request.roomNumber,
-      price: request.price,
-      capacity: request.capacity,
+      title: title,
+      price: price,
+      capacity: capacity,
+      description: description,
+      gender: _selectedGender,
     );
 
     switch (validation) {
       case AddRoomValidationResult.photos:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please upload at least one room photo.'),
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.photo_library_rounded,
+            iconColor: Colors.orange,
+            title: 'Room Photos Required',
+            message: 'Please upload at least one room photo.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
           ),
         );
         return;
 
       case AddRoomValidationResult.title:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a room title.')),
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.meeting_room_rounded,
+            iconColor: Colors.orange,
+            title: 'Room Title Required',
+            message: 'Please enter a room title.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
+          ),
         );
         return;
 
       case AddRoomValidationResult.price:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a valid room price.')),
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.payments_rounded,
+            iconColor: Colors.orange,
+            title: 'Room Price Required',
+            message: 'Please enter a valid room price.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
+          ),
         );
         return;
 
       case AddRoomValidationResult.capacity:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a valid room capacity.')),
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.groups_rounded,
+            iconColor: Colors.orange,
+            title: 'Room Capacity Required',
+            message: 'Please enter a valid room capacity.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
+          ),
+        );
+        return;
+
+      case AddRoomValidationResult.description:
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.description_rounded,
+            iconColor: Colors.orange,
+            title: 'Description Required',
+            message: 'Please enter a room description.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
+          ),
+        );
+        return;
+
+      case AddRoomValidationResult.gender:
+        await showDialog(
+          context: context,
+          builder: (_) => PrimaryDialog(
+            icon: Icons.people_alt_rounded,
+            iconColor: Colors.orange,
+            title: 'Gender Preference Required',
+            message: 'Please select who this room is intended for.',
+            buttonText: 'OK',
+            onPressed: () => Navigator.pop(context),
+          ),
         );
         return;
 
@@ -221,17 +284,94 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         break;
     }
 
-    final success = await _viewModel.createRoom(request);
+    final request = AddRoomRequest(
+      propertyId: widget.propertyId,
+      roomNumber: title,
+      price: price,
+      capacity: capacity,
+      description: description,
+      genderPreference: _selectedGender!,
+      images: _images,
+    );
+
+    bool success;
+
+    if (_isEditing) {
+      success = await _viewModel.updateRoom(
+        roomId: widget.room!.id,
+        request: request,
+      );
+    } else {
+      success = await _viewModel.createRoom(request);
+    }
 
     if (!mounted) return;
 
     if (success) {
       Navigator.pop(context, true);
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Failed to publish room.')));
+      return;
     }
+
+    await showDialog(
+      context: context,
+      builder: (_) => PrimaryDialog(
+        icon: Icons.error_rounded,
+        iconColor: Colors.red,
+        title: _isEditing ? 'Update Failed' : 'Publish Failed',
+        message: _isEditing
+            ? 'Failed to update room. Please try again.'
+            : 'Failed to publish room. Please try again.',
+        buttonText: 'OK',
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
+  }
+
+  //============================================================================
+  //! DELETE ROOM
+  //============================================================================
+
+  Future<void> _deleteRoom() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (_) => PrimaryDialog(
+        icon: Icons.delete_rounded,
+        iconColor: Colors.red,
+        title: 'Delete Room?',
+        message:
+            'This will permanently delete:\n\n'
+            '• Room\n'
+            '• Images\n\n'
+            'This action cannot be undone.',
+        secondaryButtonText: 'Cancel',
+        onSecondaryPressed: () => Navigator.pop(context, false),
+        buttonText: 'Delete',
+        onPressed: () => Navigator.pop(context, true),
+      ),
+    );
+
+    if (shouldDelete != true) return;
+
+    final success = await _viewModel.deleteRoom(widget.room!.id);
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pop(context, true);
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      builder: (_) => PrimaryDialog(
+        icon: Icons.error_rounded,
+        iconColor: Colors.red,
+        title: 'Delete Failed',
+        message: 'Failed to delete room. Please try again.',
+        buttonText: 'OK',
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
   }
 
   //============================================================================
@@ -256,9 +396,9 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
             //==============================================================
             //! TITLE
             //==============================================================
-            const Text(
-              'Add Room',
-              style: TextStyle(
+            Text(
+              _isEditing ? 'Edit Room' : 'Add Room',
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: AppColors.secondary,
@@ -311,9 +451,39 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
             const SizedBox(height: 32),
 
             //==============================================================
-            //! PUBLISH ROOM
+            //! PUBLISH / UPDATE ROOM
             //==============================================================
-            PrimaryButton(text: 'Publish Room', onPressed: _publishRoom),
+            PrimaryButton(
+              text: _isEditing ? 'Update Room' : 'Publish Room',
+              onPressed: _saveRoom,
+            ),
+
+            const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
+
+            //==============================================================
+            //! DELETE ROOM
+            //==============================================================
+            if (_isEditing) ...[
+              const SizedBox(height: 12),
+
+              OutlinedButton(
+                onPressed: _deleteRoom,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 52),
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                  ),
+                ),
+                child: const Text(
+                  'Delete Room',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 20),
           ],

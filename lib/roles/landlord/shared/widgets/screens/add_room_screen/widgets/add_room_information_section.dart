@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
+import 'package:bh_finder/shared/widgets/textfields/prefixed_text_field.dart';
 import 'package:bh_finder/shared/widgets/textfields/primary_form_text_field.dart';
 
 //============================================================================
@@ -73,10 +74,10 @@ class AddRoomInformationSection extends StatelessWidget {
         const SizedBox(height: 20),
 
         //==============================================================
-        //! ROOM PRICE
+        //! ROOM DETAILS
         //==============================================================
         const Text(
-          'Room Price',
+          'Room Details',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -86,33 +87,28 @@ class AddRoomInformationSection extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        PrimaryFormField(
-          controller: priceController,
-          hintText: 'Enter room price',
-          keyboardType: TextInputType.number,
-        ),
+        Row(
+          children: [
+            Expanded(
+              child: PrefixedTextField(
+                controller: priceController,
+                hintText: '0',
+                prefixText: '₱',
+                keyboardType: TextInputType.number,
+              ),
+            ),
 
-        const SizedBox(height: 20),
+            const SizedBox(width: 12),
 
-        //==============================================================
-        //! CAPACITY
-        //==============================================================
-        const Text(
-          'Capacity',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppColors.secondary,
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
-        PrimaryFormField(
-          controller: capacityController,
-          hintText: 'Maximum occupants',
-          keyboardType: TextInputType.number,
-          prefixIcon: Icons.people_rounded,
+            Expanded(
+              child: PrefixedTextField(
+                controller: capacityController,
+                hintText: '0',
+                prefixIcon: Icons.groups_outlined,
+                keyboardType: TextInputType.number,
+              ),
+            ),
+          ],
         ),
 
         const SizedBox(height: 20),

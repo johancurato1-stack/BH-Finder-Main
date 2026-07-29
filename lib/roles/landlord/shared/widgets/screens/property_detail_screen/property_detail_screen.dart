@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/repositories/repositories.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -254,11 +254,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         Navigator.pop(context, true);
                       }
                     },
-                    onDeletePressed: () {
-                      // TODO: Delete Property
-                    },
                   ),
-
                   const SizedBox(height: 20),
                 ],
               ),

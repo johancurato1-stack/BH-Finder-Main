@@ -299,28 +299,41 @@ class SupabaseRoomRepository implements RoomRepository {
         .eq('id', room.id);
 
     //----------------------------------------------------------
-    // Existing Images
+    // Existing Images In Database
     //----------------------------------------------------------
 
-    final existingImages = await _supabase
+    final existingRows = await _supabase
         .from('room_images')
         .select('storage_path')
         .eq('room_id', room.id);
 
-    final storagePaths = existingImages
-        .map<String>((image) => image['storage_path'] as String)
-        .toList();
+    final existingStoragePaths = existingRows
+        .map<String>((row) => row['storage_path'] as String)
+        .toSet();
 
     //----------------------------------------------------------
-    // Delete Existing Storage Files
+    // Images User Kept
     //----------------------------------------------------------
 
-    if (storagePaths.isNotEmpty) {
-      await _storageRepository.deleteFiles(storagePaths);
+    final keptStoragePaths = room.images
+        .where((image) => !image.isLocal)
+        .map((image) => image.storagePath!)
+        .toSet();
+
+    //----------------------------------------------------------
+    // Delete Removed Images
+    //----------------------------------------------------------
+
+    final removedStoragePaths = existingStoragePaths.difference(
+      keptStoragePaths,
+    );
+
+    if (removedStoragePaths.isNotEmpty) {
+      await _storageRepository.deleteFiles(removedStoragePaths.toList());
     }
 
     //----------------------------------------------------------
-    // Delete Existing Database Rows
+    // Remove Existing Database Rows
     //----------------------------------------------------------
 
     await _supabase.from('room_images').delete().eq('room_id', room.id);
@@ -334,26 +347,32 @@ class SupabaseRoomRepository implements RoomRepository {
         .map((image) => image.path)
         .toList();
 
-    final uploadedPaths = await _storageRepository.uploadRoomImages(
+    final uploadedStoragePaths = await _storageRepository.uploadRoomImages(
       roomId: room.id,
       localPaths: localPaths,
     );
 
     //----------------------------------------------------------
-    // Save New Images
+    // Rebuild Image Rows
     //----------------------------------------------------------
 
-    if (uploadedPaths.isNotEmpty) {
-      final rows = <Map<String, dynamic>>[];
+    final rows = <Map<String, dynamic>>[];
 
-      for (int i = 0; i < uploadedPaths.length; i++) {
-        rows.add({
-          'room_id': room.id,
-          'storage_path': uploadedPaths[i],
-          'display_order': i,
-        });
-      }
+    int uploadedIndex = 0;
 
+    for (int i = 0; i < room.images.length; i++) {
+      final image = room.images[i];
+
+      rows.add({
+        'room_id': room.id,
+        'storage_path': image.isLocal
+            ? uploadedStoragePaths[uploadedIndex++]
+            : image.storagePath!,
+        'display_order': i,
+      });
+    }
+
+    if (rows.isNotEmpty) {
       await _supabase.from('room_images').insert(rows);
     }
   }

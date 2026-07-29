@@ -4,6 +4,8 @@ import 'package:bh_finder/core/property_and_room_adding_updating/repositories/ro
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/add_room_screen.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/image_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/photo_thumbnails.dart';
 
@@ -77,10 +79,34 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
     setState(() {
       _data = data;
-
       _loading = false;
     });
   }
+
+  //==========================================================================
+  //! EDIT ROOM
+  //==========================================================================
+
+  Future<void> _editRoom() async {
+    if (_data == null) return;
+
+    final updated = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            AddRoomScreen(propertyId: _data!.propertyId, room: _data),
+      ),
+    );
+
+    if (updated == true) {
+      await _loadRoom();
+
+      if (!mounted) return;
+
+      Navigator.pop(context, true);
+    }
+  }
+
   //==========================================================================
   //! BUILD
   //==========================================================================
@@ -90,20 +116,16 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     if (_loading || _data == null) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     final data = _data!;
-
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
-
           children: [
             //==============================================================
             //! BACK BUTTON
@@ -124,17 +146,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             PhotoThumbnails(
               images: data.images,
-
               selectedIndex: _selectedImage,
-
               onImageSelected: (index) {
                 setState(() {
                   _selectedImage = index;
                 });
-              },
-
-              onAddPhoto: () {
-                // TODO: Add Photo
               },
             ),
 
@@ -164,15 +180,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             //! ACTION BUTTONS
             //==============================================================
-            RoomDetailActionButtons(
-              onEdit: () {
-                // TODO: Edit Room
-              },
-
-              onDelete: () {
-                // TODO: Delete Room
-              },
-            ),
+            RoomDetailActionButtons(onEdit: _editRoom),
 
             const SizedBox(height: 20),
           ],

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/data/mock/user/mock_user.dart';
-
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/repositories/repositories.dart';
+
+import 'package:bh_finder/core/view_models/profile_view_model.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -40,11 +41,19 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   //==========================================================================
-  //! REPOSITORY
+  //! REPOSITORIES
   //==========================================================================
 
   final PropertyRepository _propertyRepository =
       Repositories.instance.propertyRepository;
+
+  //==========================================================================
+  //! VIEW MODELS
+  //==========================================================================
+
+  final ProfileViewModel _profileViewModel = ProfileViewModel(
+    repository: SupabaseProfileRepository(),
+  );
 
   //==========================================================================
   //! VARIABLES
@@ -63,6 +72,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+
+    _profileViewModel.loadProfile();
 
     _loadProperties();
   }
@@ -88,132 +99,142 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Scaffold(
-        backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
+    return AnimatedBuilder(
+      animation: _profileViewModel,
+      builder: (context, _) {
+        final profile = _profileViewModel.profile;
 
-    final properties = _properties;
+        if (_loading || _profileViewModel.loading || profile == null) {
+          return const Scaffold(
+            backgroundColor: AppColors.background,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              //==============================================================
-              //! HEADER
-              //==============================================================
-              DashboardScreenHeader(onNotificationPressed: () {}),
+        final properties = _properties;
 
-              //==============================================================
-              //! GREETING
-              //==============================================================
-              DashboardScreenGreetingSection(user: mockUser),
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  //==============================================================
+                  //! HEADER
+                  //==============================================================
+                  DashboardScreenHeader(onNotificationPressed: () {}),
 
-              const SizedBox(height: 20),
+                  //==============================================================
+                  //! GREETING
+                  //==============================================================
+                  DashboardScreenGreetingSection(
+                    firstName: profile['first_name'] ?? '',
+                  ),
 
-              //==============================================================
-              //! PROPERTY CAROUSEL
-              //==============================================================
-              PropertyCardCarousel(
-                properties: properties,
-                onPageChanged: (page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                onPropertyTap: (property) async {
-                  final updated = await Navigator.push<bool>(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) =>
-                          PropertyDetailScreen(propertyId: property.id),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0, 1);
-                            const end = Offset.zero;
-                            const curve = Curves.easeOut;
+                  const SizedBox(height: 20),
 
-                            final offsetAnimation = animation.drive(
-                              Tween(
-                                begin: begin,
-                                end: end,
-                              ).chain(CurveTween(curve: curve)),
-                            );
+                  //==============================================================
+                  //! PROPERTY CAROUSEL
+                  //==============================================================
+                  PropertyCardCarousel(
+                    properties: properties,
+                    onPageChanged: (page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
+                    onPropertyTap: (property) async {
+                      final updated = await Navigator.push<bool>(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) =>
+                              PropertyDetailScreen(propertyId: property.id),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0, 1);
+                                const end = Offset.zero;
+                                const curve = Curves.easeOut;
 
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                    ),
-                  );
+                                final offsetAnimation = animation.drive(
+                                  Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve)),
+                                );
 
-                  if (!mounted || updated != true) return;
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                        ),
+                      );
 
-                  setState(() {
-                    _loading = true;
-                  });
+                      if (!mounted || updated != true) return;
 
-                  await _loadProperties();
-                },
-                onAddProperty: () async {
-                  final created = await Navigator.push<bool>(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const AddPropertyScreen(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0, 1);
-                            const end = Offset.zero;
-                            const curve = Curves.easeOut;
+                      setState(() {
+                        _loading = true;
+                      });
 
-                            final offsetAnimation = animation.drive(
-                              Tween(
-                                begin: begin,
-                                end: end,
-                              ).chain(CurveTween(curve: curve)),
-                            );
+                      await _loadProperties();
+                    },
+                    onAddProperty: () async {
+                      final created = await Navigator.push<bool>(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) =>
+                              const AddPropertyScreen(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(0, 1);
+                                const end = Offset.zero;
+                                const curve = Curves.easeOut;
 
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                    ),
-                  );
+                                final offsetAnimation = animation.drive(
+                                  Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve)),
+                                );
 
-                  if (!mounted || created != true) return;
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                        ),
+                      );
 
-                  setState(() {
-                    _loading = true;
-                  });
+                      if (!mounted || created != true) return;
 
-                  await _loadProperties();
-                },
+                      setState(() {
+                        _loading = true;
+                      });
+
+                      await _loadProperties();
+                    },
+                  ),
+
+                  //==============================================================
+                  //! PAGE INDICATOR
+                  //==============================================================
+                  PageIndicator(
+                    currentPage: _currentPage,
+                    pageCount: properties.length + 1,
+                  ),
+
+                  //==============================================================
+                  //! RECENT INQUIRIES
+                  //==============================================================
+                  const DashboardScreenRecentInquiriesSection(),
+
+                  const SizedBox(height: 50),
+                ],
               ),
-
-              //==============================================================
-              //! PAGE INDICATOR
-              //==============================================================
-              PageIndicator(
-                currentPage: _currentPage,
-                pageCount: properties.length + 1,
-              ),
-
-              //==============================================================
-              //! RECENT INQUIRIES
-              //==============================================================
-              const DashboardScreenRecentInquiriesSection(),
-
-              const SizedBox(height: 50),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

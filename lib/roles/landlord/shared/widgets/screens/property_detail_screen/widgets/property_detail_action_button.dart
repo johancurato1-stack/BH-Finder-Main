@@ -11,18 +11,13 @@ class PropertyDetailActionButtons extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const PropertyDetailActionButtons({
-    super.key,
-    required this.onEditPressed,
-    required this.onDeletePressed,
-  });
+  const PropertyDetailActionButtons({super.key, required this.onEditPressed});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
   final VoidCallback onEditPressed;
-  final VoidCallback onDeletePressed;
 
   //============================================================================
   //! BUILD
@@ -38,24 +33,6 @@ class PropertyDetailActionButtons extends StatelessWidget {
         PrimaryButton(text: 'Edit Property', onPressed: onEditPressed),
 
         const SizedBox(height: 12),
-
-        //======================================================================
-        //! DELETE PROPERTY
-        //======================================================================
-        OutlinedButton(
-          onPressed: onDeletePressed,
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(double.infinity, 52),
-            side: const BorderSide(color: Colors.red),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: const Text(
-            'Delete Property',
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
-          ),
-        ),
       ],
     );
   }

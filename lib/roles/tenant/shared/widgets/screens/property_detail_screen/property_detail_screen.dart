@@ -8,7 +8,7 @@ import 'package:bh_finder/core/models/image_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/property_detail_data.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_bottom_button.dart';
@@ -83,8 +83,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
     _pageController = PageController();
 
-    _images = [];
-
     _loadProperty();
   }
 
@@ -107,7 +105,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       });
 
       _startAutoScroll();
-    } catch (e, stackTrace) {
+    } catch (_) {
       if (!mounted) return;
 
       setState(() {

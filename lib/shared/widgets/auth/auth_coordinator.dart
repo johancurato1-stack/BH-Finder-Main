@@ -131,7 +131,7 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
         _role = profile?['last_active_role'];
         _loading = false;
       });
-    } catch (e, stackTrace) {
+    } catch (_) {
       if (!mounted) return;
 
       setState(() {

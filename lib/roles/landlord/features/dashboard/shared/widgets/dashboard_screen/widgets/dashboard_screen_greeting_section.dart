@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/models/user_model.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
-
-import 'package:bh_finder/core/models/user_model.dart';
 
 class DashboardScreenGreetingSection extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
 
-  const DashboardScreenGreetingSection({super.key, required this.user});
+  const DashboardScreenGreetingSection({super.key, required this.firstName});
 
   //==========================================================================
   //! VARIABLES
   //==========================================================================
 
-  final UserModel user;
+  final String firstName;
+
+  static const VerificationStatus _verificationStatus =
+      VerificationStatus.unverified;
 
   //==========================================================================
   //! HELPERS
@@ -37,8 +40,8 @@ class DashboardScreenGreetingSection extends StatelessWidget {
     return 'Good evening';
   }
 
-  Color _verificationColor() {
-    switch (user.verificationStatus) {
+  Color _verificationColor(VerificationStatus status) {
+    switch (status) {
       case VerificationStatus.verified:
         return Colors.green;
 
@@ -50,8 +53,8 @@ class DashboardScreenGreetingSection extends StatelessWidget {
     }
   }
 
-  IconData _verificationIcon() {
-    switch (user.verificationStatus) {
+  IconData _verificationIcon(VerificationStatus status) {
+    switch (status) {
       case VerificationStatus.verified:
         return Icons.verified;
 
@@ -71,7 +74,6 @@ class DashboardScreenGreetingSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
-
       child: Row(
         children: [
           //==============================================================
@@ -80,13 +82,12 @@ class DashboardScreenGreetingSection extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Text('${_getGreeting()},', style: AppTextStyles.subtitle),
 
                 const SizedBox(height: AppSpacing.xs),
 
-                Text(user.firstname + ' 👋', style: AppTextStyles.heading2),
+                Text('$firstName 👋', style: AppTextStyles.heading2),
               ],
             ),
           ),
@@ -96,32 +97,23 @@ class DashboardScreenGreetingSection extends StatelessWidget {
           //==============================================================
           Stack(
             clipBehavior: Clip.none,
-
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 36,
                 backgroundColor: AppColors.white,
-                backgroundImage: user.avatarUrl.isNotEmpty
-                    ? NetworkImage(user.avatarUrl)
-                    : null,
-
-                child: user.avatarUrl.isEmpty
-                    ? const Icon(Icons.person, color: AppColors.tertiary)
-                    : null,
+                child: Icon(Icons.person, color: AppColors.tertiary),
               ),
 
               Positioned(
                 right: -2,
                 bottom: -2,
-
                 child: CircleAvatar(
                   radius: 14,
                   backgroundColor: AppColors.white,
-
                   child: Icon(
-                    _verificationIcon(),
+                    _verificationIcon(_verificationStatus),
                     size: 14,
-                    color: _verificationColor(),
+                    color: _verificationColor(_verificationStatus),
                   ),
                 ),
               ),

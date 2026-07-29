@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/property_and_room_adding_updating/models/add_room_request.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
 
@@ -9,7 +11,15 @@ import 'package:bh_finder/core/property_and_room_adding_updating/repositories/ro
 //! ADD ROOM VALIDATION RESULT
 //============================================================================
 
-enum AddRoomValidationResult { success, photos, title, price, capacity }
+enum AddRoomValidationResult {
+  success,
+  photos,
+  title,
+  price,
+  capacity,
+  description,
+  gender,
+}
 
 //============================================================================
 //! ADD ROOM VIEW MODEL
@@ -105,6 +115,24 @@ class AddRoomViewModel extends ChangeNotifier {
   }
 
   //============================================================================
+  //! DELETE ROOM
+  //============================================================================
+
+  Future<bool> deleteRoom(String roomId) async {
+    _setLoading(true);
+
+    try {
+      await _roomRepository.delete(roomId);
+
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  //============================================================================
   //! VALIDATE ROOM
   //============================================================================
 
@@ -113,6 +141,8 @@ class AddRoomViewModel extends ChangeNotifier {
     required String title,
     required double price,
     required int capacity,
+    required String description,
+    required GenderPreference? gender,
   }) {
     if (photoCount < 1) {
       return AddRoomValidationResult.photos;
@@ -128,6 +158,14 @@ class AddRoomViewModel extends ChangeNotifier {
 
     if (capacity <= 0) {
       return AddRoomValidationResult.capacity;
+    }
+
+    if (description.trim().isEmpty) {
+      return AddRoomValidationResult.description;
+    }
+
+    if (gender == null) {
+      return AddRoomValidationResult.gender;
     }
 
     return AddRoomValidationResult.success;

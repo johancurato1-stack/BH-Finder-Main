@@ -11,19 +11,13 @@ class RoomDetailActionButtons extends StatelessWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const RoomDetailActionButtons({
-    super.key,
-    required this.onEdit,
-    required this.onDelete,
-  });
+  const RoomDetailActionButtons({super.key, required this.onEdit});
 
   //============================================================================
   //! PROPERTIES
   //============================================================================
 
   final VoidCallback onEdit;
-
-  final VoidCallback onDelete;
 
   //============================================================================
   //! BUILD
@@ -39,32 +33,6 @@ class RoomDetailActionButtons extends StatelessWidget {
         PrimaryButton(text: 'Edit Room', onPressed: onEdit),
 
         const SizedBox(height: 12),
-
-        //==========================================================================
-        //! DELETE BUTTON
-        //==========================================================================
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: OutlinedButton.icon(
-            onPressed: onDelete,
-            icon: const Icon(Icons.delete_outline_rounded, color: Colors.red),
-            label: const Text(
-              'Delete Room',
-              style: TextStyle(
-                color: Colors.red,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Colors.red),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
