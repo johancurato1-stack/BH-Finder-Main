@@ -173,9 +173,11 @@ Feel free to fork the repository, submit issues, or open pull requests.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the BH Finder Source-Available License.
 
-See the LICENSE file for details.
+The source code is provided for educational and evaluation purposes only. You may view the code and submit suggestions or pull requests, but you may not copy, modify, redistribute, or use this code in your own projects without prior written permission.
+
+See the LICENSE file for full terms.
 
 ---
 
