@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/widgets/property_detail_performance_card.dart';
 
@@ -15,7 +16,13 @@ class PropertyDetailPerformanceSection extends StatelessWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyDetailPerformanceSection({super.key});
+  const PropertyDetailPerformanceSection({super.key, required this.data});
+
+  //==========================================================================
+  //! PROPERTIES
+  //==========================================================================
+
+  final PropertyDetailData data;
 
   //==========================================================================
   //! BUILD
@@ -37,22 +44,22 @@ class PropertyDetailPerformanceSection extends StatelessWidget {
         //! FIRST ROW
         //====================================================================
         Row(
-          children: const [
+          children: [
             Expanded(
               child: PropertyDetailPerformanceCard(
                 icon: Icons.meeting_room_rounded,
                 label: 'Rooms',
-                value: '12',
+                value: data.roomCount.toString(),
               ),
             ),
 
-            SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.md),
 
             Expanded(
               child: PropertyDetailPerformanceCard(
                 icon: Icons.visibility_rounded,
                 label: 'Views',
-                value: '1,243',
+                value: data.totalViews.toString(),
               ),
             ),
           ],
@@ -64,22 +71,22 @@ class PropertyDetailPerformanceSection extends StatelessWidget {
         //! SECOND ROW
         //====================================================================
         Row(
-          children: const [
+          children: [
             Expanded(
               child: PropertyDetailPerformanceCard(
                 icon: Icons.favorite_rounded,
                 label: 'Favorites',
-                value: '83',
+                value: data.favoriteCount.toString(),
               ),
             ),
 
-            SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.md),
 
             Expanded(
               child: PropertyDetailPerformanceCard(
                 icon: Icons.chat_bubble_rounded,
                 label: 'Inquiries',
-                value: '17',
+                value: data.totalInquiries.toString(),
               ),
             ),
           ],

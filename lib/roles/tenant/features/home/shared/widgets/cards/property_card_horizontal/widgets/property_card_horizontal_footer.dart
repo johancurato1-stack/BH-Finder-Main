@@ -76,7 +76,11 @@ class PropertyCardHorizontalFooter extends StatelessWidget {
         //======================================================================
         Row(
           children: [
-            const Icon(Icons.favorite, size: 14, color: Colors.red),
+            Icon(
+              Icons.favorite,
+              size: 14,
+              color: data.isFavorite ? Colors.red : AppColors.secondary,
+            ),
 
             const SizedBox(width: 4),
 

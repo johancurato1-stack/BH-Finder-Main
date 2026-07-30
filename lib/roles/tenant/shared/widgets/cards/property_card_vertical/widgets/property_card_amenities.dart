@@ -4,7 +4,7 @@ import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 
 //============================================================================
-//! PROPERTY AMENITIES
+//! PROPERTY CARD AMENITIES
 //============================================================================
 
 class PropertyCardAmenities extends StatelessWidget {
@@ -20,12 +20,13 @@ class PropertyCardAmenities extends StatelessWidget {
 
   final TenantPropertyCardData data;
 
+  static const int _maxVisibleAmenities = 3;
+
   //============================================================================
-  //! AMENITY ICON
+  //! ICON
   //============================================================================
 
-  /// Returns the appropriate icon for each property amenity.
-  IconData _getAmenityIcon(Amenity amenity) {
+  IconData _iconForAmenity(Amenity amenity) {
     switch (amenity) {
       case Amenity.wifi:
         return Icons.wifi;
@@ -69,29 +70,57 @@ class PropertyCardAmenities extends StatelessWidget {
   }
 
   //============================================================================
+  //! TILE
+  //============================================================================
+
+  Widget _buildTile(Widget child) {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: child,
+    );
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
   @override
   Widget build(BuildContext context) {
+    final visibleAmenities = data.amenities.take(_maxVisibleAmenities).toList();
+
+    final remaining = data.amenities.length - visibleAmenities.length;
+
     return Wrap(
-      spacing: 6,
-      runSpacing: 5,
-      children: data.amenities.map((amenity) {
-        return Container(
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: Colors.grey.shade300, width: 0.5),
+      spacing: 4,
+      runSpacing: 4,
+      children: [
+        ...visibleAmenities.map(
+          (amenity) => _buildTile(
+            Icon(
+              _iconForAmenity(amenity),
+              size: 11,
+              color: Colors.grey.shade600,
+            ),
           ),
-          child: Icon(
-            _getAmenityIcon(amenity),
-            size: 11,
-            color: Colors.grey.shade600,
+        ),
+
+        if (remaining > 0)
+          _buildTile(
+            Text(
+              '+$remaining',
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade600,
+              ),
+            ),
           ),
-        );
-      }).toList(),
+      ],
     );
   }
 }

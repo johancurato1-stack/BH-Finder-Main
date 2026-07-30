@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -37,6 +38,7 @@ class PropertyDetailScreen extends StatefulWidget {
     required this.propertyId,
     required this.repository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -49,12 +51,11 @@ class PropertyDetailScreen extends StatefulWidget {
 
   final RoomRepository roomRepository;
 
+  final FavoriteRepository favoriteRepository;
+
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
 }
-//============================================================================
-//! STATE
-//============================================================================
 
 class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //============================================================================
@@ -64,6 +65,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   PropertyDetailData? _data;
 
   bool _loading = true;
+
+  bool _isFavorite = false;
+
+  bool _viewRecorded = false;
 
   late final PageController _pageController;
 
@@ -94,13 +99,22 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     try {
       final data = await widget.repository.getPropertyDetail(widget.propertyId);
 
+      if (!_viewRecorded) {
+        await widget.repository.recordView(propertyId: widget.propertyId);
+
+        _viewRecorded = true;
+      }
+
+      final isFavorite = await widget.favoriteRepository.isFavorite(
+        propertyId: widget.propertyId,
+      );
+
       if (!mounted) return;
 
       setState(() {
         _data = data;
-
         _images = data.images;
-
+        _isFavorite = isFavorite;
         _loading = false;
       });
 
@@ -210,11 +224,18 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       PropertyDetailFloatingActions(
                         onBack: () => Navigator.pop(context),
 
-                        isFavorite: false,
+                        isFavorite: _isFavorite,
 
-                        onFavorite: () {
-                          // TODO:
-                          // Connect FavoritesRepository
+                        onFavorite: () async {
+                          await widget.favoriteRepository.toggleFavorite(
+                            propertyId: widget.propertyId,
+                          );
+
+                          if (!mounted) return;
+
+                          setState(() {
+                            _isFavorite = !_isFavorite;
+                          });
                         },
                       ),
                     ],

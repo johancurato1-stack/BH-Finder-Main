@@ -344,6 +344,39 @@ class SupabasePropertyRepository implements PropertyRepository {
 
     final properties = await getAll();
 
+    //----------------------------------------------------------
+    // Current User Favorites
+    //----------------------------------------------------------
+
+    final userId = _supabase.auth.currentUser?.id;
+
+    final favoriteIds = <String>{};
+
+    if (userId != null) {
+      final rows = await _supabase
+          .from('favorites')
+          .select('property_id')
+          .eq('user_id', userId);
+
+      favoriteIds.addAll(rows.map((row) => row['property_id'] as String));
+    }
+
+    //----------------------------------------------------------
+    // Favorite Counts
+    //----------------------------------------------------------
+
+    final favoriteRows = await _supabase
+        .from('favorites')
+        .select('property_id');
+
+    final favoriteCounts = <String, int>{};
+
+    for (final row in favoriteRows) {
+      final propertyId = row['property_id'] as String;
+
+      favoriteCounts[propertyId] = (favoriteCounts[propertyId] ?? 0) + 1;
+    }
+
     final cards = <TenantPropertyCardData>[];
 
     for (final property in properties) {
@@ -401,10 +434,10 @@ class SupabasePropertyRepository implements PropertyRepository {
           roomCount: roomCount,
           status: property.status,
           genderPreference: genderPreference,
-          favoriteCount: 0,
           address: property.address,
           amenities: property.amenities,
-          isFavorite: false,
+          isFavorite: favoriteIds.contains(property.id),
+          favoriteCount: favoriteCounts[property.id] ?? 0,
         ),
       );
     }
@@ -459,6 +492,13 @@ class SupabasePropertyRepository implements PropertyRepository {
 
       final totalRooms = await _roomRepository.getRoomCount(property.id);
 
+      final favoriteRows = await _supabase
+          .from('favorites')
+          .select('property_id')
+          .eq('property_id', property.id);
+
+      final totalFavorites = favoriteRows.length;
+
       //--------------------------------------------------------
       // Card
       //--------------------------------------------------------
@@ -471,7 +511,7 @@ class SupabasePropertyRepository implements PropertyRepository {
           address: property.address,
           totalRooms: totalRooms,
           totalViews: property.views,
-          totalFavorites: 0,
+          totalFavorites: totalFavorites,
           totalInquiries: 0,
           status: property.status,
         ),
@@ -479,6 +519,34 @@ class SupabasePropertyRepository implements PropertyRepository {
     }
 
     return cards;
+  }
+
+  //============================================================================
+  //! FAVORITE PROPERTY CARDS
+  //============================================================================
+
+  @override
+  Future<List<TenantPropertyCardData>> getFavoritePropertyCards() async {
+    final userId = _supabase.auth.currentUser?.id;
+
+    if (userId == null) {
+      return [];
+    }
+
+    final favoriteRows = await _supabase
+        .from('favorites')
+        .select('property_id')
+        .eq('user_id', userId);
+
+    final favoriteIds = favoriteRows
+        .map<String>((row) => row['property_id'] as String)
+        .toSet();
+
+    final allProperties = await getPropertyCards();
+
+    return allProperties
+        .where((property) => favoriteIds.contains(property.id))
+        .toList();
   }
 
   //============================================================================
@@ -551,6 +619,17 @@ class SupabasePropertyRepository implements PropertyRepository {
     // Landlord will come from ProfileRepository later.
     //
 
+    //----------------------------------------------------------
+    // Favorite Count
+    //----------------------------------------------------------
+
+    final favoriteRows = await _supabase
+        .from('favorites')
+        .select('property_id')
+        .eq('property_id', propertyId);
+
+    final favoriteCount = favoriteRows.length;
+
     return PropertyDetailData(
       id: property.id,
       title: property.title,
@@ -561,7 +640,7 @@ class SupabasePropertyRepository implements PropertyRepository {
       genderPreference: genderPreference,
       totalViews: property.views,
       totalInquiries: 0,
-      favoriteCount: 0,
+      favoriteCount: favoriteCount,
       amenities: property.amenities,
       latitude: property.latitude,
       longitude: property.longitude,
@@ -569,6 +648,56 @@ class SupabasePropertyRepository implements PropertyRepository {
       status: property.status,
       rooms: rooms,
       address: property.address,
+    );
+  }
+
+  //============================================================================
+  //! RECORD VIEW
+  //============================================================================
+
+  @override
+  Future<void> recordView({required String propertyId}) async {
+    //----------------------------------------------------------
+    // Current User
+    //----------------------------------------------------------
+
+    final userId = _supabase.auth.currentUser?.id;
+
+    if (userId == null) {
+      return;
+    }
+
+    //----------------------------------------------------------
+    // Already Viewed?
+    //----------------------------------------------------------
+
+    final existing = await _supabase
+        .from('property_views')
+        .select()
+        .eq('user_id', userId)
+        .eq('property_id', propertyId)
+        .maybeSingle();
+
+    if (existing != null) {
+      return;
+    }
+
+    //----------------------------------------------------------
+    // Save View Record
+    //----------------------------------------------------------
+
+    await _supabase.from('property_views').insert({
+      'user_id': userId,
+      'property_id': propertyId,
+    });
+
+    //----------------------------------------------------------
+    // Increment Property Views
+    //----------------------------------------------------------
+
+    await _supabase.rpc(
+      'increment_property_views',
+      params: {'property_uuid': propertyId},
     );
   }
 }

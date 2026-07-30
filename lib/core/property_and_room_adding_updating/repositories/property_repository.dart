@@ -37,9 +37,17 @@ abstract class PropertyRepository {
 
   Future<List<LandlordPropertyCardData>> getLandlordPropertyCards();
 
+  Future<List<TenantPropertyCardData>> getFavoritePropertyCards();
+
   //============================================================================
   //! PROPERTY DETAIL
   //============================================================================
 
   Future<PropertyDetailData> getPropertyDetail(String propertyId);
+
+  //============================================================================
+  //! PROPERTY VIEWS
+  //============================================================================
+
+  Future<void> recordView({required String propertyId});
 }

@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
@@ -32,6 +33,7 @@ class HomeScreen extends StatefulWidget {
     required this.onNotificationsRead,
     required this.propertyRepository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -47,6 +49,8 @@ class HomeScreen extends StatefulWidget {
   final PropertyRepository propertyRepository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -164,12 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           PageRouteBuilder(
                             pageBuilder: (_, __, ___) => SeeAllScreen(
                               title: 'Near You',
-
                               properties: properties,
-
                               repository: widget.propertyRepository,
-
                               roomRepository: widget.roomRepository,
+                              favoriteRepository: widget.favoriteRepository,
                             ),
 
                             transitionsBuilder:
@@ -211,10 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
               //==============================================================
               HomeScreenPropertyHorizontalList(
                 properties: properties,
-
                 repository: widget.propertyRepository,
-
                 roomRepository: widget.roomRepository,
+                favoriteRepository: widget.favoriteRepository,
               ),
 
               const SizedBox(height: AppSpacing.xxxl),

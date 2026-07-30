@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -25,6 +26,7 @@ class PropertyCardHorizontal extends StatelessWidget {
     required this.data,
     required this.repository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -36,6 +38,8 @@ class PropertyCardHorizontal extends StatelessWidget {
   final PropertyRepository repository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   //============================================================================
   //! BUILD
@@ -54,10 +58,9 @@ class PropertyCardHorizontal extends StatelessWidget {
           PageRouteBuilder(
             pageBuilder: (_, __, ___) => PropertyDetailScreen(
               propertyId: data.id,
-
               repository: repository,
-
               roomRepository: roomRepository,
+              favoriteRepository: favoriteRepository,
             ),
 
             transitionsBuilder:

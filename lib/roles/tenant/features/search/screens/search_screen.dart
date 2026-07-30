@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
@@ -28,6 +29,7 @@ class SearchScreen extends StatefulWidget {
     required this.onBackPressed,
     required this.propertyRepository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -39,6 +41,8 @@ class SearchScreen extends StatefulWidget {
   final PropertyRepository propertyRepository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -100,12 +104,10 @@ class _SearchScreenState extends State<SearchScreen> {
       MaterialPageRoute(
         builder: (context) => SearchResultsScreen(
           filter: _filter.copyWith(query: _searchController.text),
-
           properties: properties,
-
           repository: widget.propertyRepository,
-
           roomRepository: widget.roomRepository,
+          favoriteRepository: widget.favoriteRepository,
         ),
       ),
     );

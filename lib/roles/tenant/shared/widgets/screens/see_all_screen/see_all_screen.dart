@@ -9,6 +9,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/wid
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 
 //============================================================================
 //! SEE ALL SCREEN
@@ -25,6 +26,7 @@ class SeeAllScreen extends StatelessWidget {
     required this.properties,
     required this.repository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -38,6 +40,8 @@ class SeeAllScreen extends StatelessWidget {
   final PropertyRepository repository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   //============================================================================
   //! BUILD
@@ -67,6 +71,7 @@ class SeeAllScreen extends StatelessWidget {
                 properties: properties,
                 repository: repository,
                 roomRepository: roomRepository,
+                favoriteRepository: favoriteRepository,
               ),
             ),
           ],

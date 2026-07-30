@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
@@ -22,6 +23,7 @@ class FavoritesScreenList extends StatefulWidget {
     super.key,
     required this.propertyRepository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -31,6 +33,8 @@ class FavoritesScreenList extends StatefulWidget {
   final PropertyRepository propertyRepository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   @override
   State<FavoritesScreenList> createState() => _FavoritesScreenListState();
@@ -61,7 +65,8 @@ class _FavoritesScreenListState extends State<FavoritesScreenList> {
   //============================================================================
 
   Future<void> _loadProperties() async {
-    final properties = await widget.propertyRepository.getPropertyCards();
+    final properties = await widget.propertyRepository
+        .getFavoritePropertyCards();
 
     if (!mounted) return;
 
@@ -91,17 +96,13 @@ class _FavoritesScreenListState extends State<FavoritesScreenList> {
 
       itemCount: _savedProperties.length,
 
-      itemBuilder: (context, index) {
-        final property = _savedProperties[index];
-
-        return PropertyCardVertical(
-          property: property,
-
-          repository: widget.propertyRepository,
-
-          roomRepository: widget.roomRepository,
-        );
-      },
+      itemBuilder: (context, index) => PropertyCardVertical(
+        property: _savedProperties[index],
+        repository: widget.propertyRepository,
+        roomRepository: widget.roomRepository,
+        showAmenities: false,
+        favoriteRepository: widget.favoriteRepository,
+      ),
     );
   }
 }

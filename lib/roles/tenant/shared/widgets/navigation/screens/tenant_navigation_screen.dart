@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/repositories/repositories.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 
 import 'package:bh_finder/roles/tenant/features/favorites/screens/favorites_screen.dart';
 import 'package:bh_finder/roles/tenant/features/home/screens/home_screen.dart';
@@ -33,6 +34,9 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       Repositories.instance.propertyRepository;
 
   final RoomRepository _roomRepository = Repositories.instance.roomRepository;
+
+  final FavoriteRepository _favoriteRepository =
+      Repositories.instance.favoriteRepository;
 
   //============================================================================
   //! STATE
@@ -68,6 +72,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         },
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
+        favoriteRepository: _favoriteRepository,
       ),
 
       SearchScreen(
@@ -78,6 +83,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         },
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
+        favoriteRepository: _favoriteRepository,
       ),
 
       FavoritesScreen(
@@ -88,6 +94,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         },
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
+        favoriteRepository: _favoriteRepository,
       ),
 
       MessagesScreen(

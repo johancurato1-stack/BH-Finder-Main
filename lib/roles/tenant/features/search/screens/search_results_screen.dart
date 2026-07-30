@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -28,6 +29,7 @@ class SearchResultsScreen extends StatelessWidget {
     this.properties = const [],
     required this.repository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -41,6 +43,8 @@ class SearchResultsScreen extends StatelessWidget {
   final PropertyRepository repository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   //============================================================================
   //! BUILD
@@ -76,13 +80,16 @@ class SearchResultsScreen extends StatelessWidget {
               child: properties.isEmpty
                   ? const EmptySearchResultsScreen()
                   : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 1),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+
                       itemCount: properties.length,
+
                       itemBuilder: (context, index) {
                         return PropertyCardVertical(
                           property: properties[index],
                           repository: repository,
                           roomRepository: roomRepository,
+                          favoriteRepository: favoriteRepository,
                         );
                       },
                     ),

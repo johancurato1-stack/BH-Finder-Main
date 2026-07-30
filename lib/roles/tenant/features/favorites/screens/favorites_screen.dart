@@ -1,3 +1,4 @@
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
@@ -22,6 +23,7 @@ class FavoritesScreen extends StatelessWidget {
     required this.onBackPressed,
     required this.propertyRepository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -33,6 +35,8 @@ class FavoritesScreen extends StatelessWidget {
   final PropertyRepository propertyRepository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   //============================================================================
   //! BUILD
@@ -59,8 +63,8 @@ class FavoritesScreen extends StatelessWidget {
             Expanded(
               child: FavoritesScreenList(
                 propertyRepository: propertyRepository,
-
                 roomRepository: roomRepository,
+                favoriteRepository: favoriteRepository,
               ),
             ),
           ],

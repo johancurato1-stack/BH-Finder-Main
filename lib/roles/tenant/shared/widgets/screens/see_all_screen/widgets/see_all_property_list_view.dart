@@ -7,6 +7,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 
 //============================================================================
 //! PROPERTY LIST VIEW
@@ -22,6 +23,7 @@ class PropertyListView extends StatelessWidget {
     required this.properties,
     required this.repository,
     required this.roomRepository,
+    required this.favoriteRepository,
   });
 
   //============================================================================
@@ -33,6 +35,8 @@ class PropertyListView extends StatelessWidget {
   final PropertyRepository repository;
 
   final RoomRepository roomRepository;
+
+  final FavoriteRepository favoriteRepository;
 
   //============================================================================
   //! BUILD
@@ -55,6 +59,7 @@ class PropertyListView extends StatelessWidget {
                   propertyId: property.id,
                   repository: repository,
                   roomRepository: roomRepository,
+                  favoriteRepository: favoriteRepository,
                 ),
               ),
             );
@@ -63,6 +68,8 @@ class PropertyListView extends StatelessWidget {
             property: property,
             repository: repository,
             roomRepository: roomRepository,
+            favoriteRepository: favoriteRepository,
+            showAmenities: false,
           ),
         );
       },

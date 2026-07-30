@@ -9,21 +9,9 @@ import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenan
 //============================================================================
 
 class PropertyCardImage extends StatelessWidget {
-  //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-
   const PropertyCardImage({super.key, required this.data});
 
-  //============================================================================
-  //! PROPERTIES
-  //============================================================================
-
   final TenantPropertyCardData data;
-
-  //============================================================================
-  //! STATUS COLOR
-  //============================================================================
 
   Color _getStatusColor() {
     switch (data.status) {
@@ -35,27 +23,26 @@ class PropertyCardImage extends StatelessWidget {
     }
   }
 
-  //============================================================================
-  //! BUILD
-  //============================================================================
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(12),
+            bottomLeft: Radius.circular(12),
+          ),
           child: Image.network(
             data.coverImageUrl,
-            height: 110,
-            width: 120,
+            width: 132,
+            height: 128, // <- Match the card height
             fit: BoxFit.cover,
           ),
         ),
 
         Positioned(
-          top: 6,
-          left: 6,
+          top: 8,
+          left: 8,
           child: Container(
             width: 14,
             height: 14,

@@ -186,7 +186,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! PERFORMANCE
                   //==========================================================
-                  PropertyDetailPerformanceSection(),
+                  PropertyDetailPerformanceSection(data: data),
 
                   const Divider(
                     height: 32,
