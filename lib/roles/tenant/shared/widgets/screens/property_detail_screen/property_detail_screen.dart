@@ -169,10 +169,9 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
       MaterialPageRoute(
         builder: (_) => ViewRoomsScreen(
+          propertyId: data.id,
           PropertyName: data.title,
-
           rooms: data.rooms,
-
           repository: widget.roomRepository,
         ),
       ),

@@ -23,6 +23,7 @@ class PropertyModel {
     required this.longitude,
     required this.images,
     required this.amenities,
+    required this.minimumPrice,
     required this.genderPreference,
     required this.views,
     required this.status,
@@ -59,7 +60,10 @@ class PropertyModel {
   /// Available amenities.
   final List<Amenity> amenities;
 
-  /// Male, Female, or Mixed.
+  /// Cached minimum room price.
+  final double minimumPrice;
+
+  /// Cached gender preference derived from all rooms.
   final GenderPreference genderPreference;
 
   /// Cached number of property views.

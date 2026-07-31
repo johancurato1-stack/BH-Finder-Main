@@ -49,10 +49,33 @@ class SupabaseStorageRepository implements StorageRepository {
   //============================================================================
 
   @override
-  Future<String> uploadAvatar(String localPath) async {
-    throw UnimplementedError(
-      'Avatar upload will be updated after profile integration.',
-    );
+  Future<String> uploadAvatar({
+    required String userId,
+    required String localPath,
+  }) async {
+    const bucket = 'avatars';
+
+    final objectPath = '$userId/profile.jpg';
+
+    //----------------------------------------------------------
+    // Remove Existing Avatar
+    //----------------------------------------------------------
+
+    await _supabase.storage.from(bucket).remove([objectPath]);
+
+    //----------------------------------------------------------
+    // Upload Avatar
+    //----------------------------------------------------------
+
+    await _supabase.storage
+        .from(bucket)
+        .upload(
+          objectPath,
+          File(localPath),
+          fileOptions: const FileOptions(upsert: true),
+        );
+
+    return '$bucket/$objectPath';
   }
 
   //============================================================================

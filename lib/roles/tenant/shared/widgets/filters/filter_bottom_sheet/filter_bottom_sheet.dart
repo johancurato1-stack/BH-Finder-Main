@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import '../../../../../../shared/widgets/buttons/primary_button.dart';
+import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
 
-import '../shared/constants/filter_constants.dart';
+import '../../../../../../shared/widgets/buttons/primary_button.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/widgets/filter_bottom_sheet_amenities_section.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_header.dart';
@@ -17,18 +18,23 @@ class FilterBottomSheet extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const FilterBottomSheet({super.key});
+  const FilterBottomSheet({super.key, required this.initialFilter});
+
+  final SearchFilterModel initialFilter;
 
   //============================================================================
   //! SHOW
   //============================================================================
 
-  static void show(BuildContext context) {
-    showModalBottomSheet(
+  static Future<SearchFilterModel?> show(
+    BuildContext context, {
+    required SearchFilterModel initialFilter,
+  }) {
+    return showModalBottomSheet<SearchFilterModel>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FilterBottomSheet(),
+      builder: (_) => FilterBottomSheet(initialFilter: initialFilter),
     );
   }
 
@@ -41,12 +47,17 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   //! STATE
   //============================================================================
 
-  String _selectedBudget = 'Any';
-  final List<String> _selectedAmenities = [];
+  late SearchFilterModel _filter;
 
-  String _selectedDistance = 'Any';
-  String _selectedGender = 'Mixed';
-  String _selectedStatus = 'Available';
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+    _filter = widget.initialFilter.copyWith();
+  }
 
   //============================================================================
   //! METHODS
@@ -54,26 +65,22 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   void _resetFilters() {
     setState(() {
-      _selectedBudget = 'Any';
-      _selectedDistance = 'Any';
-      _selectedGender = 'Mixed';
-      _selectedStatus = 'Available';
-      _selectedAmenities.clear();
+      _filter.reset();
     });
   }
 
   void _toggleAmenity(String amenity) {
     setState(() {
-      if (_selectedAmenities.contains(amenity)) {
-        _selectedAmenities.remove(amenity);
+      if (_filter.amenities.contains(amenity)) {
+        _filter.amenities.remove(amenity);
       } else {
-        _selectedAmenities.add(amenity);
+        _filter.amenities.add(amenity);
       }
     });
   }
 
   void _applyFilters() {
-    Navigator.pop(context);
+    Navigator.pop(context, _filter);
   }
 
   //============================================================================
@@ -93,7 +100,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           topRight: Radius.circular(24),
         ),
       ),
-
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -129,10 +135,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const FilterBottomSheetSectionTitle(title: 'Budget Range'),
 
                 FilterBottomSheetOptionsWrap(
-                  options: FilterConstants.budgets,
-                  selectedValue: _selectedBudget,
+                  options: SearchFilterOptions.budgets,
+                  selectedValue: _filter.budget,
                   onSelected: (value) {
-                    setState(() => _selectedBudget = value);
+                    setState(() {
+                      _filter.budget = value;
+                    });
                   },
                 ),
 
@@ -142,23 +150,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const FilterBottomSheetSectionTitle(title: 'Amenities'),
 
                 FilterBottomSheetAmenitiesSection(
-                  selectedAmenities: _selectedAmenities,
+                  selectedAmenities: _filter.amenities,
                   onAmenityToggle: _toggleAmenity,
-                ),
-
-                //==============================================================
-                //! DISTANCE
-                //==============================================================
-                const FilterBottomSheetSectionTitle(
-                  title: 'Distance from School',
-                ),
-
-                FilterBottomSheetOptionsWrap(
-                  options: FilterConstants.distances,
-                  selectedValue: _selectedDistance,
-                  onSelected: (value) {
-                    setState(() => _selectedDistance = value);
-                  },
                 ),
 
                 //==============================================================
@@ -167,22 +160,26 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const FilterBottomSheetSectionTitle(title: 'Gender Preference'),
 
                 FilterBottomSheetOptionsWrap(
-                  options: FilterConstants.genders,
-                  selectedValue: _selectedGender,
+                  options: SearchFilterOptions.genders,
+                  selectedValue: _filter.gender,
                   onSelected: (value) {
-                    setState(() => _selectedGender = value);
+                    setState(() {
+                      _filter.gender = value;
+                    });
                   },
                 ),
 
                 //==============================================================
                 //! STATUS
                 //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Room Status'),
+                const FilterBottomSheetSectionTitle(title: 'Property Status'),
 
                 FilterBottomSheetStatusSection(
-                  selectedStatus: _selectedStatus,
+                  selectedStatus: _filter.status,
                   onStatusSelected: (status) {
-                    setState(() => _selectedStatus = status);
+                    setState(() {
+                      _filter.status = status;
+                    });
                   },
                 ),
               ],

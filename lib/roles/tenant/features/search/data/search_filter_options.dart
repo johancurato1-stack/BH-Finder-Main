@@ -19,43 +19,36 @@ class SearchFilterOptions {
   //============================================================================
 
   static const List<Map<String, dynamic>> amenities = [
-    {'label': 'Wi-Fi', 'icon': Icons.wifi},
-    {'label': 'Aircon', 'icon': Icons.ac_unit},
-    {'label': 'Own CR', 'icon': Icons.bathroom},
-    {'label': 'Kitchen', 'icon': Icons.countertops},
-    {'label': 'Laundry', 'icon': Icons.local_laundry_service},
-    {'label': 'Study', 'icon': Icons.menu_book},
-    {'label': 'Desk', 'icon': Icons.desk},
-    {'label': 'Cabinet', 'icon': Icons.shelves},
-    {'label': 'CCTV', 'icon': Icons.videocam},
-    {'label': 'Security', 'icon': Icons.security},
-    {'label': 'Parking', 'icon': Icons.directions_car},
-  ];
-
-  //============================================================================
-  //! DISTANCE OPTIONS
-  //============================================================================
-
-  static const List<String> distances = [
-    'Any',
-    'Within 5 min walk',
-    'Within 10 min walk',
-    'Within 15 min walk',
+    {'label': 'Wi-Fi', 'value': 'wifi', 'icon': Icons.wifi},
+    {'label': 'Aircon', 'value': 'airConditioning', 'icon': Icons.ac_unit},
+    {'label': 'Own CR', 'value': 'privateBathroom', 'icon': Icons.bathroom},
+    {'label': 'Kitchen', 'value': 'kitchen', 'icon': Icons.countertops},
+    {
+      'label': 'Laundry',
+      'value': 'laundry',
+      'icon': Icons.local_laundry_service,
+    },
+    {'label': 'Study', 'value': 'studyArea', 'icon': Icons.menu_book},
+    {'label': 'Desk', 'value': 'desk', 'icon': Icons.desk},
+    {'label': 'Cabinet', 'value': 'cabinet', 'icon': Icons.shelves},
+    {'label': 'CCTV', 'value': 'cctv', 'icon': Icons.videocam},
+    {'label': 'Security', 'value': 'security', 'icon': Icons.security},
+    {'label': 'Parking', 'value': 'parking', 'icon': Icons.directions_car},
   ];
 
   //============================================================================
   //! GENDER OPTIONS
   //============================================================================
 
-  static const List<String> genders = ['Male', 'Female', 'Mixed'];
+  static const List<String> genders = ['Male', 'Female', 'Mixed', 'Any'];
 
   //============================================================================
   //! STATUS OPTIONS
   //============================================================================
 
   static const List<Map<String, dynamic>> statuses = [
+    {'label': 'Any'},
     {'label': 'Available', 'color': Colors.green},
     {'label': 'Occupied', 'color': Colors.red},
-    {'label': 'Pending', 'color': Colors.amber},
   ];
 }

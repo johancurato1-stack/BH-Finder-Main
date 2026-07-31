@@ -20,6 +20,10 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 
 import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
+import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
+
+import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
+
 //============================================================================
 //! DASHBOARD SCREEN
 //============================================================================
@@ -53,6 +57,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final ProfileViewModel _profileViewModel = ProfileViewModel(
     repository: SupabaseProfileRepository(),
+    storageRepository: SupabaseStorageRepository(),
+    authRepository: SupabaseAuthRepository(),
   );
 
   //==========================================================================
@@ -129,6 +135,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   //==============================================================
                   DashboardScreenGreetingSection(
                     firstName: profile['first_name'] ?? '',
+                    avatarUrl: SupabaseStorageRepository().getPublicUrl(
+                      'avatars',
+                      (profile['avatar_path'] ?? '').replaceFirst(
+                        'avatars/',
+                        '',
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 20),

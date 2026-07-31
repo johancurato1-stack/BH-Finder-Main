@@ -45,10 +45,10 @@ class SearchScreen extends StatefulWidget {
   final FavoriteRepository favoriteRepository;
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<SearchScreen> createState() => SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen> {
   //============================================================================
   //! CONTROLLERS
   //============================================================================
@@ -83,6 +83,14 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   //============================================================================
+  //! RESET SEARCH
+  //============================================================================
+
+  void resetSearch() {
+    _resetFilters();
+  }
+
+  //============================================================================
   //! REFRESH UI
   //============================================================================
 
@@ -95,8 +103,6 @@ class _SearchScreenState extends State<SearchScreen> {
   //============================================================================
 
   Future<void> _showResults() async {
-    final properties = await widget.propertyRepository.getPropertyCards();
-
     if (!mounted) return;
 
     Navigator.push(
@@ -104,7 +110,6 @@ class _SearchScreenState extends State<SearchScreen> {
       MaterialPageRoute(
         builder: (context) => SearchResultsScreen(
           filter: _filter.copyWith(query: _searchController.text),
-          properties: properties,
           repository: widget.propertyRepository,
           roomRepository: widget.roomRepository,
           favoriteRepository: widget.favoriteRepository,

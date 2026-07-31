@@ -26,13 +26,14 @@ class SearchScreenAmenitiesGrid extends StatelessWidget {
 
       children: amenities.map((amenity) {
         final label = amenity['label'] as String;
+        final value = amenity['value'] as String;
         final icon = amenity['icon'] as IconData;
 
         return FilterButton(
           label: label,
           icon: icon,
-          isSelected: selectedAmenities.contains(label),
-          onTap: () => onToggle(label),
+          isSelected: selectedAmenities.contains(value),
+          onTap: () => onToggle(value),
         );
       }).toList(),
     );

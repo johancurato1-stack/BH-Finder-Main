@@ -10,6 +10,11 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/widgets/view_rooms_list_view.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/models/room_search_filter_model.dart';
+
+//============================================================================
+//! VIEW ROOMS SCREEN
+//============================================================================
 
 class ViewRoomsScreen extends StatefulWidget {
   //============================================================================
@@ -18,10 +23,13 @@ class ViewRoomsScreen extends StatefulWidget {
 
   const ViewRoomsScreen({
     super.key,
+    required this.propertyId,
     required this.PropertyName,
     required this.rooms,
     required this.repository,
   });
+
+  final String propertyId;
 
   //============================================================================
   //! PROPERTIES
@@ -36,6 +44,47 @@ class ViewRoomsScreen extends StatefulWidget {
 }
 
 class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
+  //============================================================================
+  //! STATE
+  //============================================================================
+
+  late RoomSearchFilterModel _filter;
+
+  bool _isLoading = true;
+
+  List<RoomModel> _rooms = [];
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _filter = const RoomSearchFilterModel();
+
+    _loadRooms();
+  }
+
+  //============================================================================
+  //! LOAD ROOMS
+  //============================================================================
+
+  Future<void> _loadRooms() async {
+    final rooms = await widget.repository.searchRooms(
+      propertyId: widget.propertyId,
+      filter: _filter,
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _rooms = rooms;
+      _isLoading = false;
+    });
+  }
+
   //============================================================================
   //! BUILD
   //============================================================================
@@ -53,7 +102,21 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
             ViewRoomsHeader(
               title: widget.PropertyName,
               onBack: () => Navigator.pop(context),
-              onFilter: () => FilterBottomSheetSecondary.show(context),
+              onFilter: () async {
+                final filter = await FilterBottomSheetSecondary.show(
+                  context,
+                  initialFilter: _filter,
+                );
+
+                if (filter == null) return;
+
+                setState(() {
+                  _filter = filter;
+                  _isLoading = true;
+                });
+
+                await _loadRooms();
+              },
             ),
 
             //==================================================================
@@ -63,10 +126,12 @@ class _ViewRoomsScreenState extends State<ViewRoomsScreen> {
               child: Column(
                 children: [
                   Expanded(
-                    child: ViewRoomListView(
-                      rooms: widget.rooms,
-                      repository: widget.repository,
-                    ),
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ViewRoomListView(
+                            rooms: _rooms,
+                            repository: widget.repository,
+                          ),
                   ),
 
                   InformationNoticeCard(

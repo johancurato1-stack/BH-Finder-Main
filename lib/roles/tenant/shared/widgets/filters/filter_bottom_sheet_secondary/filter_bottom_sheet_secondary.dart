@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/models/room_search_filter_model.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_options_wrap.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_section_title.dart';
+
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
 class FilterBottomSheetSecondary extends StatefulWidget {
@@ -11,18 +14,27 @@ class FilterBottomSheetSecondary extends StatefulWidget {
   //! CONSTRUCTOR
   //============================================================================
 
-  const FilterBottomSheetSecondary({super.key});
+  const FilterBottomSheetSecondary({super.key, required this.initialFilter});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final RoomSearchFilterModel initialFilter;
 
   //============================================================================
   //! SHOW
   //============================================================================
 
-  static void show(BuildContext context) {
-    showModalBottomSheet(
+  static Future<RoomSearchFilterModel?> show(
+    BuildContext context, {
+    required RoomSearchFilterModel initialFilter,
+  }) {
+    return showModalBottomSheet<RoomSearchFilterModel>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FilterBottomSheetSecondary(),
+      builder: (_) => FilterBottomSheetSecondary(initialFilter: initialFilter),
     );
   }
 
@@ -36,12 +48,28 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
   //! STATE
   //============================================================================
 
-  String _selectedBudget = 'Any';
-  String _selectedGender = 'Any';
+  late String _selectedPrice;
+  late String _selectedGender;
 
-  final List<String> _budgets = ['Any', 'Lowest - Highest', 'Highest - Lowest'];
+  final List<String> _prices = [
+    'Any',
+    'Lowest to Highest',
+    'Highest to Lowest',
+  ];
 
-  final List<String> _genders = ['Male', 'Female', 'Any'];
+  final List<String> _genders = ['Any', 'Male', 'Female'];
+
+  //============================================================================
+  //! LIFECYCLE
+  //============================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedPrice = widget.initialFilter.sortPrice;
+    _selectedGender = widget.initialFilter.gender;
+  }
 
   //============================================================================
   //! METHODS
@@ -49,13 +77,16 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
 
   void _resetFilters() {
     setState(() {
-      _selectedBudget = 'Any';
+      _selectedPrice = 'Any';
       _selectedGender = 'Any';
     });
   }
 
   void _applyFilters() {
-    Navigator.pop(context);
+    Navigator.pop(
+      context,
+      RoomSearchFilterModel(sortPrice: _selectedPrice, gender: _selectedGender),
+    );
   }
 
   //============================================================================
@@ -68,7 +99,6 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * .85,
       ),
-
       decoration: const BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
@@ -76,7 +106,6 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
           topRight: Radius.circular(24),
         ),
       ),
-
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -107,15 +136,15 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               children: [
                 //==============================================================
-                //! BUDGET
+                //! PRICE
                 //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Budget Range'),
+                const FilterBottomSheetSectionTitle(title: 'Price'),
 
                 FilterBottomSheetOptionsWrap(
-                  options: _budgets,
-                  selectedValue: _selectedBudget,
+                  options: _prices,
+                  selectedValue: _selectedPrice,
                   onSelected: (value) {
-                    setState(() => _selectedBudget = value);
+                    setState(() => _selectedPrice = value);
                   },
                 ),
 
@@ -143,7 +172,7 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
               20,
               20,
               20,
-              MediaQuery.of(context).padding.bottom + 20,
+              MediaQuery.of(context).padding.bottom + 78,
             ),
             child: PrimaryButton(
               text: 'Apply Filters',

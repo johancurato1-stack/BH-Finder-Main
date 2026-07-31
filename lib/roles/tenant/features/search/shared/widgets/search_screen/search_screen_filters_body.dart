@@ -95,23 +95,6 @@ class SearchScreenFilterBody extends StatelessWidget {
         ),
 
         //============================================================================
-        //! DISTANCE
-        //============================================================================
-        SearchScreenFilterSection(
-          title: 'Distance from School',
-
-          child: SearchScreenFilterOptionGrid(
-            options: SearchFilterOptions.distances,
-            selectedValue: filter.distance,
-
-            onSelected: (value) {
-              filter.distance = value;
-              onChanged();
-            },
-          ),
-        ),
-
-        //============================================================================
         //! GENDER
         //============================================================================
         SearchScreenFilterSection(
@@ -132,7 +115,7 @@ class SearchScreenFilterBody extends StatelessWidget {
         //! STATUS
         //============================================================================
         SearchScreenFilterSection(
-          title: 'Room Status',
+          title: 'Property Status',
 
           child: SearchScreenStatusGrid(
             statuses: SearchFilterOptions.statuses,

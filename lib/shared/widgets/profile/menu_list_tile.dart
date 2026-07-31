@@ -51,57 +51,63 @@ class MenuListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      dense: true,
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        onTap: onTap,
+        dense: true,
 
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: 3,
-      ),
-
-      //========================================================================
-      //! LEADING ICON
-      //========================================================================
-      leading: Container(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-
-        decoration: BoxDecoration(
-          color: _effectiveBackgroundColor,
-          shape: BoxShape.circle,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xs,
+          vertical: 3,
         ),
 
-        child: Icon(icon, size: 25, color: _effectiveIconColor),
+        //========================================================================
+        //! LEADING ICON
+        //========================================================================
+        leading: Container(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+
+          decoration: BoxDecoration(
+            color: _effectiveBackgroundColor,
+            shape: BoxShape.circle,
+          ),
+
+          child: Icon(icon, size: 25, color: _effectiveIconColor),
+        ),
+
+        //========================================================================
+        //! TITLE
+        //========================================================================
+        title: Text(
+          title,
+          style: AppTextStyles.bodyBold.copyWith(
+            color: textColor,
+            fontSize: 15,
+          ),
+        ),
+
+        //========================================================================
+        //! SUBTITLE
+        //========================================================================
+        subtitle: subtitle == null
+            ? null
+            : Text(
+                subtitle!,
+                style: AppTextStyles.caption.copyWith(fontSize: 13),
+              ),
+
+        //========================================================================
+        //! TRAILING
+        //========================================================================
+        trailing: hideArrow
+            ? null
+            : const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.grey,
+                size: 18,
+              ),
       ),
-
-      //========================================================================
-      //! TITLE
-      //========================================================================
-      title: Text(
-        title,
-        style: AppTextStyles.bodyBold.copyWith(color: textColor, fontSize: 15),
-      ),
-
-      //========================================================================
-      //! SUBTITLE
-      //========================================================================
-      subtitle: subtitle == null
-          ? null
-          : Text(
-              subtitle!,
-              style: AppTextStyles.caption.copyWith(fontSize: 13),
-            ),
-
-      //========================================================================
-      //! TRAILING
-      //========================================================================
-      trailing: hideArrow
-          ? null
-          : const Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,
-              size: 18,
-            ),
     );
   }
 }

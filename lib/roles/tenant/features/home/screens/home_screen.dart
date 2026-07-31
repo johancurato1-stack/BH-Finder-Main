@@ -168,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           PageRouteBuilder(
                             pageBuilder: (_, __, ___) => SeeAllScreen(
                               title: 'Near You',
-                              properties: properties,
                               repository: widget.propertyRepository,
                               roomRepository: widget.roomRepository,
                               favoriteRepository: widget.favoriteRepository,

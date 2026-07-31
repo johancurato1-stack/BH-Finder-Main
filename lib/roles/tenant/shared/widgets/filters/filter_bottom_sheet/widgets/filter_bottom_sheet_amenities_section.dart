@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/constants/filter_constants.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/models/filters/filter_model.dart';
 
 class FilterBottomSheetAmenitiesSection extends StatelessWidget {
   final List<String> selectedAmenities;
@@ -23,16 +23,16 @@ class FilterBottomSheetAmenitiesSection extends StatelessWidget {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-
-      children: FilterConstants.amenities.map((AmenityFilter amenity) {
-        final label = amenity.label;
-        final isSelected = selectedAmenities.contains(label);
+      children: SearchFilterOptions.amenities.map((amenity) {
+        final label = amenity['label'] as String;
+        final value = amenity['value'] as String;
+        final icon = amenity['icon'] as IconData;
 
         return FilterButton(
           label: label,
-          icon: amenity.icon,
-          isSelected: isSelected,
-          onTap: () => onAmenityToggle(label),
+          icon: icon,
+          isSelected: selectedAmenities.contains(value),
+          onTap: () => onAmenityToggle(value),
         );
       }).toList(),
     );

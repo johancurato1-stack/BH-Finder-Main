@@ -9,6 +9,7 @@ import 'package:bh_finder/core/property_and_room_adding_updating/repositories/ro
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/storage_repository.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/models/room_search_filter_model.dart';
 
 //============================================================================
 //! SUPABASE ROOM REPOSITORY
@@ -79,6 +80,97 @@ class SupabaseRoomRepository implements RoomRepository {
 
     //----------------------------------------------------------
     // Load Images For Each Room
+    //----------------------------------------------------------
+
+    for (final row in roomRows) {
+      final imageRows = await _supabase
+          .from('room_images')
+          .select()
+          .eq('room_id', row['id'])
+          .order('display_order', ascending: true);
+
+      final imageUrls = imageRows
+          .map<String>(
+            (image) => _storageRepository.getPublicUrl(
+              'rooms',
+              (image['storage_path'] as String).replaceFirst('rooms/', ''),
+            ),
+          )
+          .toList();
+
+      rooms.add(
+        RoomModel(
+          id: row['id'],
+          propertyId: row['property_id'],
+          title: row['title'],
+          description: row['description'] ?? '',
+          price: (row['price'] as num).toDouble(),
+          capacity: row['capacity'],
+          genderPreference: GenderPreference.values.firstWhere(
+            (e) => e.toString().split('.').last == row['gender_preference'],
+          ),
+          images: imageUrls
+              .map((url) => ImageModel(path: url, isLocal: false))
+              .toList(),
+        ),
+      );
+    }
+
+    return rooms;
+  }
+
+  //============================================================================
+  //! SEARCH ROOMS
+  //============================================================================
+
+  @override
+  Future<List<RoomModel>> searchRooms({
+    required String propertyId,
+    required RoomSearchFilterModel filter,
+  }) async {
+    //----------------------------------------------------------
+    // Rooms
+    //----------------------------------------------------------
+
+    var query = _supabase.from('rooms').select().eq('property_id', propertyId);
+
+    //----------------------------------------------------------
+    // Gender
+    //----------------------------------------------------------
+
+    switch (filter.gender) {
+      case 'Male':
+        query = query.eq('gender_preference', 'male');
+        break;
+
+      case 'Female':
+        query = query.eq('gender_preference', 'female');
+        break;
+    }
+
+    //----------------------------------------------------------
+    // Sort
+    //----------------------------------------------------------
+
+    late final List<dynamic> roomRows;
+
+    switch (filter.sortPrice) {
+      case 'Lowest to Highest':
+        roomRows = await query.order('price', ascending: true);
+        break;
+
+      case 'Highest to Lowest':
+        roomRows = await query.order('price', ascending: false);
+        break;
+
+      default:
+        roomRows = await query;
+    }
+
+    final rooms = <RoomModel>[];
+
+    //----------------------------------------------------------
+    // Load Images
     //----------------------------------------------------------
 
     for (final row in roomRows) {
@@ -221,6 +313,56 @@ class SupabaseRoomRepository implements RoomRepository {
   }
 
   //============================================================================
+  //! REFRESH PROPERTY COMPUTED VALUES
+  //============================================================================
+
+  Future<void> _refreshPropertyComputedValues(String propertyId) async {
+    //----------------------------------------------------------
+    // Rooms
+    //----------------------------------------------------------
+
+    final rooms = await getByProperty(propertyId);
+
+    //----------------------------------------------------------
+    // Minimum Price
+    //----------------------------------------------------------
+
+    double minimumPrice = 0;
+
+    if (rooms.isNotEmpty) {
+      minimumPrice = rooms
+          .map((room) => room.price)
+          .reduce((a, b) => a < b ? a : b);
+    }
+
+    //----------------------------------------------------------
+    // Gender Preference
+    //----------------------------------------------------------
+
+    GenderPreference genderPreference = GenderPreference.mixed;
+
+    if (rooms.isNotEmpty) {
+      final genders = rooms.map((room) => room.genderPreference).toSet();
+
+      if (genders.length == 1) {
+        genderPreference = genders.first;
+      }
+    }
+
+    //----------------------------------------------------------
+    // Update Property
+    //----------------------------------------------------------
+
+    await _supabase
+        .from('properties')
+        .update({
+          'minimum_price': minimumPrice,
+          'gender_preference': genderPreference.name,
+        })
+        .eq('id', propertyId);
+  }
+
+  //============================================================================
   //! CREATE ROOM
   //============================================================================
   @override
@@ -275,6 +417,12 @@ class SupabaseRoomRepository implements RoomRepository {
 
       await _supabase.from('room_images').insert(rows);
     }
+
+    //----------------------------------------------------------
+    // Refresh Property Computed Values
+    //----------------------------------------------------------
+
+    await _refreshPropertyComputedValues(room.propertyId);
   }
 
   //============================================================================
@@ -375,6 +523,12 @@ class SupabaseRoomRepository implements RoomRepository {
     if (rows.isNotEmpty) {
       await _supabase.from('room_images').insert(rows);
     }
+
+    //----------------------------------------------------------
+    // Refresh Property Computed Values
+    //----------------------------------------------------------
+
+    await _refreshPropertyComputedValues(room.propertyId);
   }
 
   //============================================================================
@@ -383,6 +537,16 @@ class SupabaseRoomRepository implements RoomRepository {
 
   @override
   Future<void> delete(String roomId) async {
+    //----------------------------------------------------------
+    // Property ID
+    //----------------------------------------------------------
+
+    final room = await getById(roomId);
+
+    if (room == null) {
+      return;
+    }
+
     //----------------------------------------------------------
     // Existing Images
     //----------------------------------------------------------
@@ -409,5 +573,11 @@ class SupabaseRoomRepository implements RoomRepository {
     //----------------------------------------------------------
 
     await _supabase.from('rooms').delete().eq('id', roomId);
+
+    //----------------------------------------------------------
+    // Refresh Property Computed Values
+    //----------------------------------------------------------
+
+    await _refreshPropertyComputedValues(room.propertyId);
   }
 }

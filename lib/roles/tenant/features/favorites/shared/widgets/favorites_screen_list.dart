@@ -1,5 +1,6 @@
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
+
+import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
@@ -14,13 +15,14 @@ import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertic
 //! FAVORITES SCREEN LIST
 //============================================================================
 
-class FavoritesScreenList extends StatefulWidget {
+class FavoritesScreenList extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
   const FavoritesScreenList({
     super.key,
+    required this.properties,
     required this.propertyRepository,
     required this.roomRepository,
     required this.favoriteRepository,
@@ -30,52 +32,13 @@ class FavoritesScreenList extends StatefulWidget {
   //! PROPERTIES
   //============================================================================
 
+  final List<TenantPropertyCardData> properties;
+
   final PropertyRepository propertyRepository;
 
   final RoomRepository roomRepository;
 
   final FavoriteRepository favoriteRepository;
-
-  @override
-  State<FavoritesScreenList> createState() => _FavoritesScreenListState();
-}
-
-//============================================================================
-//! STATE
-//============================================================================
-
-class _FavoritesScreenListState extends State<FavoritesScreenList> {
-  List<TenantPropertyCardData> _savedProperties = [];
-
-  bool _loading = true;
-
-  //============================================================================
-  //! LIFECYCLE
-  //============================================================================
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadProperties();
-  }
-
-  //============================================================================
-  //! LOAD FAVORITES
-  //============================================================================
-
-  Future<void> _loadProperties() async {
-    final properties = await widget.propertyRepository
-        .getFavoritePropertyCards();
-
-    if (!mounted) return;
-
-    setState(() {
-      _savedProperties = properties;
-
-      _loading = false;
-    });
-  }
 
   //============================================================================
   //! BUILD
@@ -83,25 +46,19 @@ class _FavoritesScreenListState extends State<FavoritesScreenList> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_savedProperties.isEmpty) {
+    if (properties.isEmpty) {
       return const FavoritesScreenEmptySavedState();
     }
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 12),
-
-      itemCount: _savedProperties.length,
-
+      itemCount: properties.length,
       itemBuilder: (context, index) => PropertyCardVertical(
-        property: _savedProperties[index],
-        repository: widget.propertyRepository,
-        roomRepository: widget.roomRepository,
+        property: properties[index],
+        repository: propertyRepository,
+        roomRepository: roomRepository,
+        favoriteRepository: favoriteRepository,
         showAmenities: false,
-        favoriteRepository: widget.favoriteRepository,
       ),
     );
   }

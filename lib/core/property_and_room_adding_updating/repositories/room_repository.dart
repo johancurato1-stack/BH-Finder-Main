@@ -1,5 +1,6 @@
 import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/models/room_search_filter_model.dart';
 
 //============================================================================
 //! ROOM REPOSITORY
@@ -27,6 +28,12 @@ abstract class RoomRepository {
 
   /// Returns data used by the room detail screen.
   Future<RoomDetailData> getRoomDetail(String roomId);
+
+  /// Returns filtered rooms belonging to a property.
+  Future<List<RoomModel>> searchRooms({
+    required String propertyId,
+    required RoomSearchFilterModel filter,
+  });
 
   //============================================================================
   //! COMMANDS

@@ -25,7 +25,10 @@ abstract class StorageRepository {
   //! AVATAR
   //============================================================================
 
-  Future<String> uploadAvatar(String localPath);
+  Future<String> uploadAvatar({
+    required String userId,
+    required String localPath,
+  });
 
   //============================================================================
   //! DELETE

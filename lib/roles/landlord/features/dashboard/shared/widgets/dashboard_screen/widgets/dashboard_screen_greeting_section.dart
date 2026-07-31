@@ -11,13 +11,19 @@ class DashboardScreenGreetingSection extends StatelessWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const DashboardScreenGreetingSection({super.key, required this.firstName});
+  const DashboardScreenGreetingSection({
+    super.key,
+    required this.firstName,
+    this.avatarUrl,
+  });
 
   //==========================================================================
   //! VARIABLES
   //==========================================================================
 
   final String firstName;
+
+  final String? avatarUrl;
 
   static const VerificationStatus _verificationStatus =
       VerificationStatus.unverified;
@@ -98,10 +104,15 @@ class DashboardScreenGreetingSection extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 36,
                 backgroundColor: AppColors.white,
-                child: Icon(Icons.person, color: AppColors.tertiary),
+                backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
+                    ? NetworkImage(avatarUrl!)
+                    : null,
+                child: avatarUrl == null || avatarUrl!.isEmpty
+                    ? const Icon(Icons.person, color: AppColors.tertiary)
+                    : null,
               ),
 
               Positioned(

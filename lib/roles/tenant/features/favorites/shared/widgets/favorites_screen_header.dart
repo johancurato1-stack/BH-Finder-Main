@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet.dart';
 
 class FavoritesScreenHeader extends StatelessWidget {
-  final VoidCallback onBackPressed;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
-  const FavoritesScreenHeader({super.key, required this.onBackPressed});
+  const FavoritesScreenHeader({
+    super.key,
+    required this.onBackPressed,
+    required this.onFilterPressed,
+  });
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final VoidCallback onBackPressed;
+  final VoidCallback onFilterPressed;
 
   //============================================================================
   //! BUILD
@@ -16,14 +28,12 @@ class FavoritesScreenHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
         children: [
-          //============================================================================
+          //==========================================================================
           //! BACK BUTTON
-          //============================================================================
+          //==========================================================================
           IconButton(
             onPressed: onBackPressed,
             icon: const Icon(
@@ -33,9 +43,9 @@ class FavoritesScreenHeader extends StatelessWidget {
             ),
           ),
 
-          //============================================================================
+          //==========================================================================
           //! TITLE
-          //============================================================================
+          //==========================================================================
           const Text(
             'Favorites',
             style: TextStyle(
@@ -46,11 +56,11 @@ class FavoritesScreenHeader extends StatelessWidget {
             ),
           ),
 
-          //============================================================================
+          //==========================================================================
           //! FILTER BUTTON
-          //============================================================================
+          //==========================================================================
           IconButton(
-            onPressed: () => FilterBottomSheet.show(context),
+            onPressed: onFilterPressed,
             icon: const Icon(
               Icons.tune_rounded,
               color: AppColors.primary,

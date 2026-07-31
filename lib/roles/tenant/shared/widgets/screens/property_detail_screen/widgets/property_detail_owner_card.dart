@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/models/landlord_model.dart';
@@ -86,8 +87,16 @@ class PropertyDetailOwnerCard extends StatelessWidget {
 
         IconButton(
           icon: const Icon(Icons.phone, color: AppColors.primary),
-          onPressed: () {
-            // TODO: Call landlord.
+          onPressed: () async {
+            await Clipboard.setData(ClipboardData(text: landlord.phoneNumber));
+
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Phone number copied to clipboard.'),
+                ),
+              );
+            }
           },
         ),
       ],

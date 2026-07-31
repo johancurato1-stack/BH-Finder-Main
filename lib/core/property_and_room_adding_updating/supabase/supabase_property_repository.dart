@@ -4,6 +4,7 @@ import 'package:bh_finder/core/enums/enums.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/models/property_model.dart';
 import 'package:bh_finder/core/models/image_model.dart';
+import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
@@ -12,6 +13,7 @@ import 'package:bh_finder/core/property_and_room_adding_updating/repositories/st
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
+import 'package:bh_finder/core/models/landlord_model.dart';
 
 //============================================================================
 //! SUPABASE PROPERTY REPOSITORY
@@ -176,20 +178,19 @@ class SupabasePropertyRepository implements PropertyRepository {
       images: const [],
 
       amenities: (json['amenities'] as List)
-          .map(
-            (e) => Amenity.values.firstWhere(
-              (a) => a.toString().split('.').last == e,
-            ),
-          )
+          .map((e) => Amenity.values.firstWhere((a) => a.name == e))
           .toList(),
 
-      // Computed later from rooms.
-      genderPreference: GenderPreference.mixed,
+      minimumPrice: (json['minimum_price'] as num).toDouble(),
+
+      genderPreference: GenderPreference.values.firstWhere(
+        (e) => e.name == json['gender_preference'],
+      ),
 
       views: json['views'] ?? 0,
 
       status: PropertyStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == json['availability_status'],
+        (e) => e.name == json['availability_status'],
       ),
     );
   }
@@ -336,6 +337,7 @@ class SupabasePropertyRepository implements PropertyRepository {
   //============================================================================
   //! TENANT PROPERTY CARDS
   //============================================================================
+
   @override
   Future<List<TenantPropertyCardData>> getPropertyCards() async {
     //----------------------------------------------------------
@@ -377,6 +379,22 @@ class SupabasePropertyRepository implements PropertyRepository {
       favoriteCounts[propertyId] = (favoriteCounts[propertyId] ?? 0) + 1;
     }
 
+    return _buildTenantPropertyCards(
+      properties: properties,
+      favoriteIds: favoriteIds,
+      favoriteCounts: favoriteCounts,
+    );
+  }
+
+  //============================================================================
+  //! BUILD TENANT PROPERTY CARDS
+  //============================================================================
+
+  Future<List<TenantPropertyCardData>> _buildTenantPropertyCards({
+    required List<PropertyModel> properties,
+    required Set<String> favoriteIds,
+    required Map<String, int> favoriteCounts,
+  }) async {
     final cards = <TenantPropertyCardData>[];
 
     for (final property in properties) {
@@ -402,24 +420,10 @@ class SupabasePropertyRepository implements PropertyRepository {
       }
 
       //--------------------------------------------------------
-      // Computed Values
+      // Room Count
       //--------------------------------------------------------
 
-      final rooms = await _roomRepository.getByProperty(property.id);
-
-      final minimumPrice = await _roomRepository.getMinimumPrice(property.id);
-
       final roomCount = await _roomRepository.getRoomCount(property.id);
-
-      GenderPreference genderPreference = GenderPreference.mixed;
-
-      if (rooms.isNotEmpty) {
-        final genders = rooms.map((room) => room.genderPreference).toSet();
-
-        if (genders.length == 1) {
-          genderPreference = genders.first;
-        }
-      }
 
       //--------------------------------------------------------
       // Card
@@ -430,10 +434,10 @@ class SupabasePropertyRepository implements PropertyRepository {
           id: property.id,
           title: property.title,
           coverImageUrl: coverImageUrl,
-          minimumPrice: minimumPrice,
+          minimumPrice: property.minimumPrice,
           roomCount: roomCount,
           status: property.status,
-          genderPreference: genderPreference,
+          genderPreference: property.genderPreference,
           address: property.address,
           amenities: property.amenities,
           isFavorite: favoriteIds.contains(property.id),
@@ -550,6 +554,27 @@ class SupabasePropertyRepository implements PropertyRepository {
   }
 
   //============================================================================
+  //! SEARCH FAVORITE PROPERTY CARDS
+  //============================================================================
+
+  @override
+  Future<List<TenantPropertyCardData>> searchFavoritePropertyCards(
+    SearchFilterModel filter,
+  ) async {
+    //----------------------------------------------------------
+    // Search All Matching Properties
+    //----------------------------------------------------------
+
+    final properties = await searchProperties(filter);
+
+    //----------------------------------------------------------
+    // Keep Favorites Only
+    //----------------------------------------------------------
+
+    return properties.where((property) => property.isFavorite).toList();
+  }
+
+  //============================================================================
   //! PROPERTY DETAIL
   //============================================================================
 
@@ -594,30 +619,46 @@ class SupabasePropertyRepository implements PropertyRepository {
 
     final rooms = await _roomRepository.getByProperty(propertyId);
 
-    final minimumPrice = await _roomRepository.getMinimumPrice(propertyId);
-
     final roomCount = await _roomRepository.getRoomCount(propertyId);
 
     //----------------------------------------------------------
-    // Gender Preference
+    // Landlord
     //----------------------------------------------------------
 
-    GenderPreference genderPreference = GenderPreference.mixed;
+    final profile = await _supabase
+        .from('profiles')
+        .select()
+        .eq('id', property.landlordId)
+        .maybeSingle();
 
-    if (rooms.isNotEmpty) {
-      final genders = rooms.map((room) => room.genderPreference).toSet();
+    LandlordModel? landlord;
 
-      if (genders.length == 1) {
-        genderPreference = genders.first;
-      }
+    if (profile != null) {
+      final avatarPath = profile['avatar_path'] as String?;
+
+      landlord = LandlordModel(
+        id: profile['id'] as String,
+
+        fullName: '${profile['first_name']} ${profile['last_name']}'.trim(),
+
+        phoneNumber: profile['phone'] ?? '',
+
+        profileImageUrl: avatarPath == null || avatarPath.isEmpty
+            ? ''
+            : _storageRepository.getPublicUrl(
+                'avatars',
+                avatarPath.replaceFirst('avatars/', ''),
+              ),
+
+        verificationStatus: VerificationStatus.values.firstWhere(
+          (status) => status.name == profile['verification_status'],
+          orElse: () => VerificationStatus.pending,
+        ),
+
+        // Until you implement analytics for replies.
+        responseTime: ResponseTime.within1Hour,
+      );
     }
-
-    //----------------------------------------------------------
-    // TODO
-    //----------------------------------------------------------
-    //
-    // Landlord will come from ProfileRepository later.
-    //
 
     //----------------------------------------------------------
     // Favorite Count
@@ -635,19 +676,157 @@ class SupabasePropertyRepository implements PropertyRepository {
       title: property.title,
       description: property.description,
       images: images,
-      minimumPrice: minimumPrice,
+      minimumPrice: property.minimumPrice,
       roomCount: roomCount,
-      genderPreference: genderPreference,
+      genderPreference: property.genderPreference,
       totalViews: property.views,
       totalInquiries: 0,
       favoriteCount: favoriteCount,
       amenities: property.amenities,
       latitude: property.latitude,
       longitude: property.longitude,
-      landlord: null,
+      landlord: landlord,
       status: property.status,
       rooms: rooms,
       address: property.address,
+    );
+  }
+
+  //============================================================================
+  //! SEARCH PROPERTIES
+  //============================================================================
+
+  @override
+  Future<List<TenantPropertyCardData>> searchProperties(
+    SearchFilterModel filter,
+  ) async {
+    //----------------------------------------------------------
+    // Query
+    //----------------------------------------------------------
+
+    var query = _supabase.from('properties').select();
+
+    //----------------------------------------------------------
+    // Search Text
+    //----------------------------------------------------------
+
+    if (filter.query.trim().isNotEmpty) {
+      final text = filter.query.trim();
+
+      query = query.or('title.ilike.%$text%,address.ilike.%$text%');
+    }
+
+    //----------------------------------------------------------
+    // Budget
+    //----------------------------------------------------------
+
+    switch (filter.budget) {
+      case '₱1,500 - ₱3,000':
+        query = query.gte('minimum_price', 1500).lte('minimum_price', 3000);
+        break;
+
+      case '₱3,000 - ₱5,000':
+        query = query.gte('minimum_price', 3000).lte('minimum_price', 5000);
+        break;
+
+      case '₱5,000+':
+        query = query.gte('minimum_price', 5000);
+        break;
+    }
+
+    //----------------------------------------------------------
+    // Gender
+    //----------------------------------------------------------
+
+    switch (filter.gender) {
+      case 'Male':
+        query = query.eq('gender_preference', 'male');
+        break;
+
+      case 'Female':
+        query = query.eq('gender_preference', 'female');
+        break;
+
+      case 'Mixed':
+        query = query.eq('gender_preference', 'mixed');
+        break;
+    }
+
+    //----------------------------------------------------------
+    // Status
+    //----------------------------------------------------------
+
+    switch (filter.status) {
+      case 'Available':
+        query = query.eq('availability_status', 'available');
+        break;
+
+      case 'Occupied':
+        query = query.eq('availability_status', 'occupied');
+        break;
+    }
+
+    //----------------------------------------------------------
+    // Amenities
+    //----------------------------------------------------------
+
+    if (filter.amenities.isNotEmpty) {
+      query = query.filter(
+        'amenities',
+        'cs',
+        '{${filter.amenities.join(',')}}',
+      );
+    }
+
+    //----------------------------------------------------------
+    // Load Properties
+    //----------------------------------------------------------
+
+    final rows = await query.order('created_at');
+
+    final properties = rows.map<PropertyModel>(_mapProperty).toList();
+
+    //----------------------------------------------------------
+    // Current User Favorites
+    //----------------------------------------------------------
+
+    final userId = _supabase.auth.currentUser?.id;
+
+    final favoriteIds = <String>{};
+
+    if (userId != null) {
+      final rows = await _supabase
+          .from('favorites')
+          .select('property_id')
+          .eq('user_id', userId);
+
+      favoriteIds.addAll(rows.map((row) => row['property_id'] as String));
+    }
+
+    //----------------------------------------------------------
+    // Favorite Counts
+    //----------------------------------------------------------
+
+    final favoriteRows = await _supabase
+        .from('favorites')
+        .select('property_id');
+
+    final favoriteCounts = <String, int>{};
+
+    for (final row in favoriteRows) {
+      final propertyId = row['property_id'] as String;
+
+      favoriteCounts[propertyId] = (favoriteCounts[propertyId] ?? 0) + 1;
+    }
+
+    //----------------------------------------------------------
+    // Build Cards
+    //----------------------------------------------------------
+
+    return _buildTenantPropertyCards(
+      properties: properties,
+      favoriteIds: favoriteIds,
+      favoriteCounts: favoriteCounts,
     );
   }
 

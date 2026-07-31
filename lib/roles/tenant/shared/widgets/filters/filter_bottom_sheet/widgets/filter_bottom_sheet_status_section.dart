@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/constants/filter_constants.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/models/filters/filter_model.dart';
 
 class FilterBottomSheetStatusSection extends StatelessWidget {
   final String selectedStatus;
@@ -23,16 +23,16 @@ class FilterBottomSheetStatusSection extends StatelessWidget {
     return Wrap(
       spacing: 5,
       runSpacing: 5,
-
-      children: FilterConstants.statuses.map((StatusFilter status) {
-        final isSelected = selectedStatus == status.label;
+      children: SearchFilterOptions.statuses.map((status) {
+        final label = status['label'] as String;
+        final color = status['color'] as Color?;
 
         return FilterButton(
-          label: status.label,
-          isSelected: isSelected,
+          label: label,
+          isSelected: selectedStatus == label,
           isStatusType: true,
-          statusColor: status.color,
-          onTap: () => onStatusSelected(status.label),
+          statusColor: color,
+          onTap: () => onStatusSelected(label),
         );
       }).toList(),
     );

@@ -2,6 +2,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:bh_finder/core/repositories/profile_repository.dart';
 
+import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
+
 class SupabaseProfileRepository implements ProfileRepository {
   //============================================================================
   //! SUPABASE
@@ -28,6 +30,24 @@ class SupabaseProfileRepository implements ProfileRepository {
         .single();
 
     return response;
+  }
+
+  //============================================================================
+  //! AVATAR
+  //============================================================================
+
+  @override
+  Future<void> updateAvatarPath(String avatarPath) async {
+    final user = _supabase.auth.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    await _supabase
+        .from('profiles')
+        .update({'avatar_path': avatarPath})
+        .eq('id', user.id);
   }
 
   //============================================================================

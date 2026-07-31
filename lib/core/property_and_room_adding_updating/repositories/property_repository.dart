@@ -4,6 +4,8 @@ import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenan
 import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
 import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
 
+import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+
 //============================================================================
 //! PROPERTY REPOSITORY
 //============================================================================
@@ -38,6 +40,18 @@ abstract class PropertyRepository {
   Future<List<LandlordPropertyCardData>> getLandlordPropertyCards();
 
   Future<List<TenantPropertyCardData>> getFavoritePropertyCards();
+
+  Future<List<TenantPropertyCardData>> searchFavoritePropertyCards(
+    SearchFilterModel filter,
+  );
+
+  //============================================================================
+  //! SEARCH
+  //============================================================================
+
+  Future<List<TenantPropertyCardData>> searchProperties(
+    SearchFilterModel filter,
+  );
 
   //============================================================================
   //! PROPERTY DETAIL

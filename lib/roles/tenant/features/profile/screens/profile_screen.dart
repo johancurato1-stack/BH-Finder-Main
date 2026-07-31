@@ -16,6 +16,9 @@ import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.
 import 'package:bh_finder/core/view_models/profile_view_model.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';
+import 'package:bh_finder/shared/widgets/profile/editable_profile_avatar.dart';
+
+import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
   //============================================================================
@@ -46,6 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //============================================================================
   final ProfileViewModel _profileViewModel = ProfileViewModel(
     repository: SupabaseProfileRepository(),
+    storageRepository: SupabaseStorageRepository(),
+    authRepository: SupabaseAuthRepository(),
   );
 
   final AuthViewModel _authViewModel = AuthViewModel(
@@ -159,15 +164,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       //==============================================================
                       //! PROFILE AVATAR
                       //==============================================================
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundColor: AppColors.white,
-
-                        child: Icon(
-                          Icons.person,
-                          size: 45,
-                          color: AppColors.tertiary,
+                      EditableProfileAvatar(
+                        avatarUrl: SupabaseStorageRepository().getPublicUrl(
+                          'avatars',
+                          profile['avatar_path'].replaceFirst('avatars/', ''),
                         ),
+                        editable: true,
+                        onTap: () {
+                          // We'll implement this next.
+                        },
                       ),
 
                       const SizedBox(width: AppSpacing.lg),

@@ -21,13 +21,13 @@ class SearchScreenStatusGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 5,
-      runSpacing: 5,
+      spacing: 8,
+      runSpacing: 8,
       children: statuses.map((status) {
         return FilterButton(
           label: status['label'] as String,
           isStatusType: true,
-          statusColor: status['color'] as Color,
+          statusColor: status['color'] as Color?,
           isSelected: selectedStatus == status['label'],
           onTap: () => onSelected(status['label'] as String),
         );

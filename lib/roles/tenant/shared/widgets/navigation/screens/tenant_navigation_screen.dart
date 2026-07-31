@@ -39,6 +39,13 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       Repositories.instance.favoriteRepository;
 
   //============================================================================
+  //! SEARCH
+  //============================================================================
+
+  final GlobalKey<SearchScreenState> _searchScreenKey =
+      GlobalKey<SearchScreenState>();
+
+  //============================================================================
   //! STATE
   //============================================================================
 
@@ -76,7 +83,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       ),
 
       SearchScreen(
+        key: _searchScreenKey,
         onBackPressed: () {
+          _searchScreenKey.currentState?.resetSearch();
+
           setState(() {
             _currentIndex = 0;
           });
@@ -120,6 +130,10 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         currentIndex: _currentIndex,
         showMessagesBadge: _showMessagesTabBadge,
         onTap: (index) {
+          if (_currentIndex == 1 && index != 1) {
+            _searchScreenKey.currentState?.resetSearch();
+          }
+
           setState(() {
             _currentIndex = index;
           });
