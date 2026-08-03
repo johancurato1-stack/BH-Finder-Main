@@ -1,19 +1,21 @@
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
-import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_property_horizontal_list.dart';
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_header.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_hero_section.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_search_bar.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_section_header.dart';
+import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_property_horizontal_list.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/see_all_screen/see_all_screen.dart';
 
@@ -37,7 +39,7 @@ class HomeScreen extends StatefulWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! CALLBACKS
   //============================================================================
 
   final VoidCallback onSearchPressed;
@@ -45,6 +47,10 @@ class HomeScreen extends StatefulWidget {
   final bool hasNotification;
 
   final VoidCallback onNotificationsRead;
+
+  //============================================================================
+  //! REPOSITORIES
+  //============================================================================
 
   final PropertyRepository propertyRepository;
 
@@ -87,13 +93,43 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadProperties() async {
     final properties = await widget.propertyRepository.getPropertyCards();
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     setState(() {
       _properties = properties;
-
       _loading = false;
     });
+  }
+
+  //============================================================================
+  //! OPEN SEE ALL
+  //============================================================================
+
+  void _openSeeAll() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => SeeAllScreen(
+          title: 'Near You',
+          repository: widget.propertyRepository,
+          roomRepository: widget.roomRepository,
+          favoriteRepository: widget.favoriteRepository,
+        ),
+
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+                .animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                ),
+
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   //============================================================================
@@ -105,12 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_loading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-
         body: Center(child: CircularProgressIndicator()),
       );
     }
-
-    final properties = _properties;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -133,10 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     //==========================================================
                     //! HOME HEADER
                     //==========================================================
-                    HomeScreenHeader(
-                      hasNotification: widget.hasNotification,
-
-                      onNotificationsRead: widget.onNotificationsRead,
+                    AnimatedEntrance(
+                      order: 0,
+                      child: HomeScreenHeader(
+                        hasNotification: widget.hasNotification,
+                        onNotificationsRead: widget.onNotificationsRead,
+                      ),
                     ),
 
                     const SizedBox(height: AppSpacing.xxl),
@@ -144,62 +179,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     //==========================================================
                     //! HERO SECTION
                     //==========================================================
-                    const HomeScreenHeroSection(),
+                    const AnimatedEntrance(
+                      order: 1,
+                      child: HomeScreenHeroSection(),
+                    ),
 
                     const SizedBox(height: AppSpacing.xl),
 
                     //==========================================================
                     //! SEARCH BAR
                     //==========================================================
-                    HomeScreenSearchBar(onTap: widget.onSearchPressed),
+                    AnimatedEntrance(
+                      order: 2,
+                      child: HomeScreenSearchBar(onTap: widget.onSearchPressed),
+                    ),
 
                     const SizedBox(height: AppSpacing.xxl),
 
                     //==========================================================
                     //! NEAR YOU
                     //==========================================================
-                    HomeScreenSectionHeader(
-                      title: 'Near You',
-
-                      onSeeAll: () {
-                        Navigator.push(
-                          context,
-
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => SeeAllScreen(
-                              title: 'Near You',
-                              repository: widget.propertyRepository,
-                              roomRepository: widget.roomRepository,
-                              favoriteRepository: widget.favoriteRepository,
-                            ),
-
-                            transitionsBuilder:
-                                (
-                                  context,
-                                  animation,
-                                  secondaryAnimation,
-                                  child,
-                                ) {
-                                  return SlideTransition(
-                                    position:
-                                        Tween<Offset>(
-                                          begin: const Offset(0, 1),
-
-                                          end: Offset.zero,
-                                        ).animate(
-                                          CurvedAnimation(
-                                            parent: animation,
-
-                                            curve: Curves.easeOut,
-                                          ),
-                                        ),
-
-                                    child: child,
-                                  );
-                                },
-                          ),
-                        );
-                      },
+                    AnimatedEntrance(
+                      order: 3,
+                      child: HomeScreenSectionHeader(
+                        title: 'Near You',
+                        onSeeAll: _openSeeAll,
+                      ),
                     ),
 
                     const SizedBox(height: AppSpacing.md),
@@ -210,11 +215,14 @@ class _HomeScreenState extends State<HomeScreen> {
               //==============================================================
               //! PROPERTY LIST
               //==============================================================
-              HomeScreenPropertyHorizontalList(
-                properties: properties,
-                repository: widget.propertyRepository,
-                roomRepository: widget.roomRepository,
-                favoriteRepository: widget.favoriteRepository,
+              AnimatedEntrance(
+                order: 4,
+                child: HomeScreenPropertyHorizontalList(
+                  properties: _properties,
+                  repository: widget.propertyRepository,
+                  roomRepository: widget.roomRepository,
+                  favoriteRepository: widget.favoriteRepository,
+                ),
               ),
 
               const SizedBox(height: AppSpacing.xxxl),

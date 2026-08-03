@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/cards/add_room_card.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/cards/property_room_card/property_room_card.dart';

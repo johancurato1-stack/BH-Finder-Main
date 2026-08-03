@@ -2,28 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/theme/app_spacing.dart';
-
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/shared/widgets/back_button_header.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_photos_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_information_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_amenities_section.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_availability_section.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_location_section.dart';
+
 import 'package:bh_finder/shared/widgets/location/location_selector.dart';
-import 'package:bh_finder/shared/widgets/location/current_location_card.dart';
-import 'package:bh_finder/shared/widgets/location/manual_location_form.dart';
 import 'package:bh_finder/shared/widgets/cards/information_notice_card.dart';
 import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
 
 import 'package:bh_finder/shared/widgets/services/location_service.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/add_property_view_model.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/models/add_property_request.dart';
+import 'package:bh_finder/core/view_models/add_property_view_model.dart';
+import 'package:bh_finder/core/models/add_property_request.dart';
 import 'package:bh_finder/core/enums/enums.dart';
-import 'package:bh_finder/core/repositories/repositories.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
-import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/widgets/add_property_availability_section.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
+import 'package:bh_finder/core/ui_models/property_detail_data.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 
 //============================================================================
@@ -125,6 +123,33 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
   PropertyStatus _selectedStatus = PropertyStatus.available;
 
+  //============================================================================
+  //! DIALOG HELPER
+  //============================================================================
+
+  /// Shows a single-button informational dialog.
+  ///
+  /// Used for the many validation/error messages in this screen that only
+  /// need an icon, title, message, and a single "OK" button.
+  Future<void> _showMessageDialog({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String message,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) => PrimaryDialog(
+        icon: icon,
+        iconColor: iconColor,
+        title: title,
+        message: message,
+        buttonText: 'OK',
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
+  }
+
   Future<void> _deleteSelectedPhoto() async {
     final shouldDelete = await showDialog<bool>(
       context: context,
@@ -155,24 +180,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     if (_images.length == 1) {
       if (!mounted) return;
 
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return PrimaryDialog(
-            icon: Icons.photo_library_rounded,
-            iconColor: Colors.orange,
-
-            title: 'Property Photo Required',
-
-            message: 'A property must have at least one photo.',
-
-            buttonText: 'OK',
-
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          );
-        },
+      await _showMessageDialog(
+        icon: Icons.photo_library_rounded,
+        iconColor: Colors.orange,
+        title: 'Property Photo Required',
+        message: 'A property must have at least one photo.',
       );
 
       return;
@@ -235,17 +247,12 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.location_off_rounded,
-          iconColor: Colors.red,
-          title: 'Location Not Found',
-          message:
-              'We couldn\'t determine your current location. Please make sure location services are enabled and try again.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.location_off_rounded,
+        iconColor: Colors.red,
+        title: 'Location Not Found',
+        message:
+            'We couldn\'t determine your current location. Please make sure location services are enabled and try again.',
       );
     } finally {
       if (mounted && _locationStatus == LocationStatus.gpsDetecting) {
@@ -273,19 +280,12 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       }
 
       if (missingFields.isNotEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) => PrimaryDialog(
-            icon: Icons.location_off_rounded,
-            iconColor: Colors.orange,
-            title: 'Incomplete Address',
-            message:
-                'Please enter the following before saving your location:\n\n${missingFields.join('\n')}',
-            buttonText: 'OK',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+        await _showMessageDialog(
+          icon: Icons.location_off_rounded,
+          iconColor: Colors.orange,
+          title: 'Incomplete Address',
+          message:
+              'Please enter the following before saving your location:\n\n${missingFields.join('\n')}',
         );
 
         return;
@@ -308,19 +308,13 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.location_off_rounded,
-          iconColor: Colors.red,
-          title: 'Location Not Found',
-          message:
-              'We couldn\'t find the address you entered. Please check the spelling of your province, city/municipality, and barangay, then try again.',
-          buttonText: 'OK',
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+
+      await _showMessageDialog(
+        icon: Icons.location_off_rounded,
+        iconColor: Colors.red,
+        title: 'Location Not Found',
+        message:
+            'We couldn\'t find the address you entered. Please check the spelling of your province, city/municipality, and barangay, then try again.',
       );
     }
   }
@@ -361,16 +355,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     //==============================================================
 
     if (_images.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.photo_library_rounded,
-          iconColor: Colors.orange,
-          title: 'Property Photos Required',
-          message: 'Please add at least one photo of your property.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.photo_library_rounded,
+        iconColor: Colors.orange,
+        title: 'Property Photos Required',
+        message: 'Please add at least one photo of your property.',
       );
 
       return;
@@ -381,32 +370,22 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     //==============================================================
 
     if (_titleController.text.trim().isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.home_rounded,
-          iconColor: Colors.orange,
-          title: 'Property Title Required',
-          message: 'Please enter a title for your property.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.home_rounded,
+        iconColor: Colors.orange,
+        title: 'Property Title Required',
+        message: 'Please enter a title for your property.',
       );
 
       return;
     }
 
     if (_descriptionController.text.trim().isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.description_rounded,
-          iconColor: Colors.orange,
-          title: 'Property Description Required',
-          message: 'Please enter a description for your property.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.description_rounded,
+        iconColor: Colors.orange,
+        title: 'Property Description Required',
+        message: 'Please enter a description for your property.',
       );
 
       return;
@@ -418,16 +397,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
     if (_locationStatus != LocationStatus.gpsSelected &&
         _locationStatus != LocationStatus.manualSelected) {
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.location_on_rounded,
-          iconColor: Colors.orange,
-          title: 'Property Location Required',
-          message: 'Please save your property location before publishing.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.location_on_rounded,
+        iconColor: Colors.orange,
+        title: 'Property Location Required',
+        message: 'Please save your property location before publishing.',
       );
 
       return;
@@ -438,16 +412,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     //==============================================================
 
     if (_selectedAmenities.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => PrimaryDialog(
-          icon: Icons.checklist_rounded,
-          iconColor: Colors.orange,
-          title: 'Amenities Required',
-          message: 'Please select at least one amenity.',
-          buttonText: 'OK',
-          onPressed: () => Navigator.pop(context),
-        ),
+      await _showMessageDialog(
+        icon: Icons.checklist_rounded,
+        iconColor: Colors.orange,
+        title: 'Amenities Required',
+        message: 'Please select at least one amenity.',
       );
 
       return;
@@ -521,16 +490,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       return;
     }
 
-    await showDialog(
-      context: context,
-      builder: (_) => PrimaryDialog(
-        icon: Icons.error_rounded,
-        iconColor: Colors.red,
-        title: 'Delete Failed',
-        message: 'Failed to delete property. Please try again.',
-        buttonText: 'OK',
-        onPressed: () => Navigator.pop(context),
-      ),
+    await _showMessageDialog(
+      icon: Icons.error_rounded,
+      iconColor: Colors.red,
+      title: 'Delete Failed',
+      message: 'Failed to delete property. Please try again.',
     );
   }
 
@@ -640,14 +604,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             //==============================================================
             //! PROPERTY ADDRESS
             //==============================================================
-            LocationSelector(
-              selectedOption: _locationOption,
-              lockedOption: _isGpsLoading || _isGpsSelected
-                  ? LocationOption.manual
-                  : _isManualLoading || _isManualSelected
-                  ? LocationOption.gps
-                  : null,
-              onChanged: (option) {
+            AddPropertyLocationSection(
+              locationOption: _locationOption,
+              onOptionChanged: (option) {
                 setState(() {
                   _locationOption = option;
 
@@ -666,41 +625,26 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   }
                 });
               },
+
+              isGpsLoading: _isGpsLoading,
+              isGpsSelected: _isGpsSelected,
+              isGpsLocked: _isGpsLocked,
+              isManualLoading: _isManualLoading,
+              isManualSelected: _isManualSelected,
+              isManualLocked: _isManualLocked,
+
+              detectedAddress: _detectedAddress,
+              onDetectLocation: _detectCurrentLocation,
+              onCancelDetection: _cancelLocationDetection,
+              onRemoveLocation: _removeLocation,
+
+              provinceController: _provinceController,
+              cityController: _cityController,
+              barangayController: _barangayController,
+              streetController: _streetController,
+              landmarkController: _landmarkController,
+              onSaveManualLocation: _saveManualLocation,
             ),
-
-            const SizedBox(height: AppSpacing.lg),
-
-            if (_locationOption == LocationOption.gps)
-              CurrentLocationCard(
-                address: _detectedAddress,
-                onCancelDetection: _cancelLocationDetection,
-                isLocked: _isGpsLocked,
-                isSelected: _isGpsSelected,
-                isLoading: _isGpsLoading,
-                onDetectLocation: _detectCurrentLocation,
-                onRemoveLocation: _removeLocation,
-              ),
-
-            if (_locationOption == LocationOption.manual)
-              ManualLocationForm(
-                provinceController: _provinceController,
-                cityController: _cityController,
-                barangayController: _barangayController,
-                streetController: _streetController,
-                landmarkController: _landmarkController,
-
-                isLocked: _isManualLocked,
-
-                buttonText: _isManualSelected
-                    ? 'Remove Location'
-                    : 'Save Location',
-
-                buttonColor: _isManualSelected ? Colors.red : AppColors.primary,
-
-                onButtonPressed: _isManualSelected
-                    ? _removeLocation
-                    : _saveManualLocation,
-              ),
 
             const SizedBox(height: 24),
 
@@ -713,6 +657,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             ),
 
             const SizedBox(height: 20),
+            if (_isEditing) const SizedBox(height: 30),
 
             //==============================================================
             //! INFORMATION NOTICE CARD
@@ -736,12 +681,16 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               onPressed: _publishProperty,
             ),
 
-            const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
-
             //==============================================================
             //! DELETE PROPERTY
             //==============================================================
             if (_isEditing) ...[
+              const Divider(
+                height: 32,
+                thickness: .5,
+                color: AppColors.tertiary,
+              ),
+
               const SizedBox(height: 12),
 
               OutlinedButton(

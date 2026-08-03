@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
 
+//============================================================================
+//! SEARCH SCREEN STATUS GRID
+//============================================================================
+
 class SearchScreenStatusGrid extends StatelessWidget {
-  final List<Map<String, dynamic>> statuses;
-  final String selectedStatus;
-  final ValueChanged<String> onSelected;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenStatusGrid({
     super.key,
@@ -13,6 +17,16 @@ class SearchScreenStatusGrid extends StatelessWidget {
     required this.selectedStatus,
     required this.onSelected,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final List<Map<String, dynamic>> statuses;
+
+  final String selectedStatus;
+
+  final ValueChanged<String> onSelected;
 
   //============================================================================
   //! BUILD
@@ -23,15 +37,21 @@ class SearchScreenStatusGrid extends StatelessWidget {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: statuses.map((status) {
+
+      children: List.generate(statuses.length, (index) {
+        final status = statuses[index];
+
+        final label = status['label'] as String;
+        final color = status['color'] as Color?;
+
         return FilterButton(
-          label: status['label'] as String,
+          label: label,
           isStatusType: true,
-          statusColor: status['color'] as Color?,
-          isSelected: selectedStatus == status['label'],
-          onTap: () => onSelected(status['label'] as String),
+          statusColor: color,
+          isSelected: selectedStatus == label,
+          onTap: () => onSelected(label),
         );
-      }).toList(),
+      }),
     );
   }
 }

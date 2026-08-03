@@ -18,7 +18,7 @@ class MockChat {
       responseTime: "Usually replies in 30 mins",
       isOnline: true,
 
-      boardingHouseId: "bh_1",
+      propertyId: "property_1",
       propertyTitle: "Green Haven Boarding House",
 
       lastMessage:
@@ -37,7 +37,7 @@ class MockChat {
       responseTime: "Usually replies in 1 hour",
       isOnline: false,
 
-      boardingHouseId: "bh_2",
+      propertyId: "property_2",
       propertyTitle: "Blessed Home Boarding House",
 
       lastMessage:

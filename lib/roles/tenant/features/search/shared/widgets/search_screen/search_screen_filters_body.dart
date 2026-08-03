@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
-import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
+import 'package:bh_finder/core/options/search_filter_options.dart';
+import 'package:bh_finder/core/models/search_filter_model.dart';
 
-import 'search_screen_search_input.dart';
-import 'search_screen_filter_section.dart';
-import 'search_screen_filter_option_grid.dart';
 import 'search_screen_amenities_grid.dart';
+import 'search_screen_filter_option_grid.dart';
+import 'search_screen_filter_section.dart';
+import 'search_screen_search_input.dart';
 import 'search_screen_status_grid.dart';
 
-class SearchScreenFilterBody extends StatelessWidget {
-  final TextEditingController controller;
-  final SearchFilterModel filter;
+//============================================================================
+//! SEARCH SCREEN FILTER BODY
+//============================================================================
 
-  final VoidCallback onReset;
-  final VoidCallback onChanged;
+class SearchScreenFilterBody extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenFilterBody({
     super.key,
@@ -25,6 +27,47 @@ class SearchScreenFilterBody extends StatelessWidget {
     required this.onReset,
     required this.onChanged,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final TextEditingController controller;
+
+  final SearchFilterModel filter;
+
+  final VoidCallback onReset;
+
+  final VoidCallback onChanged;
+
+  //============================================================================
+  //! METHODS
+  //============================================================================
+
+  void _updateBudget(String value) {
+    filter.budget = value;
+    onChanged();
+  }
+
+  void _updateGender(String value) {
+    filter.gender = value;
+    onChanged();
+  }
+
+  void _updateStatus(String value) {
+    filter.status = value;
+    onChanged();
+  }
+
+  void _toggleAmenity(String value) {
+    if (filter.amenities.contains(value)) {
+      filter.amenities.remove(value);
+    } else {
+      filter.amenities.add(value);
+    }
+
+    onChanged();
+  }
 
   //============================================================================
   //! BUILD
@@ -36,14 +79,14 @@ class SearchScreenFilterBody extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
 
       children: [
-        //============================================================================
+        //======================================================================
         //! SEARCH INPUT
-        //============================================================================
+        //======================================================================
         SearchScreenSearchInput(controller: controller),
 
-        //============================================================================
+        //======================================================================
         //! BUDGET
-        //============================================================================
+        //======================================================================
         SearchScreenFilterSection(
           title: 'Budget Range',
 
@@ -64,67 +107,46 @@ class SearchScreenFilterBody extends StatelessWidget {
           child: SearchScreenFilterOptionGrid(
             options: SearchFilterOptions.budgets,
             selectedValue: filter.budget,
-
-            onSelected: (value) {
-              filter.budget = value;
-              onChanged();
-            },
+            onSelected: _updateBudget,
           ),
         ),
 
-        //============================================================================
+        //======================================================================
         //! AMENITIES
-        //============================================================================
+        //======================================================================
         SearchScreenFilterSection(
           title: 'Amenities',
 
           child: SearchScreenAmenitiesGrid(
             amenities: SearchFilterOptions.amenities,
             selectedAmenities: filter.amenities,
-
-            onToggle: (label) {
-              if (filter.amenities.contains(label)) {
-                filter.amenities.remove(label);
-              } else {
-                filter.amenities.add(label);
-              }
-
-              onChanged();
-            },
+            onToggle: _toggleAmenity,
           ),
         ),
 
-        //============================================================================
+        //======================================================================
         //! GENDER
-        //============================================================================
+        //======================================================================
         SearchScreenFilterSection(
           title: 'Gender Preference',
 
           child: SearchScreenFilterOptionGrid(
             options: SearchFilterOptions.genders,
             selectedValue: filter.gender,
-
-            onSelected: (value) {
-              filter.gender = value;
-              onChanged();
-            },
+            onSelected: _updateGender,
           ),
         ),
 
-        //============================================================================
+        //======================================================================
         //! STATUS
-        //============================================================================
+        //======================================================================
         SearchScreenFilterSection(
           title: 'Property Status',
 
           child: SearchScreenStatusGrid(
             statuses: SearchFilterOptions.statuses,
             selectedStatus: filter.status,
-
-            onSelected: (value) {
-              filter.status = value;
-              onChanged();
-            },
+            onSelected: _updateStatus,
           ),
         ),
       ],

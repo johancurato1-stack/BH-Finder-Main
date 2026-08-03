@@ -1,18 +1,26 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:bh_finder/core/repositories/profile_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/profile_repository.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
+//============================================================================
+//! SUPABASE PROFILE REPOSITORY
+//============================================================================
 
 class SupabaseProfileRepository implements ProfileRepository {
   //============================================================================
-  //! SUPABASE
+  //! FIELDS
   //============================================================================
 
   final SupabaseClient _supabase = Supabase.instance.client;
 
   //============================================================================
-  //! PROFILE
+  //! CONSTRUCTOR
+  //============================================================================
+
+  SupabaseProfileRepository();
+
+  //============================================================================
+  //! GETTERS
   //============================================================================
 
   @override
@@ -31,28 +39,6 @@ class SupabaseProfileRepository implements ProfileRepository {
 
     return response;
   }
-
-  //============================================================================
-  //! AVATAR
-  //============================================================================
-
-  @override
-  Future<void> updateAvatarPath(String avatarPath) async {
-    final user = _supabase.auth.currentUser;
-
-    if (user == null) {
-      return;
-    }
-
-    await _supabase
-        .from('profiles')
-        .update({'avatar_path': avatarPath})
-        .eq('id', user.id);
-  }
-
-  //============================================================================
-  //! TENANT
-  //============================================================================
 
   @override
   Future<int> getFavoritesCount() async {
@@ -86,10 +72,6 @@ class SupabaseProfileRepository implements ProfileRepository {
     return response.length;
   }
 
-  //============================================================================
-  //! LANDLORD
-  //============================================================================
-
   @override
   Future<int> getPropertiesCount() async {
     final user = _supabase.auth.currentUser;
@@ -107,8 +89,22 @@ class SupabaseProfileRepository implements ProfileRepository {
   }
 
   //============================================================================
-  //! ROLE
+  //! COMMANDS
   //============================================================================
+
+  @override
+  Future<void> updateAvatarPath(String avatarPath) async {
+    final user = _supabase.auth.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    await _supabase
+        .from('profiles')
+        .update({'avatar_path': avatarPath})
+        .eq('id', user.id);
+  }
 
   @override
   Future<void> updateLastActiveRole(String role) async {
@@ -121,6 +117,23 @@ class SupabaseProfileRepository implements ProfileRepository {
     await _supabase
         .from('profiles')
         .update({'last_active_role': role})
+        .eq('id', user.id);
+  }
+  //============================================================================
+  //! UPDATE LAST SEEN
+  //============================================================================
+
+  @override
+  Future<void> updateLastSeen() async {
+    final user = _supabase.auth.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    await _supabase
+        .from('profiles')
+        .update({'last_seen_at': DateTime.now().toUtc().toIso8601String()})
         .eq('id', user.id);
   }
 }

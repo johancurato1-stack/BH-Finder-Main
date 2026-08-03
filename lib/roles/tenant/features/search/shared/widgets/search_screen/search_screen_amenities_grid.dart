@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
 
+//============================================================================
+//! SEARCH SCREEN AMENITIES GRID
+//============================================================================
+
 class SearchScreenAmenitiesGrid extends StatelessWidget {
-  final List<Map<String, dynamic>> amenities;
-  final List<String> selectedAmenities;
-  final ValueChanged<String> onToggle;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenAmenitiesGrid({
     super.key,
@@ -13,6 +17,16 @@ class SearchScreenAmenitiesGrid extends StatelessWidget {
     required this.selectedAmenities,
     required this.onToggle,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final List<Map<String, dynamic>> amenities;
+
+  final List<String> selectedAmenities;
+
+  final ValueChanged<String> onToggle;
 
   //============================================================================
   //! BUILD
@@ -24,10 +38,12 @@ class SearchScreenAmenitiesGrid extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
 
-      children: amenities.map((amenity) {
-        final label = amenity['label'] as String;
-        final value = amenity['value'] as String;
-        final icon = amenity['icon'] as IconData;
+      children: List.generate(amenities.length, (index) {
+        final item = amenities[index];
+
+        final label = item['label'] as String;
+        final value = item['value'] as String;
+        final icon = item['icon'] as IconData;
 
         return FilterButton(
           label: label,
@@ -35,7 +51,7 @@ class SearchScreenAmenitiesGrid extends StatelessWidget {
           isSelected: selectedAmenities.contains(value),
           onTap: () => onToggle(value),
         );
-      }).toList(),
+      }),
     );
   }
 }

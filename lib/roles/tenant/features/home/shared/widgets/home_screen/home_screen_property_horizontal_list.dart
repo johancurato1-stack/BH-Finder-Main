@@ -1,10 +1,12 @@
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
+
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/property_card_horizontal.dart';
 
@@ -26,16 +28,20 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! REPOSITORIES
   //============================================================================
-
-  final List<TenantPropertyCardData> properties;
 
   final PropertyRepository repository;
 
   final RoomRepository roomRepository;
 
   final FavoriteRepository favoriteRepository;
+
+  //============================================================================
+  //! DATA
+  //============================================================================
+
+  final List<TenantPropertyCardData> properties;
 
   //============================================================================
   //! BUILD
@@ -46,7 +52,7 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
     return SizedBox(
       height: 270,
 
-      child: ListView.builder(
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
 
         physics: const BouncingScrollPhysics(),
@@ -55,30 +61,24 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
 
         itemCount: properties.length,
 
+        separatorBuilder: (_, __) => const SizedBox(width: 16),
+
         itemBuilder: (context, index) {
           final property = properties[index];
 
-          return Row(
-            children: [
-              SizedBox(
-                width: 160,
+          return AnimatedEntrance(
+            order: index + 4,
 
-                height: 255,
+            child: SizedBox(
+              width: 160,
 
-                child: Align(
-                  alignment: Alignment.topCenter,
-
-                  child: PropertyCardHorizontal(
-                    data: property,
-                    repository: repository,
-                    roomRepository: roomRepository,
-                    favoriteRepository: favoriteRepository,
-                  ),
-                ),
+              child: PropertyCardHorizontal(
+                data: property,
+                repository: repository,
+                roomRepository: roomRepository,
+                favoriteRepository: favoriteRepository,
               ),
-
-              const SizedBox(width: 16),
-            ],
+            ),
           );
         },
       ),

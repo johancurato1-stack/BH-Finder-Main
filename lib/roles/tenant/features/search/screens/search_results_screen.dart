@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/core/models/search_filter_model.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
-
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/empty_search_results_screen.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_header.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_summary.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_header.dart';
-import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/search_results_screen_summary.dart';
-import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_results_screen/empty_search_results_screen.dart';
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
 
 //============================================================================
 //! SEARCH RESULTS SCREEN
@@ -35,7 +36,7 @@ class SearchResultsScreen extends StatefulWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final SearchFilterModel filter;
@@ -66,6 +67,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   @override
   void initState() {
     super.initState();
+
     _loadResults();
   }
 
@@ -85,6 +87,41 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   }
 
   //============================================================================
+  //! BUILD RESULTS
+  //============================================================================
+
+  Widget _buildResults() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_properties.isEmpty) {
+      return const EmptySearchResultsScreen();
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+
+      itemCount: _properties.length,
+
+      itemBuilder: (context, index) {
+        return AnimatedEntrance(
+          order: index + 2,
+
+          beginOffset: const Offset(-0.25, 0),
+
+          child: PropertyCardVertical(
+            property: _properties[index],
+            repository: widget.repository,
+            roomRepository: widget.roomRepository,
+            favoriteRepository: widget.favoriteRepository,
+          ),
+        );
+      },
+    );
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
@@ -92,46 +129,38 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //==========================================================================
-            //! HEADER
-            //==========================================================================
-            const SearchResultsScreenHeader(),
 
-            //==========================================================================
+          children: [
+            //==============================================================
+            //! HEADER
+            //==============================================================
+            const AnimatedEntrance(
+              order: 0,
+              child: SearchResultsScreenHeader(),
+            ),
+
+            //==============================================================
             //! SUMMARY
-            //==========================================================================
-            SearchResultsScreenSummary(
-              filter: widget.filter,
-              resultCount: _properties.length,
+            //==============================================================
+            AnimatedEntrance(
+              order: 1,
+
+              child: SearchResultsScreenSummary(
+                filter: widget.filter,
+                resultCount: _properties.length,
+              ),
             ),
 
             const SizedBox(height: 10),
 
-            //==========================================================================
+            //==============================================================
             //! RESULTS
-            //==========================================================================
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _properties.isEmpty
-                  ? const EmptySearchResultsScreen()
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      itemCount: _properties.length,
-                      itemBuilder: (context, index) {
-                        return PropertyCardVertical(
-                          property: _properties[index],
-                          repository: widget.repository,
-                          roomRepository: widget.roomRepository,
-                          favoriteRepository: widget.favoriteRepository,
-                        );
-                      },
-                    ),
-            ),
+            //==============================================================
+            Expanded(child: _buildResults()),
           ],
         ),
       ),

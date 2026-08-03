@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/add_property_card.dart';
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+
+import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/add_property_card_vertical/add_property_card_vertical.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/property_card_vertical.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 
 //============================================================================
@@ -35,6 +38,10 @@ class PropertiesScreenListView extends StatefulWidget {
 //============================================================================
 
 class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
+  //==========================================================================
+  //! STATE
+  //==========================================================================
+
   List<LandlordPropertyCardData> _properties = [];
 
   bool _loading = true;
@@ -67,6 +74,25 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
   }
 
   //==========================================================================
+  //! SLIDE ROUTE
+  //==========================================================================
+
+  Route<T> _buildSlideRoute<T>(Widget page) {
+    return PageRouteBuilder<T>(
+      pageBuilder: (_, __, ___) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+          child: child,
+        );
+      },
+    );
+  }
+
+  //==========================================================================
   //! BUILD
   //==========================================================================
 
@@ -87,40 +113,27 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
         //==============================================================
 
         if (index == properties.length) {
-          return AddPropertyCard(
-            onTap: () async {
-              final created = await Navigator.push<bool>(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, animation, __) => const AddPropertyScreen(),
-                  transitionsBuilder: (_, animation, __, child) {
-                    final offsetAnimation =
-                        Tween<Offset>(
-                          begin: const Offset(0, 1),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOut,
-                          ),
-                        );
+          return AnimatedEntrance(
+            order: index,
+            beginOffset: const Offset(-0.25, 0),
+            child: AddPropertyCardVertical(
+              onTap: () async {
+                final created = await Navigator.push<bool>(
+                  context,
+                  _buildSlideRoute(const AddPropertyScreen()),
+                );
 
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              );
+                if (!mounted || created != true) {
+                  return;
+                }
 
-              if (!mounted || created != true) return;
+                setState(() {
+                  _loading = true;
+                });
 
-              setState(() {
-                _loading = true;
-              });
-
-              await _loadProperties();
-            },
+                await _loadProperties();
+              },
+            ),
           );
         }
 
@@ -130,7 +143,11 @@ class _PropertiesScreenListViewState extends State<PropertiesScreenListView> {
 
         final property = properties[index];
 
-        return PropertyCardVertical(data: property);
+        return AnimatedEntrance(
+          order: index,
+          beginOffset: const Offset(-0.25, 0),
+          child: PropertyCardVertical(data: property),
+        );
       },
     );
   }

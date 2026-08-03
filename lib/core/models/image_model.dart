@@ -4,17 +4,7 @@
 
 class ImageModel {
   //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-
-  const ImageModel({
-    required this.path,
-    required this.isLocal,
-    this.storagePath,
-  });
-
-  //============================================================================
-  //! PROPERTIES
+  //! FIELDS
   //============================================================================
 
   /// Local file path when isLocal == true.
@@ -32,4 +22,14 @@ class ImageModel {
   /// True if selected from the device.
   /// False if already stored in Supabase.
   final bool isLocal;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
+  const ImageModel({
+    required this.path,
+    required this.isLocal,
+    this.storagePath,
+  });
 }

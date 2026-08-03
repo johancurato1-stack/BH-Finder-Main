@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/models/inquiry_model.dart';
 import 'package:bh_finder/core/models/message_model.dart';
+import 'package:bh_finder/core/theme/app_colors.dart';
 
 class InquiryCard extends StatelessWidget {
   //============================================================================
-  //! VARIABLES
+  //! FIELDS
   //============================================================================
 
   final InquiryModel inquiry;
+
   final MessageModel message;
 
   //============================================================================
@@ -60,8 +62,8 @@ class InquiryCard extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        "INQUIRY",
-                        style: TextStyle(
+                        'INQUIRY',
+                        style: const TextStyle(
                           color: AppColors.tertiary,
                           fontSize: 11,
                           letterSpacing: 1.4,
@@ -74,14 +76,14 @@ class InquiryCard extends StatelessWidget {
 
                     _buildInfoRow(
                       Icons.home_work_rounded,
-                      inquiry.boardingHouseName,
+                      inquiry.propertyName,
                     ),
 
                     const SizedBox(height: 12),
 
                     _buildInfoRow(
                       Icons.meeting_room_rounded,
-                      inquiry.roomName ?? "Room",
+                      inquiry.roomName ?? 'Room',
                     ),
 
                     const SizedBox(height: 12),
@@ -104,6 +106,7 @@ class InquiryCard extends StatelessWidget {
 
             Row(
               mainAxisSize: MainAxisSize.min,
+
               children: [
                 Text(
                   message.formattedTime,
@@ -117,9 +120,9 @@ class InquiryCard extends StatelessWidget {
                   const SizedBox(width: 6),
 
                   Icon(
-                    message.statusIcon,
+                    _getMessageStatusIcon(),
                     size: 15,
-                    color: message.statusColor,
+                    color: _getMessageStatusColor(),
                   ),
                 ],
               ],
@@ -162,27 +165,27 @@ class InquiryCard extends StatelessWidget {
     switch (inquiry.status) {
       case InquiryStatus.pending:
         color = Colors.orange;
-        label = "Inquiry Pending";
+        label = 'Inquiry Pending';
         break;
 
       case InquiryStatus.accepted:
         color = Colors.green;
-        label = "Inquiry Accepted";
+        label = 'Inquiry Accepted';
         break;
 
       case InquiryStatus.rejected:
         color = Colors.red;
-        label = "Inquiry Rejected";
+        label = 'Inquiry Rejected';
         break;
 
       case InquiryStatus.reserved:
         color = Colors.blue;
-        label = "Inquiry Reserved";
+        label = 'Inquiry Reserved';
         break;
 
       case InquiryStatus.completed:
         color = Colors.purple;
-        label = "Inquiry Completed";
+        label = 'Inquiry Completed';
         break;
     }
 
@@ -199,5 +202,41 @@ class InquiryCard extends StatelessWidget {
         style: TextStyle(color: color, fontWeight: FontWeight.w600),
       ),
     );
+  }
+
+  //============================================================================
+  //! MESSAGE STATUS ICON
+  //============================================================================
+
+  IconData _getMessageStatusIcon() {
+    switch (message.status) {
+      case MessageStatus.sending:
+        return Icons.access_time;
+
+      case MessageStatus.sent:
+        return Icons.check;
+
+      case MessageStatus.delivered:
+        return Icons.done_all;
+
+      case MessageStatus.seen:
+        return Icons.done_all;
+    }
+  }
+
+  //============================================================================
+  //! MESSAGE STATUS COLOR
+  //============================================================================
+
+  Color _getMessageStatusColor() {
+    switch (message.status) {
+      case MessageStatus.seen:
+        return Colors.blue;
+
+      case MessageStatus.sending:
+      case MessageStatus.sent:
+      case MessageStatus.delivered:
+        return Colors.grey;
+    }
   }
 }

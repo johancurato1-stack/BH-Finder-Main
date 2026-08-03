@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+
+//============================================================================
+//! EMPTY SEARCH RESULTS SCREEN
+//============================================================================
+
 class EmptySearchResultsScreen extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const EmptySearchResultsScreen({super.key});
 
   //============================================================================
@@ -11,46 +21,62 @@ class EmptySearchResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return const AnimatedEntrance(
+      order: 0,
 
-        children: [
-          //============================================================================
-          //! ICON
-          //============================================================================
-          Icon(Icons.search_off_rounded, size: 42, color: AppColors.tertiary),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32),
 
-          SizedBox(height: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
 
-          //============================================================================
-          //! TITLE
-          //============================================================================
-          Text(
-            'No Boarding Houses Found',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Roboto',
-              color: AppColors.secondary,
-            ),
+            children: [
+              //==============================================================
+              //! ICON
+              //==============================================================
+              Icon(
+                Icons.search_off_rounded,
+                size: 54,
+                color: AppColors.tertiary,
+              ),
+
+              SizedBox(height: 20),
+
+              //==============================================================
+              //! TITLE
+              //==============================================================
+              Text(
+                'No Boarding Houses Found',
+                textAlign: TextAlign.center,
+
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Roboto',
+                  color: AppColors.secondary,
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              //==============================================================
+              //! SUBTITLE
+              //==============================================================
+              Text(
+                'Try adjusting your filters or search in another location.',
+                textAlign: TextAlign.center,
+
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.5,
+                  fontFamily: 'Roboto',
+                  color: AppColors.tertiary,
+                ),
+              ),
+            ],
           ),
-
-          SizedBox(height: 8),
-
-          //============================================================================
-          //! SUBTITLE
-          //============================================================================
-          Text(
-            'Try adjusting your filters\nor search another location.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              fontFamily: 'Roboto',
-              color: AppColors.tertiary,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:bh_finder/core/models/user_model.dart';
-import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/enums/enums.dart';
+
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
 import 'package:bh_finder/core/view_models/profile_view_model.dart';
+
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_storage_repository.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_radius.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
-import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
-import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
-import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
-
-import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
-import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 import 'package:bh_finder/shared/widgets/auth/auth_coordinator.dart';
 import 'package:bh_finder/shared/widgets/profile/editable_profile_avatar.dart';
-
-import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
+import 'package:bh_finder/shared/widgets/profile/menu_list_tile.dart';
+import 'package:bh_finder/shared/widgets/screens/settings_screen.dart';
+import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   //============================================================================
@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   //============================================================================
-  //! METHODS
+  //! SETTINGS
   //============================================================================
 
   void _openSettings(BuildContext context) {
@@ -98,25 +98,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildVerificationBadge(VerificationStatus status) {
+  //============================================================================
+  //! VERIFICATION BADGE
+  //============================================================================
+
+  Widget _buildVerificationBadge(UserVerificationStatus status) {
     IconData icon;
     String label;
     Color color;
 
     switch (status) {
-      case VerificationStatus.verified:
+      case UserVerificationStatus.verified:
         icon = Icons.verified;
         label = 'Verified';
         color = Colors.greenAccent;
         break;
 
-      case VerificationStatus.pending:
+      case UserVerificationStatus.pending:
         icon = Icons.hourglass_top_rounded;
         label = 'Pending';
         color = Colors.amberAccent;
         break;
 
-      case VerificationStatus.unverified:
+      case UserVerificationStatus.unverified:
         icon = Icons.dangerous_rounded;
         label = 'Not Verified';
         color = Colors.redAccent;
@@ -127,14 +131,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: color, size: 16),
-
         const SizedBox(width: AppSpacing.xs),
-
         Text(label, style: AppTextStyles.bodyMedium.copyWith(color: color)),
       ],
     );
   }
-
   //============================================================================
   //! BUILD
   //============================================================================
@@ -146,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, _) {
         final profile = _profileViewModel.profile;
 
-        if (_profileViewModel.loading || profile == null) {
+        if (_profileViewModel.isLoading || profile == null) {
           return const LoadingScreen();
         }
 
@@ -171,10 +172,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       //! PROFILE AVATAR
                       //==============================================================
                       EditableProfileAvatar(
-                        avatarUrl: SupabaseStorageRepository().getPublicUrl(
-                          'avatars',
-                          profile['avatar_path'].replaceFirst('avatars/', ''),
-                        ),
+                        avatarUrl:
+                            profile['avatar_path'] == null ||
+                                (profile['avatar_path'] as String).isEmpty
+                            ? null
+                            : SupabaseStorageRepository().getPublicUrl(
+                                'avatars',
+                                (profile['avatar_path'] as String).replaceFirst(
+                                  'avatars/',
+                                  '',
+                                ),
+                              ),
                         editable: true,
                         onTap: () async {
                           await _changeAvatar();
@@ -199,7 +207,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 1.1,
                               ),
                             ),
-
                             Text(
                               profile['email'] ?? '',
                               maxLines: 1,
@@ -209,11 +216,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 13,
                               ),
                             ),
-
                             const SizedBox(height: AppSpacing.sm),
-
                             _buildVerificationBadge(
-                              VerificationStatus.unverified,
+                              UserVerificationStatus.unverified,
                             ),
                           ],
                         ),
@@ -232,7 +237,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-
                 //==========================================================================
                 //! MENU
                 //==========================================================================
@@ -285,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               MaterialPageRoute(
                                 builder: (_) => const AuthCoordinator(),
                               ),
-                              (route) => false,
+                              (_) => false,
                             );
                           },
                         ),
@@ -299,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.info_rounded,
                           title: 'About BH Finder',
                           onTap: () {
-                            // TODO: Navigate to About Screen
+                            // TODO: Navigate to About Screen.
                           },
                         ),
 

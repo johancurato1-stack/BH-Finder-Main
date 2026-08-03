@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/shared/widgets/cards/property_room_card/widgets/property_room_image.dart';
-import 'package:bh_finder/shared/widgets/cards/property_room_card/widgets/property_room_info.dart';
-import 'package:bh_finder/shared/widgets/cards/property_room_card/widgets/property_room_arrow.dart';
+
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/cards/property_room_card/widgets/property_room_arrow.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/cards/property_room_card/widgets/property_room_image.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/cards/property_room_card/widgets/property_room_info.dart';
+
+//============================================================================
+//! PROPERTY ROOM CARD
+//============================================================================
 
 class PropertyRoomCard extends StatelessWidget {
-  //* Room data to display.
-  final RoomModel room;
-
-  //* Called when the card is tapped.
-  final VoidCallback onTap;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const PropertyRoomCard({super.key, required this.room, required this.onTap});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  /// Room data to display.
+  final RoomModel room;
+
+  /// Called when the card is tapped.
+  final VoidCallback onTap;
 
   //============================================================================
   //! BUILD
@@ -22,17 +35,9 @@ class PropertyRoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      //* Called when the user taps the room card.
       onTap: onTap,
-
       child: Container(
-        //* Space between room cards.
         margin: const EdgeInsets.only(bottom: 12),
-
-        //* Internal spacing.
-        padding: const EdgeInsets.all(12),
-
-        //* Card appearance.
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
@@ -41,26 +46,38 @@ class PropertyRoomCard extends StatelessWidget {
             width: 0.5,
           ),
         ),
+        clipBehavior: Clip.antiAlias,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //==============================================================
+              //! ROOM IMAGE
+              //==============================================================
+              PropertyRoomImage(room: room),
 
-        child: Row(
-          children: [
-            //============================================================================
-            //! ROOM IMAGE
-            //============================================================================
-            PropertyRoomImage(room: room),
+              //==============================================================
+              //! ROOM INFORMATION
+              //==============================================================
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: PropertyRoomInfo(room: room),
+                ),
+              ),
 
-            const SizedBox(width: 12),
-
-            //============================================================================
-            //! ROOM INFORMATION
-            //============================================================================
-            Expanded(child: PropertyRoomInfo(room: room)),
-
-            //============================================================================
-            //! ARROW INDICATOR
-            //============================================================================
-            PropertyRoomArrow(room: room),
-          ],
+              //==============================================================
+              //! ARROW INDICATOR
+              //==============================================================
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 40,
+                ),
+                child: PropertyRoomArrow(room: room),
+              ),
+            ],
+          ),
         ),
       ),
     );

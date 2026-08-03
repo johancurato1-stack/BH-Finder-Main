@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
+
+import 'package:bh_finder/shared/widgets/images/app_network_image.dart';
 
 //============================================================================
 //! PROPERTY CARD IMAGE
 //============================================================================
 
 class PropertyCardImage extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const PropertyCardImage({super.key, required this.data});
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
 
   final TenantPropertyCardData data;
 
-  Color _getStatusColor() {
+  //============================================================================
+  //! STATUS COLOR
+  //============================================================================
+
+  Color get _statusColor {
     switch (data.status) {
       case PropertyStatus.available:
         return const Color(0xFF00E676);
@@ -23,32 +39,53 @@ class PropertyCardImage extends StatelessWidget {
     }
   }
 
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(12),
-            bottomLeft: Radius.circular(12),
-          ),
-          child: Image.network(
-            data.coverImageUrl,
-            width: 132,
-            height: 128, // <- Match the card height
-            fit: BoxFit.cover,
+        //==============================================================
+        //! COVER IMAGE
+        //==============================================================
+        Hero(
+          tag: data.id,
+
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+            ),
+
+            child: SizedBox(
+              width: 132,
+              height: 128,
+
+              child: AppNetworkImage(
+                imageUrl: data.coverImageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
 
+        //==============================================================
+        //! STATUS INDICATOR
+        //==============================================================
         Positioned(
           top: 8,
           left: 8,
+
           child: Container(
             width: 14,
             height: 14,
+
             decoration: BoxDecoration(
-              color: _getStatusColor(),
+              color: _statusColor,
               shape: BoxShape.circle,
+
               border: Border.all(color: AppColors.white, width: 2),
             ),
           ),

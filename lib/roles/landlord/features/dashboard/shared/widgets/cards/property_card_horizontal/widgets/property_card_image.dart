@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
+
+import 'package:bh_finder/shared/widgets/images/app_network_image.dart';
 
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/property_card_horizontal/widgets/property_card_status_tag.dart';
 
 //============================================================================
-//! PROPERTY IMAGE
+//! PROPERTY CARD IMAGE
 //============================================================================
 
 class PropertyCardImage extends StatelessWidget {
@@ -58,16 +60,19 @@ class PropertyCardImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ClipRRect(
+        //==============================================================
+        //! PROPERTY IMAGE
+        //==============================================================
+        AppNetworkImage(
+          imageUrl: data.coverImageUrl,
+          height: 180,
+          width: double.infinity,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          child: Image.network(
-            data.coverImageUrl,
-            height: 180,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
         ),
 
+        //==============================================================
+        //! STATUS TAG
+        //==============================================================
         Positioned(
           top: 12,
           right: 12,

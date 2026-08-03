@@ -37,26 +37,39 @@ class LocationSelector extends StatelessWidget {
 
         const SizedBox(height: AppSpacing.lg),
 
-        _LocationOptionCard(
-          icon: Icons.my_location_rounded,
-          title: 'Use Current Location',
-          subtitle: 'Automatically detect your current location.',
-          value: LocationOption.gps,
-          groupValue: selectedOption,
-          isLocked: lockedOption == LocationOption.gps,
-          onTap: () => onChanged(LocationOption.gps),
-        ),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          child: Column(
+            key: ValueKey(selectedOption),
+            children: [
+              _LocationOptionCard(
+                icon: Icons.my_location_rounded,
+                title: 'Use Current Location',
+                subtitle: 'Automatically detect your current location.',
+                value: LocationOption.gps,
+                groupValue: selectedOption,
+                isLocked: lockedOption == LocationOption.gps,
+                onTap: () => onChanged(LocationOption.gps),
+              ),
 
-        const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
 
-        _LocationOptionCard(
-          icon: Icons.edit_location_alt_rounded,
-          title: 'Enter Address Manually',
-          subtitle: 'Enter the property address manually.',
-          value: LocationOption.manual,
-          groupValue: selectedOption,
-          isLocked: lockedOption == LocationOption.manual,
-          onTap: () => onChanged(LocationOption.manual),
+              _LocationOptionCard(
+                icon: Icons.edit_location_alt_rounded,
+                title: 'Enter Address Manually',
+                subtitle: 'Enter the property address manually.',
+                value: LocationOption.manual,
+                groupValue: selectedOption,
+                isLocked: lockedOption == LocationOption.manual,
+                onTap: () => onChanged(LocationOption.manual),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -97,7 +110,8 @@ class _LocationOptionCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppRadius.lg),
             onTap: onTap,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutCubic,
               padding: const EdgeInsets.all(AppSpacing.lg),
               decoration: BoxDecoration(
                 color: selected
@@ -108,13 +122,39 @@ class _LocationOptionCard extends StatelessWidget {
                   color: selected ? AppColors.primary : AppColors.tertiary,
                   width: 0.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: selected
+                        ? AppColors.primary.withValues(alpha: 0.10)
+                        : Colors.black.withValues(alpha: 0.02),
+                    blurRadius: selected ? 18 : 8,
+                    spreadRadius: selected ? 1 : 0,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    size: 28,
-                    color: selected ? AppColors.primary : AppColors.tertiary,
+                  AnimatedScale(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutBack,
+                    scale: selected ? 1.08 : 1.0,
+                    child: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      style: TextStyle(
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.tertiary,
+                      ),
+                      child: Icon(
+                        icon,
+                        size: 28,
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.tertiary,
+                      ),
+                    ),
                   ),
 
                   const SizedBox(width: AppSpacing.lg),
@@ -123,20 +163,43 @@ class _LocationOptionCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(title, style: AppTextStyles.bodyBold),
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          style: AppTextStyles.bodyBold.copyWith(
+                            color: selected
+                                ? AppColors.primary
+                                : AppTextStyles.bodyBold.color,
+                          ),
+                          child: Text(title),
+                        ),
 
                         const SizedBox(height: AppSpacing.xs),
 
-                        Text(subtitle, style: AppTextStyles.caption),
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          style: AppTextStyles.caption.copyWith(
+                            color: selected
+                                ? AppColors.primary.withValues(alpha: 0.8)
+                                : AppTextStyles.caption.color,
+                          ),
+                          child: Text(subtitle),
+                        ),
                       ],
                     ),
                   ),
 
-                  Radio<LocationOption>(
-                    value: value,
-                    groupValue: groupValue,
-                    activeColor: AppColors.primary,
-                    onChanged: isLocked ? null : (_) => onTap(),
+                  AnimatedScale(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOutBack,
+                    scale: selected ? 1.08 : 1.0,
+                    child: Radio<LocationOption>(
+                      value: value,
+                      groupValue: groupValue,
+                      activeColor: AppColors.primary,
+                      onChanged: isLocked ? null : (_) => onTap(),
+                    ),
                   ),
                 ],
               ),

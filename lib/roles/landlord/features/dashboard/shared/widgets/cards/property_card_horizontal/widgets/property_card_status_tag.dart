@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //============================================================================
-//! PROPERTY STATUS CHIP
+//! PROPERTY CARD STATUS TAG
 //============================================================================
 
 class PropertyCardStatusTag extends StatelessWidget {

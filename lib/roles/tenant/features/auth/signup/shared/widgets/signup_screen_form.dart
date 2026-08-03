@@ -7,7 +7,7 @@ import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/shared/widgets/dropdown_fields/primary_dropdown_field.dart';
 import 'package:bh_finder/shared/widgets/textfields/primary_text_field.dart';
 
-import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
 
 class SignupScreenForm extends StatelessWidget {
   final AuthViewModel viewModel;

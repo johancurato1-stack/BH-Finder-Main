@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
 
 class PropertyCardVerticalInfo extends StatelessWidget {
   //==========================================================================

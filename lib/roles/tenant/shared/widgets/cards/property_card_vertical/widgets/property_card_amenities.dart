@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+
+import 'package:bh_finder/core/theme/app_colors.dart';
+
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
 //============================================================================
 //! PROPERTY CARD AMENITIES
@@ -15,12 +18,14 @@ class PropertyCardAmenities extends StatelessWidget {
   const PropertyCardAmenities({super.key, required this.data});
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final TenantPropertyCardData data;
 
   static const int _maxVisibleAmenities = 3;
+
+  static const double _iconSize = 11;
 
   //============================================================================
   //! ICON
@@ -73,14 +78,18 @@ class PropertyCardAmenities extends StatelessWidget {
   //! TILE
   //============================================================================
 
-  Widget _buildTile(Widget child) {
+  Widget _buildTile({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(3),
+
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
+
         border: Border.all(color: Colors.grey.shade300),
+
         borderRadius: BorderRadius.circular(4),
       ),
+
       child: child,
     );
   }
@@ -93,30 +102,40 @@ class PropertyCardAmenities extends StatelessWidget {
   Widget build(BuildContext context) {
     final visibleAmenities = data.amenities.take(_maxVisibleAmenities).toList();
 
-    final remaining = data.amenities.length - visibleAmenities.length;
+    final remainingCount = data.amenities.length - visibleAmenities.length;
 
     return Wrap(
       spacing: 4,
       runSpacing: 4,
+
       children: [
+        //==============================================================
+        //! VISIBLE AMENITIES
+        //==============================================================
         ...visibleAmenities.map(
           (amenity) => _buildTile(
-            Icon(
+            child: Icon(
               _iconForAmenity(amenity),
-              size: 11,
-              color: Colors.grey.shade600,
+
+              size: _iconSize,
+              color: AppColors.tertiary,
             ),
           ),
         ),
 
-        if (remaining > 0)
+        //==============================================================
+        //! REMAINING COUNT
+        //==============================================================
+        if (remainingCount > 0)
           _buildTile(
-            Text(
-              '+$remaining',
-              style: TextStyle(
+            child: Text(
+              '+$remainingCount',
+
+              style: const TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
-                color: Colors.grey.shade600,
+                fontFamily: 'Roboto',
+                color: AppColors.tertiary,
               ),
             ),
           ),

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
+//==========================================================================
+//! DASHBOARD SCREEN HEADER
+//==========================================================================
+
 class DashboardScreenHeader extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR

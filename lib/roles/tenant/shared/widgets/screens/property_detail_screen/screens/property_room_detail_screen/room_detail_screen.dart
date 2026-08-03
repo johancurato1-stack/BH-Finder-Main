@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
-import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
 import 'package:bh_finder/core/models/image_model.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/ui_models/room_detail_data.dart';
 
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/date_info.dart';
 import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
+import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 import 'package:bh_finder/shared/widgets/others/section_title.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_bottom_button.dart';
@@ -15,8 +17,6 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/widgets/room_detail_photos_section.dart';
-
-import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
 //============================================================================
 //! ROOM DETAIL SCREEN
@@ -60,11 +60,14 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
   late final PageController _pageController;
 
-  Timer? _timer;
+  Timer? _autoScrollTimer;
+
+  Timer? _resumeAutoScrollTimer;
 
   List<ImageModel> _images = [];
 
   int _currentPage = 0;
+
   //============================================================================
   //! LIFECYCLE
   //============================================================================
@@ -78,6 +81,17 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     _loadRoom();
   }
 
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+
+    _resumeAutoScrollTimer?.cancel();
+
+    _pageController.dispose();
+
+    super.dispose();
+  }
+
   //============================================================================
   //! LOAD ROOM
   //============================================================================
@@ -89,26 +103,26 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
     setState(() {
       _data = data;
-
       _images = data.images;
-
       _loading = false;
     });
 
-    _startImageTimer();
+    _startAutoScroll();
   }
 
   //============================================================================
-  //! IMAGE TIMER
+  //! START AUTO SCROLL
   //============================================================================
 
-  void _startImageTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+  void _startAutoScroll() {
+    _autoScrollTimer?.cancel();
+
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!_pageController.hasClients) return;
 
       if (_images.isEmpty) return;
 
-      int nextPage = (_pageController.page?.toInt() ?? 0) + 1;
+      int nextPage = _currentPage + 1;
 
       if (nextPage >= _images.length) {
         nextPage = 0;
@@ -116,21 +130,25 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
       _pageController.animateToPage(
         nextPage,
-
-        duration: const Duration(milliseconds: 500),
-
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
       );
     });
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
+  //============================================================================
+  //! PAUSE AUTO SCROLL
+  //============================================================================
 
-    _pageController.dispose();
+  void _pauseAutoScroll() {
+    _autoScrollTimer?.cancel();
 
-    super.dispose();
+    _resumeAutoScrollTimer?.cancel();
+
+    _resumeAutoScrollTimer = Timer(
+      const Duration(seconds: 10),
+      _startAutoScroll,
+    );
   }
 
   //============================================================================
@@ -142,12 +160,12 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     if (_loading || _data == null) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     final data = _data!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
 
@@ -166,7 +184,10 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       ImageCarousel(
                         pageController: _pageController,
                         images: _images.map((image) => image.path).toList(),
+
                         onPageChanged: (index) {
+                          _pauseAutoScroll();
+
                           setState(() {
                             _currentPage = index;
                           });
@@ -175,7 +196,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
                       RoomDetailFloatingActions(
                         onBack: () => Navigator.pop(context),
-
                         onShare: () {},
                       ),
                     ],
@@ -184,7 +204,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
                 PageIndicator(
                   currentPage: _currentPage,
-
                   pageCount: _images.length,
                 ),
 
@@ -203,22 +222,27 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
                       const Divider(
                         height: 32,
-
                         thickness: .5,
-
                         color: AppColors.tertiary,
                       ),
 
                       //========================================================
                       //! ROOM PHOTOS
                       //========================================================
-                      RoomDetailPhotosSection(onViewAll: () {}),
+                      RoomDetailPhotosSection(
+                        images: _images,
+                        pageController: _pageController,
+                        onImageSelected: _pauseAutoScroll,
+                        onViewAll: () {
+                          // TODO: Open room photo gallery.
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
 
                       const Divider(
                         height: 32,
-
                         thickness: .5,
-
                         color: AppColors.tertiary,
                       ),
 
@@ -231,14 +255,25 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
                       Text(
                         data.description,
-
                         style: const TextStyle(
                           fontSize: 14,
-
                           color: AppColors.secondary,
-
                           height: 1.5,
                         ),
+                      ),
+
+                      const Divider(
+                        height: 32,
+                        thickness: .5,
+                        color: AppColors.tertiary,
+                      ),
+
+                      //========================================================
+                      //! DATE INFORMATION
+                      //========================================================
+                      DateInfo(
+                        createdAt: data.createdAt,
+                        updatedAt: data.updatedAt,
                       ),
                     ],
                   ),

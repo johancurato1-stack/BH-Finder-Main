@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/repositories.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 
-import 'package:bh_finder/core/view_models/profile_view_model.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_storage_repository.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
+
+import 'package:bh_finder/core/view_models/profile_view_model.dart';
+
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
 
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_greeting_section.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_header.dart';
 import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_screen_recent_inquiries_section.dart';
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_carousel.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/dashboard_property_card_carousel.dart';
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
-
-import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
-
-import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
-
-import 'package:bh_finder/core/property_and_room_adding_updating/supabase/supabase_storage_repository.dart';
 
 //============================================================================
 //! DASHBOARD SCREEN
@@ -51,18 +51,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final PropertyRepository _propertyRepository =
       Repositories.instance.propertyRepository;
 
+  final SupabaseStorageRepository _storageRepository =
+      SupabaseStorageRepository();
+
   //==========================================================================
   //! VIEW MODELS
   //==========================================================================
 
-  final ProfileViewModel _profileViewModel = ProfileViewModel(
+  late final ProfileViewModel _profileViewModel = ProfileViewModel(
     repository: SupabaseProfileRepository(),
-    storageRepository: SupabaseStorageRepository(),
+    storageRepository: _storageRepository,
     authRepository: SupabaseAuthRepository(),
   );
 
   //==========================================================================
-  //! VARIABLES
+  //! STATE
   //==========================================================================
 
   int _currentPage = 0;
@@ -89,6 +92,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   //==========================================================================
 
   Future<void> _loadProperties() async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+
     final properties = await _propertyRepository.getLandlordPropertyCards();
 
     if (!mounted) return;
@@ -97,6 +106,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _properties = properties;
       _loading = false;
     });
+  }
+
+  //==========================================================================
+  //! REFRESH
+  //==========================================================================
+
+  Future<void> _refreshProperties() async {
+    await _loadProperties();
+  }
+
+  //==========================================================================
+  //! NAVIGATION
+  //==========================================================================
+
+  Route<T> _buildSlideRoute<T>(Widget page) {
+    return PageRouteBuilder<T>(
+      pageBuilder: (_, __, ___) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0, 1);
+        const end = Offset.zero;
+        const curve = Curves.easeOut;
+
+        final offsetAnimation = animation.drive(
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve)),
+        );
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 
   //==========================================================================
@@ -110,14 +148,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context, _) {
         final profile = _profileViewModel.profile;
 
-        if (_loading || _profileViewModel.loading || profile == null) {
+        if (_loading || _profileViewModel.isLoading || profile == null) {
           return const Scaffold(
             backgroundColor: AppColors.background,
             body: Center(child: CircularProgressIndicator()),
           );
         }
-
-        final properties = _properties;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -125,121 +161,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  //==============================================================
+                  //==========================================================
                   //! HEADER
-                  //==============================================================
-                  DashboardScreenHeader(onNotificationPressed: () {}),
+                  //==========================================================
+                  AnimatedEntrance(
+                    order: 0,
+                    child: DashboardScreenHeader(onNotificationPressed: () {}),
+                  ),
 
-                  //==============================================================
+                  //==========================================================
                   //! GREETING
-                  //==============================================================
-                  DashboardScreenGreetingSection(
-                    firstName: profile['first_name'] ?? '',
-                    avatarUrl: SupabaseStorageRepository().getPublicUrl(
-                      'avatars',
-                      (profile['avatar_path'] ?? '').replaceFirst(
-                        'avatars/',
-                        '',
+                  //==========================================================
+                  AnimatedEntrance(
+                    order: 1,
+                    child: DashboardScreenGreetingSection(
+                      firstName: profile['first_name'] ?? '',
+                      avatarUrl: _storageRepository.getPublicUrl(
+                        'avatars',
+                        (profile['avatar_path'] ?? '').replaceFirst(
+                          'avatars/',
+                          '',
+                        ),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  //==============================================================
+                  //==========================================================
                   //! PROPERTY CAROUSEL
-                  //==============================================================
-                  PropertyCardCarousel(
-                    properties: properties,
-                    onPageChanged: (page) {
-                      setState(() {
-                        _currentPage = page;
-                      });
-                    },
-                    onPropertyTap: (property) async {
-                      final updated = await Navigator.push<bool>(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) =>
-                              PropertyDetailScreen(propertyId: property.id),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(0, 1);
-                                const end = Offset.zero;
-                                const curve = Curves.easeOut;
+                  //==========================================================
+                  AnimatedEntrance(
+                    order: 2,
+                    child: DashboardPropertyCardCarousel(
+                      properties: _properties,
 
-                                final offsetAnimation = animation.drive(
-                                  Tween(
-                                    begin: begin,
-                                    end: end,
-                                  ).chain(CurveTween(curve: curve)),
-                                );
+                      onPageChanged: (page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
 
-                                return SlideTransition(
-                                  position: offsetAnimation,
-                                  child: child,
-                                );
-                              },
-                        ),
-                      );
+                      onPropertyTap: (property) async {
+                        final updated = await Navigator.push<bool>(
+                          context,
+                          _buildSlideRoute(
+                            PropertyDetailScreen(propertyId: property.id),
+                          ),
+                        );
 
-                      if (!mounted || updated != true) return;
+                        if (!mounted || updated != true) {
+                          return;
+                        }
 
-                      setState(() {
-                        _loading = true;
-                      });
+                        await _refreshProperties();
+                      },
 
-                      await _loadProperties();
-                    },
-                    onAddProperty: () async {
-                      final created = await Navigator.push<bool>(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) =>
-                              const AddPropertyScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(0, 1);
-                                const end = Offset.zero;
-                                const curve = Curves.easeOut;
+                      onAddProperty: () async {
+                        final created = await Navigator.push<bool>(
+                          context,
+                          _buildSlideRoute(const AddPropertyScreen()),
+                        );
 
-                                final offsetAnimation = animation.drive(
-                                  Tween(
-                                    begin: begin,
-                                    end: end,
-                                  ).chain(CurveTween(curve: curve)),
-                                );
+                        if (!mounted || created != true) {
+                          return;
+                        }
 
-                                return SlideTransition(
-                                  position: offsetAnimation,
-                                  child: child,
-                                );
-                              },
-                        ),
-                      );
-
-                      if (!mounted || created != true) return;
-
-                      setState(() {
-                        _loading = true;
-                      });
-
-                      await _loadProperties();
-                    },
+                        await _refreshProperties();
+                      },
+                    ),
                   ),
 
-                  //==============================================================
+                  //==========================================================
                   //! PAGE INDICATOR
-                  //==============================================================
-                  PageIndicator(
-                    currentPage: _currentPage,
-                    pageCount: properties.length + 1,
+                  //==========================================================
+                  AnimatedEntrance(
+                    order: 3,
+                    child: PageIndicator(
+                      currentPage: _currentPage,
+                      pageCount: _properties.length + 1,
+                    ),
                   ),
 
-                  //==============================================================
+                  const SizedBox(height: 18),
+
+                  //==========================================================
                   //! RECENT INQUIRIES
-                  //==============================================================
-                  const DashboardScreenRecentInquiriesSection(),
+                  //==========================================================
+                  const AnimatedEntrance(
+                    order: 4,
+                    child: DashboardScreenRecentInquiriesSection(),
+                  ),
 
                   const SizedBox(height: 50),
                 ],

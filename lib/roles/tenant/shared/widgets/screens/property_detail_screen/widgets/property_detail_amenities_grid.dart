@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 //============================================================================
@@ -15,17 +16,18 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
   const PropertyDetailAmenitiesGrid({super.key, required this.amenities});
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final List<Amenity> amenities;
+
+  static const double _spacing = 10;
 
   //============================================================================
   //! AMENITY ICON
   //============================================================================
 
-  /// Returns the appropriate icon for each amenity.
-  IconData _getAmenityIcon(Amenity amenity) {
+  IconData _iconForAmenity(Amenity amenity) {
     switch (amenity) {
       case Amenity.wifi:
         return Icons.wifi;
@@ -72,8 +74,7 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
   //! AMENITY LABEL
   //============================================================================
 
-  /// Returns a readable amenity label.
-  String _getAmenityLabel(Amenity amenity) {
+  String _labelForAmenity(Amenity amenity) {
     switch (amenity) {
       case Amenity.wifi:
         return 'Wi-Fi';
@@ -123,12 +124,13 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 10,
-      runSpacing: 10,
+      spacing: _spacing,
+      runSpacing: _spacing,
+
       children: amenities.map((amenity) {
         return _AmenityBox(
-          title: _getAmenityLabel(amenity),
-          icon: _getAmenityIcon(amenity),
+          title: _labelForAmenity(amenity),
+          icon: _iconForAmenity(amenity),
         );
       }).toList(),
     );
@@ -140,38 +142,68 @@ class PropertyDetailAmenitiesGrid extends StatelessWidget {
 //============================================================================
 
 class _AmenityBox extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const _AmenityBox({required this.title, required this.icon});
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
 
   final String title;
 
   final IconData icon;
 
+  //============================================================================
+  //! BUILD
+  //============================================================================
+
   @override
   Widget build(BuildContext context) {
+    final width = (MediaQuery.sizeOf(context).width - 70) / 4;
+
     return Container(
-      width: (MediaQuery.of(context).size.width - 70) / 4,
+      width: width,
+
       padding: const EdgeInsets.symmetric(vertical: 12),
+
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
+
         borderRadius: BorderRadius.circular(10),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.1),
+            color: AppColors.black.withValues(alpha: .10),
             blurRadius: 3,
-            offset: const Offset(0, 0),
           ),
         ],
       ),
+
       child: Column(
         children: [
+          //==============================================================
+          //! ICON
+          //==============================================================
           Icon(icon, size: 24, color: AppColors.tertiary),
 
           const SizedBox(height: 6),
 
+          //==============================================================
+          //! LABEL
+          //==============================================================
           Text(
             title,
+
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 10, color: AppColors.tertiary),
+
+            style: const TextStyle(
+              fontSize: 10,
+              fontFamily: 'Roboto',
+              color: AppColors.tertiary,
+            ),
           ),
         ],
       ),

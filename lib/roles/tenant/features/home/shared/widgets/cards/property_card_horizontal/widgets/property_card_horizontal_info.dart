@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/property_card_horizontal/widgets/property_card_horizontal_footer.dart';
 

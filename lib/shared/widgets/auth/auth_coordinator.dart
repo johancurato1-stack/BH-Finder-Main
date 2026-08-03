@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/repositories/profile_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/profile_repository.dart';
 import 'package:bh_finder/core/repositories/supabase/supabase_profile_repository.dart';
 
-import 'package:bh_finder/core/authentication/view_models/auth_state_view_model.dart';
+import 'package:bh_finder/core/services/presence_service.dart';
+
+import 'package:bh_finder/core/view_models/auth_state_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
-import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
 import 'package:bh_finder/roles/tenant/features/auth/forgot_password/screens/reset_password_screen.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/navigation/screens/tenant_navigation_screen.dart';
+import 'package:bh_finder/roles/landlord/shared/widgets/navigation/screens/landlord_navigation_screen.dart';
+
 import 'package:bh_finder/shared/widgets/splash/screens/loading_screen.dart';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+//============================================================================
+//! AUTH COORDINATOR
+//============================================================================
 
 class AuthCoordinator extends StatefulWidget {
   const AuthCoordinator({super.key});
@@ -28,6 +36,8 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
   final AuthStateViewModel _authViewModel = AuthStateViewModel();
 
   final ProfileRepository _profileRepository = SupabaseProfileRepository();
+
+  late final PresenceService _presenceService;
 
   //============================================================================
   //! STATE
@@ -95,12 +105,31 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
   void initState() {
     super.initState();
 
+    _presenceService = PresenceService(profileRepository: _profileRepository);
+
     _authViewModel.initialize();
 
     _listenAuthChanges();
 
     _checkSession();
   }
+
+  @override
+  void dispose() {
+    _presenceService.stop();
+
+    if (_authListener != null) {
+      _authViewModel.removeListener(_authListener!);
+    }
+
+    _authViewModel.dispose();
+
+    super.dispose();
+  }
+
+  //============================================================================
+  //! CHECK SESSION
+  //============================================================================
 
   Future<void> _checkSession() async {
     if (!mounted) return;
@@ -109,7 +138,13 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
       _loading = true;
     });
 
+    //==========================================================================
+    //! NO SESSION
+    //==========================================================================
+
     if (!_authViewModel.isLoggedIn) {
+      _presenceService.stop();
+
       await Future.delayed(const Duration(seconds: 2));
 
       if (!mounted) return;
@@ -122,7 +157,13 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
       return;
     }
 
+    //==========================================================================
+    //! LOAD PROFILE
+    //==========================================================================
+
     try {
+      await _presenceService.start();
+
       final profile = await _profileRepository.getCurrentProfile();
 
       if (!mounted) return;
@@ -138,17 +179,6 @@ class _AuthCoordinatorState extends State<AuthCoordinator> {
         _loading = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    if (_authListener != null) {
-      _authViewModel.removeListener(_authListener!);
-    }
-
-    _authViewModel.dispose();
-
-    super.dispose();
   }
 
   //============================================================================

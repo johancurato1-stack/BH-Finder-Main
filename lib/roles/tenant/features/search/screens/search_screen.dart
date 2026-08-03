@@ -1,19 +1,20 @@
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_header.dart';
-import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_filters_body.dart';
+import 'package:bh_finder/core/models/search_filter_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/search/screens/search_results_screen.dart';
 
-import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
-
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_filters_body.dart';
+import 'package:bh_finder/roles/tenant/features/search/shared/widgets/search_screen/search_screen_header.dart';
 
 //============================================================================
 //! SEARCH SCREEN
@@ -33,10 +34,14 @@ class SearchScreen extends StatefulWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! CALLBACKS
   //============================================================================
 
   final VoidCallback onBackPressed;
+
+  //============================================================================
+  //! REPOSITORIES
+  //============================================================================
 
   final PropertyRepository propertyRepository;
 
@@ -56,7 +61,7 @@ class SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   //============================================================================
-  //! SEARCH FILTER
+  //! FILTER
   //============================================================================
 
   final SearchFilterModel _filter = SearchFilterModel();
@@ -72,10 +77,10 @@ class SearchScreenState extends State<SearchScreen> {
   }
 
   //============================================================================
-  //! RESET FILTERS
+  //! RESET SEARCH
   //============================================================================
 
-  void _resetFilters() {
+  void resetSearch() {
     setState(() {
       _searchController.clear();
       _filter.reset();
@@ -83,15 +88,7 @@ class SearchScreenState extends State<SearchScreen> {
   }
 
   //============================================================================
-  //! RESET SEARCH
-  //============================================================================
-
-  void resetSearch() {
-    _resetFilters();
-  }
-
-  //============================================================================
-  //! REFRESH UI
+  //! REFRESH
   //============================================================================
 
   void _refresh() {
@@ -102,13 +99,11 @@ class SearchScreenState extends State<SearchScreen> {
   //! SHOW RESULTS
   //============================================================================
 
-  Future<void> _showResults() async {
-    if (!mounted) return;
-
+  void _openResults() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchResultsScreen(
+        builder: (_) => SearchResultsScreen(
           filter: _filter.copyWith(query: _searchController.text),
           repository: widget.propertyRepository,
           roomRepository: widget.roomRepository,
@@ -126,34 +121,44 @@ class SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: Column(
           children: [
-            //==========================================================================
+            //==============================================================
             //! HEADER
-            //==========================================================================
-            SearchScreenHeader(onBackPressed: widget.onBackPressed),
+            //==============================================================
+            AnimatedEntrance(
+              order: 0,
+              child: SearchScreenHeader(onBackPressed: widget.onBackPressed),
+            ),
 
-            //==========================================================================
+            //==============================================================
             //! FILTERS
-            //==========================================================================
+            //==============================================================
             Expanded(
-              child: SearchScreenFilterBody(
-                controller: _searchController,
-                filter: _filter,
-                onReset: _resetFilters,
-                onChanged: _refresh,
+              child: AnimatedEntrance(
+                order: 1,
+                child: SearchScreenFilterBody(
+                  controller: _searchController,
+                  filter: _filter,
+                  onReset: resetSearch,
+                  onChanged: _refresh,
+                ),
               ),
             ),
 
-            //==========================================================================
-            //! SHOW RESULTS BUTTON
-            //==========================================================================
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 46),
-              child: PrimaryButton(
-                text: 'Show Results',
-                onPressed: _showResults,
+            //==============================================================
+            //! BUTTON
+            //==============================================================
+            AnimatedEntrance(
+              order: 2,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 15, 20, 46),
+                child: PrimaryButton(
+                  text: 'Show Results',
+                  onPressed: _openResults,
+                ),
               ),
             ),
           ],

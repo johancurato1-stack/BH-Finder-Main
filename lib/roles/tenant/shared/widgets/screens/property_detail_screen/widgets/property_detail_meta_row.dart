@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
+
+import 'package:bh_finder/core/ui_models/property_detail_data.dart';
 
 //============================================================================
-//! PROPERTY META ROW
+//! PROPERTY DETAIL META ROW
 //============================================================================
 
 class PropertyDetailMetaRow extends StatelessWidget {
@@ -16,7 +18,7 @@ class PropertyDetailMetaRow extends StatelessWidget {
   const PropertyDetailMetaRow({super.key, required this.data});
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final PropertyDetailData data;
@@ -25,9 +27,8 @@ class PropertyDetailMetaRow extends StatelessWidget {
   //! GENDER LABEL
   //============================================================================
 
-  /// Returns a readable gender preference.
-  String _getGenderLabel(GenderPreference gender) {
-    switch (gender) {
+  String get _genderLabel {
+    switch (data.genderPreference) {
       case GenderPreference.male:
         return 'Male';
 
@@ -47,14 +48,20 @@ class PropertyDetailMetaRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _MetaChip(
-          icon: Icons.person_outline,
-          label: _getGenderLabel(data.genderPreference),
-        ),
+        //==============================================================
+        //! GENDER
+        //==============================================================
+        _MetaChip(icon: Icons.person_outline_rounded, label: _genderLabel),
 
         const SizedBox(width: 8),
 
-        _MetaChip(icon: Icons.meeting_room, label: '${data.roomCount} Rooms'),
+        //==============================================================
+        //! ROOM COUNT
+        //==============================================================
+        _MetaChip(
+          icon: Icons.meeting_room_rounded,
+          label: '${data.roomCount} ${data.roomCount == 1 ? 'Room' : 'Rooms'}',
+        ),
       ],
     );
   }
@@ -65,35 +72,59 @@ class PropertyDetailMetaRow extends StatelessWidget {
 //============================================================================
 
 class _MetaChip extends StatelessWidget {
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
   const _MetaChip({required this.icon, required this.label});
 
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
   final IconData icon;
+
   final String label;
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
+
         borderRadius: BorderRadius.circular(8),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.1),
+            color: AppColors.black.withValues(alpha: .10),
             blurRadius: 3,
-            offset: const Offset(0, 0),
           ),
         ],
       ),
+
       child: Row(
         mainAxisSize: MainAxisSize.min,
+
         children: [
+          //============================================================
+          //! ICON
+          //============================================================
           Icon(icon, size: 14, color: AppColors.tertiary),
 
           const SizedBox(width: 4),
 
+          //============================================================
+          //! LABEL
+          //============================================================
           Text(
             label,
+
             style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,

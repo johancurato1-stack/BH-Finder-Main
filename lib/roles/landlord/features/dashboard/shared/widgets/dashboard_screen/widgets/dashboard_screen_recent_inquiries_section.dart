@@ -8,6 +8,10 @@ import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashb
 
 import 'package:bh_finder/roles/landlord/features/dashboard/data/mock_data/mock_inquires.dart';
 
+//==========================================================================
+//! DASHBOARD SCREEN RECENT INQUIRIES SECTION
+//==========================================================================
+
 class DashboardScreenRecentInquiriesSection extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR

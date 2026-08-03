@@ -6,11 +6,11 @@ import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_radius.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/models/add_room_request.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/add_room_view_model.dart';
+import 'package:bh_finder/core/models/add_room_request.dart';
+import 'package:bh_finder/core/ui_models/room_detail_data.dart';
+import 'package:bh_finder/core/view_models/add_room_view_model.dart';
 import 'package:bh_finder/core/models/image_model.dart';
-import 'package:bh_finder/core/repositories/repositories.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';

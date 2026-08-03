@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/room_detail_data.dart';
+import 'package:bh_finder/core/ui_models/room_detail_data.dart';
 
 //============================================================================
 //! ROOM HEADER

@@ -44,7 +44,56 @@ enum ResponseTime {
 }
 
 //============================================================================
-//! VERFICATION STATUS
+//! VERIFICATION STATUS
 //============================================================================
 
-enum VerificationStatus { pending, verified, rejected }
+enum VerificationStatus { notSubmitted, pending, approved, rejected }
+
+//============================================================================
+//! USER VERIFICATION STATUS
+//============================================================================
+
+enum UserVerificationStatus { verified, pending, unverified }
+
+//============================================================================
+//! MESSAGE TYPE
+//============================================================================
+
+enum MessageType { text, inquiry, system }
+
+//============================================================================
+//! MESSAGE STATUS
+//============================================================================
+
+enum MessageStatus { sending, sent, delivered, seen }
+
+//============================================================================
+//! INQUIRY STATUS
+//============================================================================
+
+enum InquiryStatus { pending, accepted, rejected, reserved, completed }
+
+//============================================================================
+//! VALIDATION STATE
+//============================================================================
+enum ValidationState { neutral, valid, invalid }
+
+//============================================================================
+//! ADD PROPERTY VALIDATION RESULT
+//============================================================================
+
+enum AddPropertyValidationResult { success, photos, title, location, amenities }
+
+//============================================================================
+//! ADD ROOM VALIDATION RESULT
+//============================================================================
+
+enum AddRoomValidationResult {
+  success,
+  photos,
+  title,
+  price,
+  capacity,
+  description,
+  gender,
+}

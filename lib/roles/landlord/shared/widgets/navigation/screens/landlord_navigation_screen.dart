@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/repositories.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
@@ -41,20 +42,26 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
       Repositories.instance.propertyRepository;
 
   //==========================================================================
-  //! VARIABLES
+  //! STATE
   //==========================================================================
 
   int _currentIndex = 0;
 
   //==========================================================================
-  //! METHODS
+  //! NAVIGATION
   //==========================================================================
 
-  void _goToDashboard() {
+  void _navigateTo(int index) {
+    if (_currentIndex == index) return;
+
+    HapticFeedback.selectionClick();
+
     setState(() {
-      _currentIndex = 0;
+      _currentIndex = index;
     });
   }
+
+  void _goToDashboard() => _navigateTo(0);
 
   //==========================================================================
   //! BUILD
@@ -62,7 +69,7 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [
+    final screens = <Widget>[
       const DashboardScreen(),
 
       PropertiesScreen(
@@ -72,13 +79,7 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
 
       MessagesScreen(onBackPressed: _goToDashboard),
 
-      ProfileScreen(
-        onNavigateToTab: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
+      ProfileScreen(onNavigateToTab: _navigateTo),
     ];
 
     return Scaffold(
@@ -87,11 +88,7 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
       bottomNavigationBar: LandlordBottomNavigationBar(
         currentIndex: _currentIndex,
         showMessagesBadge: false,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _navigateTo,
       ),
     );
   }

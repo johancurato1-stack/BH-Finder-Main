@@ -1,16 +1,18 @@
-//============================================================================
-//! VERIFICATION STATUS
-//============================================================================
-enum VerificationStatus { verified, pending, unverified }
+import 'package:bh_finder/core/enums/enums.dart';
 
 //============================================================================
-//! VARIABLES
+//! USER MODEL
 //============================================================================
+
 class UserModel {
+  //============================================================================
+  //! FIELDS
+  //============================================================================
+
   final String name;
   final String email;
   final String avatarUrl;
-  final VerificationStatus verificationStatus;
+  final UserVerificationStatus verificationStatus;
   final int favoritesCount;
   final int recentlyViewedCount;
   final int inquiriesCount;
@@ -19,6 +21,7 @@ class UserModel {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
+
   const UserModel({
     required this.name,
     required this.email,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/repositories/repositories.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
 
 import 'package:bh_finder/roles/tenant/features/favorites/screens/favorites_screen.dart';
 import 'package:bh_finder/roles/tenant/features/home/screens/home_screen.dart';
@@ -11,7 +12,7 @@ import 'package:bh_finder/roles/tenant/features/messages/screens/messages_screen
 import 'package:bh_finder/roles/tenant/features/profile/screens/profile_screen.dart';
 import 'package:bh_finder/roles/tenant/features/search/screens/search_screen.dart';
 
-import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/app_bottom_navigation_bar.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/navigation/widgets/tenant_bottom_navigation_bar.dart';
 
 //============================================================================
 //! TENANT NAVIGATION SCREEN
@@ -21,11 +22,10 @@ class TenantNavigationScreen extends StatefulWidget {
   const TenantNavigationScreen({super.key});
 
   @override
-  State<TenantNavigationScreen> createState() =>
-      _TenantNavigationWrapperState();
+  State<TenantNavigationScreen> createState() => _TenantNavigationScreenState();
 }
 
-class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
+class _TenantNavigationScreenState extends State<TenantNavigationScreen> {
   //============================================================================
   //! REPOSITORIES
   //============================================================================
@@ -39,7 +39,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       Repositories.instance.favoriteRepository;
 
   //============================================================================
-  //! SEARCH
+  //! KEYS
   //============================================================================
 
   final GlobalKey<SearchScreenState> _searchScreenKey =
@@ -59,24 +59,50 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       _hasUnreadNotifications || _hasUnreadLandlordMessages;
 
   //============================================================================
+  //! NAVIGATION
+  //============================================================================
+
+  void _navigateTo(int index) {
+    if (_currentIndex == index) return;
+
+    HapticFeedback.selectionClick();
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void _goHome() {
+    _navigateTo(0);
+  }
+
+  void _markNotificationsRead() {
+    if (!_hasUnreadNotifications) return;
+
+    setState(() {
+      _hasUnreadNotifications = false;
+    });
+  }
+
+  void _onTabSelected(int index) {
+    if (_currentIndex == 1 && index != 1) {
+      _searchScreenKey.currentState?.resetSearch();
+    }
+
+    _navigateTo(index);
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
   @override
   Widget build(BuildContext context) {
-    final screens = [
+    final screens = <Widget>[
       HomeScreen(
         hasNotification: _hasUnreadNotifications,
-        onNotificationsRead: () {
-          setState(() {
-            _hasUnreadNotifications = false;
-          });
-        },
-        onSearchPressed: () {
-          setState(() {
-            _currentIndex = 1;
-          });
-        },
+        onNotificationsRead: _markNotificationsRead,
+        onSearchPressed: () => _navigateTo(1),
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
         favoriteRepository: _favoriteRepository,
@@ -86,10 +112,7 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
         key: _searchScreenKey,
         onBackPressed: () {
           _searchScreenKey.currentState?.resetSearch();
-
-          setState(() {
-            _currentIndex = 0;
-          });
+          _goHome();
         },
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
@@ -97,47 +120,23 @@ class _TenantNavigationWrapperState extends State<TenantNavigationScreen> {
       ),
 
       FavoritesScreen(
-        onBackPressed: () {
-          setState(() {
-            _currentIndex = 0;
-          });
-        },
+        onBackPressed: _goHome,
         propertyRepository: _propertyRepository,
         roomRepository: _roomRepository,
         favoriteRepository: _favoriteRepository,
       ),
 
-      MessagesScreen(
-        onBackPressed: () {
-          setState(() {
-            _currentIndex = 0;
-          });
-        },
-      ),
+      MessagesScreen(onBackPressed: _goHome),
 
-      ProfileScreen(
-        onNavigateToTab: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
+      ProfileScreen(onNavigateToTab: _navigateTo),
     ];
 
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: screens),
-      bottomNavigationBar: AppBottomNavigationBar(
+      bottomNavigationBar: TenantBottomNavigationBar(
         currentIndex: _currentIndex,
         showMessagesBadge: _showMessagesTabBadge,
-        onTap: (index) {
-          if (_currentIndex == 1 && index != 1) {
-            _searchScreenKey.currentState?.resetSearch();
-          }
-
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onTabSelected,
       ),
     );
   }

@@ -42,7 +42,9 @@ class AddPropertyAmenityButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.md),
         onTap: onTap,
-        child: Ink(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
           height: 56,
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : Colors.white,
@@ -56,23 +58,37 @@ class AddPropertyAmenityButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: isSelected ? Colors.white : AppColors.secondary,
+                TweenAnimationBuilder<Color?>(
+                  duration: const Duration(milliseconds: 200),
+                  tween: ColorTween(
+                    begin: isSelected ? AppColors.secondary : Colors.white,
+                    end: isSelected ? Colors.white : AppColors.secondary,
+                  ),
+                  builder: (context, color, child) {
+                    return Icon(icon, size: 20, color: color);
+                  },
                 ),
 
                 const SizedBox(width: AppSpacing.sm),
 
                 Expanded(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: isSelected ? Colors.white : AppColors.secondary,
-                      fontWeight: FontWeight.w600,
+                  child: TweenAnimationBuilder<Color?>(
+                    duration: const Duration(milliseconds: 200),
+                    tween: ColorTween(
+                      begin: isSelected ? AppColors.secondary : Colors.white,
+                      end: isSelected ? Colors.white : AppColors.secondary,
                     ),
+                    builder: (context, color, child) {
+                      return Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

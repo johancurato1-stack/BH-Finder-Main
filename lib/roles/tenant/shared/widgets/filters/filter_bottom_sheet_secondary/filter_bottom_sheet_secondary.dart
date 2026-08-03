@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/models/room_search_filter_model.dart';
+import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_options_wrap.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_section_title.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+
+//============================================================================
+//! FILTER BOTTOM SHEET SECONDARY
+//============================================================================
 
 class FilterBottomSheetSecondary extends StatefulWidget {
   //============================================================================
@@ -40,24 +44,30 @@ class FilterBottomSheetSecondary extends StatefulWidget {
 
   @override
   State<FilterBottomSheetSecondary> createState() =>
-      _FilterBottomSheetMiniState();
+      _FilterBottomSheetSecondaryState();
 }
 
-class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
+class _FilterBottomSheetSecondaryState
+    extends State<FilterBottomSheetSecondary> {
   //============================================================================
   //! STATE
   //============================================================================
 
   late String _selectedPrice;
+
   late String _selectedGender;
 
-  final List<String> _prices = [
+  //============================================================================
+  //! OPTIONS
+  //============================================================================
+
+  final List<String> _priceOptions = [
     'Any',
     'Lowest to Highest',
     'Highest to Lowest',
   ];
 
-  final List<String> _genders = ['Any', 'Male', 'Female'];
+  final List<String> _genderOptions = ['Any', 'Male', 'Female'];
 
   //============================================================================
   //! LIFECYCLE
@@ -72,20 +82,50 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
   }
 
   //============================================================================
-  //! METHODS
+  //! RESET
   //============================================================================
 
-  void _resetFilters() {
+  void _reset() {
     setState(() {
       _selectedPrice = 'Any';
       _selectedGender = 'Any';
     });
   }
 
-  void _applyFilters() {
+  //============================================================================
+  //! APPLY
+  //============================================================================
+
+  void _apply() {
     Navigator.pop(
       context,
       RoomSearchFilterModel(sortPrice: _selectedPrice, gender: _selectedGender),
+    );
+  }
+
+  //============================================================================
+  //! FILTER SECTION
+  //============================================================================
+
+  Widget _buildFilterSection({
+    required String title,
+    required List<String> options,
+    required String selectedValue,
+    required ValueChanged<String> onSelected,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FilterBottomSheetSectionTitle(title: title),
+
+        FilterBottomSheetOptionsWrap(
+          options: options,
+          selectedValue: selectedValue,
+          onSelected: onSelected,
+        ),
+
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -95,10 +135,11 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * .85,
-      ),
+      constraints: BoxConstraints(maxHeight: mediaQuery.size.height * .85),
+
       decoration: const BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
@@ -106,12 +147,13 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
           topRight: Radius.circular(24),
         ),
       ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          //==========================================================================
+          //==============================================================
           //! DRAG HANDLE
-          //==========================================================================
+          //==============================================================
           const SizedBox(height: 14),
 
           Container(
@@ -123,38 +165,31 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
             ),
           ),
 
-          //==========================================================================
+          //==============================================================
           //! HEADER
-          //==========================================================================
-          FilterBottomSheetHeader(onReset: _resetFilters),
+          //==============================================================
+          FilterBottomSheetHeader(onReset: _reset),
 
-          //==========================================================================
+          //==============================================================
           //! FILTER CONTENT
-          //==========================================================================
+          //==============================================================
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-              children: [
-                //==============================================================
-                //! PRICE
-                //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Price'),
 
-                FilterBottomSheetOptionsWrap(
-                  options: _prices,
+              children: [
+                _buildFilterSection(
+                  title: 'Price',
+                  options: _priceOptions,
                   selectedValue: _selectedPrice,
                   onSelected: (value) {
                     setState(() => _selectedPrice = value);
                   },
                 ),
 
-                //==============================================================
-                //! GENDER
-                //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Gender Preference'),
-
-                FilterBottomSheetOptionsWrap(
-                  options: _genders,
+                _buildFilterSection(
+                  title: 'Gender Preference',
+                  options: _genderOptions,
                   selectedValue: _selectedGender,
                   onSelected: (value) {
                     setState(() => _selectedGender = value);
@@ -164,20 +199,18 @@ class _FilterBottomSheetMiniState extends State<FilterBottomSheetSecondary> {
             ),
           ),
 
-          //==========================================================================
+          //==============================================================
           //! APPLY BUTTON
-          //==========================================================================
+          //==============================================================
           Padding(
             padding: EdgeInsets.fromLTRB(
               20,
               20,
               20,
-              MediaQuery.of(context).padding.bottom + 78,
+              mediaQuery.padding.bottom + 78,
             ),
-            child: PrimaryButton(
-              text: 'Apply Filters',
-              onPressed: _applyFilters,
-            ),
+
+            child: PrimaryButton(text: 'Apply Filters', onPressed: _apply),
           ),
         ],
       ),

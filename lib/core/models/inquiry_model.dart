@@ -1,17 +1,26 @@
-enum InquiryStatus { pending, accepted, rejected, reserved, completed }
+import 'package:bh_finder/core/enums/enums.dart';
+
+//============================================================================
+//! INQUIRY MODEL
+//============================================================================
 
 class InquiryModel {
   //============================================================================
-  //! VARIABLES
+  //! FIELDS
   //============================================================================
 
   final String id;
-  final String boardingHouseId;
-  final String boardingHouseName;
+
+  final String propertyId;
+
+  final String propertyName;
+
   final String roomId;
 
   final String price;
+
   final String genderRule;
+
   final String distance;
 
   final InquiryStatus status;
@@ -24,8 +33,8 @@ class InquiryModel {
 
   const InquiryModel({
     required this.id,
-    required this.boardingHouseId,
-    required this.boardingHouseName,
+    required this.propertyId,
+    required this.propertyName,
     required this.roomId,
     required this.price,
     required this.genderRule,

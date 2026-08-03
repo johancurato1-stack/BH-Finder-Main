@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
-import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
-
-import '../../../../../../shared/widgets/buttons/primary_button.dart';
+import 'package:bh_finder/core/options/search_filter_options.dart';
+import 'package:bh_finder/core/models/search_filter_model.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/widgets/filter_bottom_sheet_amenities_section.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/widgets/filter_bottom_sheet_status_section.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_options_wrap.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet_section_title.dart';
-import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/widgets/filter_bottom_sheet_status_section.dart';
+
+import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
+
+//============================================================================
+//! FILTER BOTTOM SHEET
+//============================================================================
 
 class FilterBottomSheet extends StatefulWidget {
   //============================================================================
@@ -19,6 +24,10 @@ class FilterBottomSheet extends StatefulWidget {
   //============================================================================
 
   const FilterBottomSheet({super.key, required this.initialFilter});
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
 
   final SearchFilterModel initialFilter;
 
@@ -56,18 +65,23 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   void initState() {
     super.initState();
+
     _filter = widget.initialFilter.copyWith();
   }
 
   //============================================================================
-  //! METHODS
+  //! RESET
   //============================================================================
 
-  void _resetFilters() {
+  void _reset() {
     setState(() {
       _filter.reset();
     });
   }
+
+  //============================================================================
+  //! TOGGLE AMENITY
+  //============================================================================
 
   void _toggleAmenity(String amenity) {
     setState(() {
@@ -79,8 +93,38 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     });
   }
 
-  void _applyFilters() {
+  //============================================================================
+  //! APPLY
+  //============================================================================
+
+  void _apply() {
     Navigator.pop(context, _filter);
+  }
+
+  //============================================================================
+  //! OPTION SECTION
+  //============================================================================
+
+  Widget _buildOptionSection({
+    required String title,
+    required List<String> options,
+    required String selectedValue,
+    required ValueChanged<String> onSelected,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FilterBottomSheetSectionTitle(title: title),
+
+        FilterBottomSheetOptionsWrap(
+          options: options,
+          selectedValue: selectedValue,
+          onSelected: onSelected,
+        ),
+
+        const SizedBox(height: 20),
+      ],
+    );
   }
 
   //============================================================================
@@ -89,10 +133,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * .85,
-      ),
+      constraints: BoxConstraints(maxHeight: mediaQuery.size.height * .85),
+
       decoration: const BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
@@ -100,12 +145,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           topRight: Radius.circular(24),
         ),
       ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          //==========================================================================
+          //==============================================================
           //! DRAG HANDLE
-          //==========================================================================
+          //==============================================================
           const SizedBox(height: 14),
 
           Container(
@@ -117,24 +163,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ),
 
-          //==========================================================================
+          //==============================================================
           //! HEADER
-          //==========================================================================
-          FilterBottomSheetHeader(onReset: _resetFilters),
+          //==============================================================
+          FilterBottomSheetHeader(onReset: _reset),
 
-          //==========================================================================
+          //==============================================================
           //! FILTER CONTENT
-          //==========================================================================
+          //==============================================================
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-              children: [
-                //==============================================================
-                //! BUDGET
-                //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Budget Range'),
 
-                FilterBottomSheetOptionsWrap(
+              children: [
+                _buildOptionSection(
+                  title: 'Budget Range',
                   options: SearchFilterOptions.budgets,
                   selectedValue: _filter.budget,
                   onSelected: (value) {
@@ -144,9 +187,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   },
                 ),
 
-                //==============================================================
-                //! AMENITIES
-                //==============================================================
                 const FilterBottomSheetSectionTitle(title: 'Amenities'),
 
                 FilterBottomSheetAmenitiesSection(
@@ -154,12 +194,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   onAmenityToggle: _toggleAmenity,
                 ),
 
-                //==============================================================
-                //! GENDER
-                //==============================================================
-                const FilterBottomSheetSectionTitle(title: 'Gender Preference'),
+                const SizedBox(height: 20),
 
-                FilterBottomSheetOptionsWrap(
+                _buildOptionSection(
+                  title: 'Gender Preference',
                   options: SearchFilterOptions.genders,
                   selectedValue: _filter.gender,
                   onSelected: (value) {
@@ -169,9 +207,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   },
                 ),
 
-                //==============================================================
-                //! STATUS
-                //==============================================================
                 const FilterBottomSheetSectionTitle(title: 'Property Status'),
 
                 FilterBottomSheetStatusSection(
@@ -186,20 +221,18 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ),
 
-          //==========================================================================
+          //==============================================================
           //! APPLY BUTTON
-          //==========================================================================
+          //==============================================================
           Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).padding.bottom + 78,
+            padding: EdgeInsets.fromLTRB(
+              20,
+              20,
+              20,
+              mediaQuery.padding.bottom + 78,
             ),
-            child: PrimaryButton(
-              text: 'Apply Filters',
-              onPressed: _applyFilters,
-            ),
+
+            child: PrimaryButton(text: 'Apply Filters', onPressed: _apply),
           ),
         ],
       ),

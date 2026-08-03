@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/auth/auth_header.dart';
 
@@ -13,7 +13,7 @@ import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signu
 import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_login_prompt.dart';
 import 'package:bh_finder/roles/tenant/features/auth/signup/shared/widgets/signup_screen_terms_section.dart';
 
-import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
 import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
 import 'package:bh_finder/roles/tenant/features/auth/login/screens/login_screen.dart';
 

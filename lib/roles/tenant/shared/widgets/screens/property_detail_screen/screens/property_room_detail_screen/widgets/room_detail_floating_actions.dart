@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! ROOM DETAIL FLOATING ACTIONS
+//============================================================================
+
 class RoomDetailFloatingActions extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR

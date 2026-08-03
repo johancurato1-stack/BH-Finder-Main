@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/models/landlord_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
+import 'package:bh_finder/core/utils/last_seen_formatter.dart';
 
 //============================================================================
-//! PROPERTY OWNER CARD
+//! PROPERTY DETAIL OWNER CARD
 //============================================================================
 
 class PropertyDetailOwnerCard extends StatelessWidget {
@@ -17,36 +18,47 @@ class PropertyDetailOwnerCard extends StatelessWidget {
   const PropertyDetailOwnerCard({super.key, required this.landlord});
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final LandlordModel landlord;
 
   //============================================================================
-  //! RESPONSE TIME
+  //! COPY PHONE NUMBER
   //============================================================================
 
-  /// Returns a readable response time.
-  String _getResponseTime(ResponseTime responseTime) {
-    switch (responseTime) {
-      case ResponseTime.within15Minutes:
-        return 'Typically responds within 15 minutes';
+  Future<void> _copyPhoneNumber(BuildContext context) async {
+    await Clipboard.setData(ClipboardData(text: landlord.phoneNumber));
 
-      case ResponseTime.within30Minutes:
-        return 'Typically responds within 30 minutes';
+    if (!context.mounted) return;
 
-      case ResponseTime.within1Hour:
-        return 'Typically responds within 1 hour';
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Phone number copied to clipboard.')),
+    );
+  }
 
-      case ResponseTime.within3Hours:
-        return 'Typically responds within 3 hours';
+  //============================================================================
+  //! VERIFICATION BADGE
+  //============================================================================
 
-      case ResponseTime.within24Hours:
-        return 'Typically responds within 24 hours';
+  Widget _buildVerificationBadge() {
+    final isVerified =
+        landlord.verificationStatus == VerificationStatus.approved;
 
-      case ResponseTime.moreThan24Hours:
-        return 'Typically responds in more than 24 hours';
-    }
+    return Container(
+      width: 16,
+      height: 16,
+      decoration: BoxDecoration(
+        color: isVerified ? Colors.green : Colors.red,
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.background, width: 2),
+      ),
+      child: Icon(
+        isVerified ? Icons.check : Icons.close,
+        size: 10,
+        color: Colors.white,
+      ),
+    );
   }
 
   //============================================================================
@@ -55,49 +67,103 @@ class PropertyDetailOwnerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasAvatar = landlord.profileImageUrl.trim().isNotEmpty;
+
+    final lastSeenText = LastSeenFormatter.format(landlord.lastSeenAt);
+
+    final isOnline = LastSeenFormatter.isOnline(landlord.lastSeenAt);
+
     return Row(
       children: [
-        CircleAvatar(
-          radius: 24,
-          backgroundImage: NetworkImage(landlord.profileImageUrl),
+        //==============================================================
+        //! AVATAR
+        //==============================================================
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.white,
+              backgroundImage: hasAvatar
+                  ? NetworkImage(landlord.profileImageUrl)
+                  : null,
+              onBackgroundImageError: (_, __) {},
+              child: !hasAvatar
+                  ? const Icon(
+                      Icons.person,
+                      size: 28,
+                      color: AppColors.tertiary,
+                    )
+                  : null,
+            ),
+
+            //----------------------------------------------------------
+            //! VERIFICATION BADGE
+            //----------------------------------------------------------
+            Positioned(right: -2, bottom: -2, child: _buildVerificationBadge()),
+          ],
         ),
 
         const SizedBox(width: 12),
 
+        //==============================================================
+        //! LANDLORD INFO
+        //==============================================================
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //----------------------------------------------------------
+              //! NAME
+              //----------------------------------------------------------
               Text(
                 landlord.fullName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Roboto',
                   color: AppColors.secondary,
                 ),
               ),
 
-              Text(
-                _getResponseTime(landlord.responseTime),
-                style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
+              const SizedBox(height: 4),
+
+              //----------------------------------------------------------
+              //! ACTIVITY STATUS
+              //----------------------------------------------------------
+              Row(
+                children: [
+                  Icon(
+                    Icons.circle,
+                    size: 8,
+                    color: isOnline ? Colors.green : Colors.grey,
+                  ),
+
+                  const SizedBox(width: 6),
+
+                  Text(
+                    lastSeenText,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Roboto',
+                      color: AppColors.tertiary,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
 
+        //==============================================================
+        //! PHONE BUTTON
+        //==============================================================
         IconButton(
-          icon: const Icon(Icons.phone, color: AppColors.primary),
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: landlord.phoneNumber));
-
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Phone number copied to clipboard.'),
-                ),
-              );
-            }
-          },
+          onPressed: () => _copyPhoneNumber(context),
+          icon: const Icon(Icons.phone_rounded, color: AppColors.primary),
         ),
       ],
     );

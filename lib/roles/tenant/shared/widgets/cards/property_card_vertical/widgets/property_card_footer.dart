@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
+
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/cards/property_card_vertical/widgets/property_card_amenities.dart';
 
@@ -22,7 +23,7 @@ class PropertyCardFooter extends StatelessWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! VARIABLES
   //============================================================================
 
   final TenantPropertyCardData data;
@@ -54,17 +55,27 @@ class PropertyCardFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
+        //==============================================================
+        //! AMENITIES
+        //==============================================================
         if (showAmenities) ...[
           PropertyCardAmenities(data: data),
 
           const SizedBox(height: 12),
         ],
 
+        //==============================================================
+        //! FOOTER
+        //==============================================================
         Row(
           children: [
-            const SizedBox(width: 90),
+            const Spacer(),
 
+            //==========================================================
+            //! FAVORITES
+            //==========================================================
             Icon(
               Icons.favorite,
               size: 14,
@@ -75,15 +86,20 @@ class PropertyCardFooter extends StatelessWidget {
 
             Text(
               data.favoriteCount.toString(),
+
               style: const TextStyle(
                 fontSize: 10,
-                color: AppColors.secondary,
                 fontWeight: FontWeight.w500,
+                fontFamily: 'Roboto',
+                color: AppColors.secondary,
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(width: 16),
 
+            //==========================================================
+            //! GENDER
+            //==========================================================
             const Icon(
               Icons.person_outline,
               size: 14,
@@ -94,10 +110,12 @@ class PropertyCardFooter extends StatelessWidget {
 
             Text(
               _genderText,
+
               style: const TextStyle(
                 fontSize: 10,
-                color: AppColors.secondary,
                 fontWeight: FontWeight.w500,
+                fontFamily: 'Roboto',
+                color: AppColors.secondary,
               ),
             ),
           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/models/room_model.dart';
+import 'package:bh_finder/core/models/room_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 //============================================================================

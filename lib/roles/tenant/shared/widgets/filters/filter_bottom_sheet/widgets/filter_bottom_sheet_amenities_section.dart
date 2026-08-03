@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/data/search_filter_options.dart';
+import 'package:bh_finder/core/options/search_filter_options.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
 
+//============================================================================
+//! FILTER BOTTOM SHEET AMENITIES SECTION
+//============================================================================
+
 class FilterBottomSheetAmenitiesSection extends StatelessWidget {
-  final List<String> selectedAmenities;
-  final ValueChanged<String> onAmenityToggle;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const FilterBottomSheetAmenitiesSection({
     super.key,
     required this.selectedAmenities,
     required this.onAmenityToggle,
   });
+
+  //============================================================================
+  //! PROPERTIES
+  //============================================================================
+
+  final List<String> selectedAmenities;
+
+  final ValueChanged<String> onAmenityToggle;
 
   //============================================================================
   //! BUILD
@@ -24,9 +37,11 @@ class FilterBottomSheetAmenitiesSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: SearchFilterOptions.amenities.map((amenity) {
-        final label = amenity['label'] as String;
-        final value = amenity['value'] as String;
-        final icon = amenity['icon'] as IconData;
+        final String label = amenity['label'] as String;
+
+        final String value = amenity['value'] as String;
+
+        final IconData icon = amenity['icon'] as IconData;
 
         return FilterButton(
           label: label,

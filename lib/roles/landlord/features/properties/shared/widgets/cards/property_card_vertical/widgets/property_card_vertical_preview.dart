@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
+
+import 'package:bh_finder/shared/widgets/images/app_network_image.dart';
+
+//============================================================================
+//! PROPERTY CARD VERTICAL PREVIEW
+//============================================================================
 
 class PropertyCardVerticalPreview extends StatelessWidget {
   //==========================================================================
@@ -39,16 +45,20 @@ class PropertyCardVerticalPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ClipRRect(
+        //==============================================================
+        //! PROPERTY IMAGE
+        //==============================================================
+        AppNetworkImage(
+          imageUrl: data.coverImageUrl,
+          width: 120,
+          height: 110,
+          fit: BoxFit.cover,
           borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            data.coverImageUrl,
-            width: 120,
-            height: 110,
-            fit: BoxFit.cover,
-          ),
         ),
 
+        //==============================================================
+        //! STATUS INDICATOR
+        //==============================================================
         Positioned(
           top: 6,
           left: 6,

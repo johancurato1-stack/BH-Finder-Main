@@ -1,3 +1,5 @@
+import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/models/message_model.dart';
 
 class MockMessages {

@@ -1,12 +1,16 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:bh_finder/core/authentication/repositories/auth_repository.dart';
-import 'package:bh_finder/core/repositories/profile_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/storage_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/auth_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/profile_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/storage_repository.dart';
+
+//============================================================================
+//! PROFILE VIEW MODEL
+//============================================================================
 
 class ProfileViewModel extends ChangeNotifier {
   //============================================================================
-  //! REPOSITORIES
+  //! FIELDS
   //============================================================================
 
   final ProfileRepository _repository;
@@ -14,6 +18,20 @@ class ProfileViewModel extends ChangeNotifier {
   final StorageRepository _storageRepository;
 
   final AuthRepository _authRepository;
+
+  Map<String, dynamic>? _profile;
+
+  int _favoritesCount = 0;
+
+  int _inquiriesCount = 0;
+
+  int _propertiesCount = 0;
+
+  bool _isLoading = false;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   ProfileViewModel({
     required ProfileRepository repository,
@@ -24,37 +42,25 @@ class ProfileViewModel extends ChangeNotifier {
        _authRepository = authRepository;
 
   //============================================================================
-  //! STATE
+  //! GETTERS
   //============================================================================
-
-  Map<String, dynamic>? _profile;
 
   Map<String, dynamic>? get profile => _profile;
 
-  int _favoritesCount = 0;
-
   int get favoritesCount => _favoritesCount;
-
-  int _inquiriesCount = 0;
 
   int get inquiriesCount => _inquiriesCount;
 
-  int _propertiesCount = 0;
-
   int get propertiesCount => _propertiesCount;
 
-  bool _loading = false;
-
-  bool get loading => _loading;
+  bool get isLoading => _isLoading;
 
   //============================================================================
-  //! LOAD PROFILE
+  //! COMMANDS
   //============================================================================
 
   Future<void> loadProfile() async {
-    _loading = true;
-
-    notifyListeners();
+    _setLoading(true);
 
     _profile = await _repository.getCurrentProfile();
 
@@ -64,14 +70,8 @@ class ProfileViewModel extends ChangeNotifier {
 
     _propertiesCount = await _repository.getPropertiesCount();
 
-    _loading = false;
-
-    notifyListeners();
+    _setLoading(false);
   }
-
-  //============================================================================
-  //! AVATAR
-  //============================================================================
 
   Future<void> updateAvatar({required String localPath}) async {
     final userId = _authRepository.currentUserId;
@@ -90,17 +90,27 @@ class ProfileViewModel extends ChangeNotifier {
     await loadProfile();
   }
 
-  //============================================================================
-  //! ROLE
-  //============================================================================
-
   Future<void> updateLastActiveRole(String role) async {
     await _repository.updateLastActiveRole(role);
 
     if (_profile != null) {
       _profile!['last_active_role'] = role;
 
-      notifyListeners();
+      _notify();
     }
+  }
+
+  //============================================================================
+  //! PRIVATE METHODS
+  //============================================================================
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+
+    _notify();
+  }
+
+  void _notify() {
+    notifyListeners();
   }
 }

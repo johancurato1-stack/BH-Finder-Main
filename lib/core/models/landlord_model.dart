@@ -1,5 +1,6 @@
-import 'package:bh_finder/core/enums/enums.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:bh_finder/core/enums/enums.dart';
 
 //============================================================================
 //! LANDLORD MODEL
@@ -8,20 +9,7 @@ import 'package:flutter/foundation.dart';
 @immutable
 class LandlordModel {
   //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-
-  const LandlordModel({
-    required this.id,
-    required this.fullName,
-    required this.phoneNumber,
-    required this.profileImageUrl,
-    required this.responseTime,
-    required this.verificationStatus,
-  });
-
-  //============================================================================
-  //! PROPERTIES
+  //! FIELDS
   //============================================================================
 
   final String id;
@@ -32,7 +20,21 @@ class LandlordModel {
 
   final String profileImageUrl;
 
-  final ResponseTime responseTime;
+  /// Last recorded activity.
+  final DateTime? lastSeenAt;
 
   final VerificationStatus verificationStatus;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
+  const LandlordModel({
+    required this.id,
+    required this.fullName,
+    required this.phoneNumber,
+    required this.profileImageUrl,
+    required this.lastSeenAt,
+    required this.verificationStatus,
+  });
 }

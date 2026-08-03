@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/core/models/search_filter_model.dart';
+
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
+
+//============================================================================
+//! SEARCH RESULTS SCREEN SUMMARY
+//============================================================================
+
 class SearchResultsScreenSummary extends StatelessWidget {
-  final SearchFilterModel filter;
-  final int resultCount;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchResultsScreenSummary({
     super.key,
@@ -14,41 +22,73 @@ class SearchResultsScreenSummary extends StatelessWidget {
   });
 
   //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final SearchFilterModel filter;
+
+  final int resultCount;
+
+  //============================================================================
+  //! TEXT STYLES
+  //============================================================================
+
+  static const TextStyle _summaryStyle = TextStyle(
+    fontSize: 14,
+    height: 1.4,
+    color: AppColors.tertiary,
+    fontFamily: 'Roboto',
+  );
+
+  static const TextStyle _countStyle = TextStyle(
+    fontSize: 14,
+    color: AppColors.tertiary,
+    fontFamily: 'Roboto',
+  );
+
+  //============================================================================
+  //! HELPERS
+  //============================================================================
+
+  String get _resultText {
+    if (resultCount == 0) {
+      return 'No properties found';
+    }
+
+    return '$resultCount propert${resultCount == 1 ? 'y' : 'ies'} found';
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //============================================================================
-          //! FILTER SUMMARY
-          //============================================================================
-          if (filter.hasActiveFilters)
-            Text(
-              filter.buildSummary(),
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.tertiary,
-                height: 1.4,
-              ),
-            ),
+    return AnimatedEntrance(
+      order: 0,
 
-          if (filter.hasActiveFilters) const SizedBox(height: 12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
 
-          //============================================================================
-          //! RESULT COUNT
-          //============================================================================
-          Text(
-            resultCount == 0
-                ? 'No places found'
-                : '$resultCount place${resultCount == 1 ? '' : 's'} found',
-            style: const TextStyle(fontSize: 14, color: AppColors.tertiary),
-          ),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+
+          children: [
+            //==============================================================
+            //! FILTER SUMMARY
+            //==============================================================
+            if (filter.hasActiveFilters) ...[
+              Text(filter.buildSummary(), style: _summaryStyle),
+
+              const SizedBox(height: 12),
+            ],
+
+            //==============================================================
+            //! RESULT COUNT
+            //==============================================================
+            Text(_resultText, style: _countStyle),
+          ],
+        ),
       ),
     );
   }

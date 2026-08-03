@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
+import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
-
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/tenant_property_card_data.dart';
-
-import 'package:bh_finder/roles/tenant/features/search/models/search_filter_model.dart';
+import 'package:bh_finder/core/models/search_filter_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/favorites_screen_header.dart';
 import 'package:bh_finder/roles/tenant/features/favorites/shared/widgets/favorites_screen_list.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/filter_bottom_sheet/filter_bottom_sheet.dart';
+
+import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
 
 //============================================================================
 //! FAVORITES SCREEN
@@ -33,10 +35,14 @@ class FavoritesScreen extends StatefulWidget {
   });
 
   //============================================================================
-  //! PROPERTIES
+  //! CALLBACKS
   //============================================================================
 
   final VoidCallback onBackPressed;
+
+  //============================================================================
+  //! REPOSITORIES
+  //============================================================================
 
   final PropertyRepository propertyRepository;
 
@@ -102,7 +108,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       initialFilter: _filter,
     );
 
-    if (filter == null) return;
+    if (filter == null) {
+      return;
+    }
 
     setState(() {
       _filter = filter;
@@ -113,6 +121,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   //============================================================================
+  //! BUILD BODY
+  //============================================================================
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return FavoritesScreenList(
+      properties: _savedProperties,
+      propertyRepository: widget.propertyRepository,
+      roomRepository: widget.roomRepository,
+      favoriteRepository: widget.favoriteRepository,
+    );
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
@@ -120,31 +145,28 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
             //==============================================================
             //! HEADER
             //==============================================================
-            FavoritesScreenHeader(
-              onBackPressed: widget.onBackPressed,
-              onFilterPressed: _showFilter,
+            AnimatedEntrance(
+              order: 0,
+
+              child: FavoritesScreenHeader(
+                onBackPressed: widget.onBackPressed,
+                onFilterPressed: _showFilter,
+              ),
             ),
 
             //==============================================================
-            //! SAVED LIST
+            //! FAVORITES
             //==============================================================
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : FavoritesScreenList(
-                      properties: _savedProperties,
-                      propertyRepository: widget.propertyRepository,
-                      roomRepository: widget.roomRepository,
-                      favoriteRepository: widget.favoriteRepository,
-                    ),
-            ),
+            Expanded(child: AnimatedEntrance(order: 1, child: _buildBody())),
           ],
         ),
       ),

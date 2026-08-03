@@ -1,5 +1,5 @@
 import 'package:bh_finder/roles/tenant/features/auth/validators/field_validation.dart';
-import 'package:bh_finder/core/enums/validation_state.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 
 class NameValidator {
   const NameValidator._();

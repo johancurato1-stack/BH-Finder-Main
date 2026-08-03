@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 
+//============================================================================
+//! ROOM DETAIL BOTTOM BUTTON
+//============================================================================
+
 class RoomDetailBottomButton extends StatelessWidget {
   //============================================================================
   //! CONSTRUCTOR

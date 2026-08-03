@@ -1,0 +1,28 @@
+//============================================================================
+//! PROPERTY PERFORMANCE DATA
+//============================================================================
+
+class PropertyPerformanceData {
+  //============================================================================
+  //! FIELDS
+  //============================================================================
+
+  final int totalRooms;
+
+  final int totalViews;
+
+  final int totalFavorites;
+
+  final int totalInquiries;
+
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
+
+  const PropertyPerformanceData({
+    required this.totalRooms,
+    required this.totalViews,
+    required this.totalFavorites,
+    required this.totalInquiries,
+  });
+}

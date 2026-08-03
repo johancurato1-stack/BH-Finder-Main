@@ -1,6 +1,10 @@
+//============================================================================
+//! CHAT MODEL
+//============================================================================
+
 class ChatModel {
   //============================================================================
-  //! VARIABLES
+  //! FIELDS
   //============================================================================
 
   final String id;
@@ -12,8 +16,8 @@ class ChatModel {
   final String responseTime;
   final bool isOnline;
 
-  // Boarding House
-  final String boardingHouseId;
+  // Property
+  final String propertyId;
   final String propertyTitle;
 
   // Conversation
@@ -25,18 +29,15 @@ class ChatModel {
   //! CONSTRUCTOR
   //============================================================================
 
-  ChatModel({
+  const ChatModel({
     required this.id,
-
     required this.landlordId,
     required this.landlordName,
     required this.avatarUrl,
     required this.responseTime,
     required this.isOnline,
-
-    required this.boardingHouseId,
+    required this.propertyId,
     required this.propertyTitle,
-
     required this.lastMessage,
     required this.timeStamp,
     required this.isUnread,
@@ -49,16 +50,13 @@ class ChatModel {
   factory ChatModel.fromMap(Map<String, dynamic> map) {
     return ChatModel(
       id: map['id'] ?? '',
-
       landlordId: map['landlordId'] ?? '',
       landlordName: map['landlordName'] ?? '',
       avatarUrl: map['avatarUrl'] ?? '',
       responseTime: map['responseTime'] ?? '',
       isOnline: map['isOnline'] ?? false,
-
-      boardingHouseId: map['boardingHouseId'] ?? '',
+      propertyId: map['propertyId'] ?? '',
       propertyTitle: map['propertyTitle'] ?? '',
-
       lastMessage: map['lastMessage'] ?? '',
       timeStamp: map['timeStamp'] ?? '',
       isUnread: map['isUnread'] ?? false,
@@ -72,16 +70,13 @@ class ChatModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-
       'landlordId': landlordId,
       'landlordName': landlordName,
       'avatarUrl': avatarUrl,
       'responseTime': responseTime,
       'isOnline': isOnline,
-
-      'boardingHouseId': boardingHouseId,
+      'propertyId': propertyId,
       'propertyTitle': propertyTitle,
-
       'lastMessage': lastMessage,
       'timeStamp': timeStamp,
       'isUnread': isUnread,

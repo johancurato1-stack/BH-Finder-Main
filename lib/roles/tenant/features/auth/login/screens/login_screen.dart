@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 
-import 'package:bh_finder/core/authentication/view_models/auth_view_model.dart';
+import 'package:bh_finder/core/view_models/auth_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/auth/auth_header.dart';
 
@@ -12,7 +12,7 @@ import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/login_
 import 'package:bh_finder/roles/tenant/features/auth/login/shared/widgets/social_login_section.dart';
 import 'package:bh_finder/roles/tenant/features/auth/forgot_password/screens/forgot_password_screen.dart';
 
-import 'package:bh_finder/core/authentication/supabase/supabase_auth_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_auth_repository.dart';
 import 'package:bh_finder/shared/widgets/dialogs/primary_dialog.dart';
 
 class LoginScreen extends StatefulWidget {

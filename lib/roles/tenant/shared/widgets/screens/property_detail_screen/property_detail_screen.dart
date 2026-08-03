@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/property_repository.dart';
-import 'package:bh_finder/core/property_and_room_adding_updating/repositories/room_repository.dart';
-import 'package:bh_finder/core/favorites/respositories/favorite_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/property_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/favorite_repository.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/view_models/property_detail_data.dart';
+import 'package:bh_finder/core/ui_models/property_detail_data.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_amenities_grid.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_bottom_button.dart';
@@ -17,6 +17,7 @@ import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_sc
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_header.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_meta_row.dart';
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/widgets/property_detail_owner_card.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/date_info.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/view_rooms_screen/view_rooms_screen.dart';
 
@@ -76,6 +77,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   Timer? _autoScrollTimer;
 
+  Timer? _resumeAutoScrollTimer;
+
   int _currentPage = 0;
 
   //============================================================================
@@ -132,6 +135,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   void dispose() {
     _autoScrollTimer?.cancel();
 
+    _resumeAutoScrollTimer?.cancel();
+
     _pageController.dispose();
 
     super.dispose();
@@ -142,7 +147,13 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //============================================================================
 
   void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+    //============================================================================
+    //! AUTO SCROLL
+    //============================================================================
+
+    _autoScrollTimer?.cancel();
+
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!_pageController.hasClients) return;
 
       if (_images.isEmpty) return;
@@ -155,12 +166,25 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
       _pageController.animateToPage(
         nextPage,
-
         duration: const Duration(milliseconds: 600),
-
         curve: Curves.easeInOutCubic,
       );
     });
+  }
+
+  //============================================================================
+  //! PAUSE AUTO SCROLL
+  //============================================================================
+
+  void _pauseAutoScroll() {
+    _autoScrollTimer?.cancel();
+
+    _resumeAutoScrollTimer?.cancel();
+
+    _resumeAutoScrollTimer = Timer(
+      const Duration(seconds: 10),
+      _startAutoScroll,
+    );
   }
 
   void _viewRooms(PropertyDetailData data) {
@@ -170,8 +194,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       MaterialPageRoute(
         builder: (_) => ViewRoomsScreen(
           propertyId: data.id,
-          PropertyName: data.title,
-          rooms: data.rooms,
+          propertyName: data.title,
           repository: widget.roomRepository,
         ),
       ),
@@ -214,6 +237,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         images: _images.map((image) => image.path).toList(),
 
                         onPageChanged: (index) {
+                          _pauseAutoScroll();
+
                           setState(() {
                             _currentPage = index;
                           });
@@ -320,6 +345,20 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
                         if (data.landlord != null)
                           PropertyDetailOwnerCard(landlord: data.landlord!),
+
+                        const Divider(
+                          height: 32,
+                          thickness: .5,
+                          color: AppColors.tertiary,
+                        ),
+
+                        //======================================================
+                        //! PROPERTY DATES
+                        //======================================================
+                        DateInfo(
+                          createdAt: data.createdAt,
+                          updatedAt: data.updatedAt,
+                        ),
                       ],
                     ),
                   ),

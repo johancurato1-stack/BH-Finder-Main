@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:bh_finder/core/property_and_room_adding_updating/ui_models/landlord_property_card_data.dart';
-
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
+import 'package:bh_finder/core/ui_models/landlord_property_card_data.dart';
 
-import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashboard_screen/widgets/property_card_stats_row.dart';
+import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards/property_card_horizontal/widgets/property_card_stats_row.dart';
 
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_info.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_preview.dart';
@@ -16,7 +15,7 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 //! PROPERTY CARD VERTICAL
 //============================================================================
 
-class PropertyCardVertical extends StatelessWidget {
+class PropertyCardVertical extends StatefulWidget {
   //==========================================================================
   //! CONSTRUCTOR
   //==========================================================================
@@ -29,90 +28,146 @@ class PropertyCardVertical extends StatelessWidget {
 
   final LandlordPropertyCardData data;
 
+  @override
+  State<PropertyCardVertical> createState() => _PropertyCardVerticalState();
+}
+
+//============================================================================
+//! STATE
+//============================================================================
+
+class _PropertyCardVerticalState extends State<PropertyCardVertical> {
+  //==========================================================================
+  //! STATE
+  //==========================================================================
+
+  bool _pressed = false;
+
+  //==========================================================================
+  //! NAVIGATION
+  //==========================================================================
+
+  Route<T> _buildSlideRoute<T>(Widget page) {
+    return PageRouteBuilder<T>(
+      pageBuilder: (_, __, ___) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0, 1);
+        const end = Offset.zero;
+        const curve = Curves.easeOutCubic;
+
+        final offsetAnimation = animation.drive(
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve)),
+        );
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
   //==========================================================================
   //! BUILD
   //==========================================================================
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (_, __, ___) =>
-                PropertyDetailScreen(propertyId: data.id),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(0, 1);
-                  const end = Offset.zero;
-                  const curve = Curves.easeOut;
-
-                  final offsetAnimation = animation.drive(
-                    Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve)),
-                  );
-
-                  return SlideTransition(
-                    position: offsetAnimation,
-                    child: child,
-                  );
-                },
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.screenPadding,
-          vertical: AppSpacing.sm,
-        ),
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        decoration: BoxDecoration(
-          color: AppColors.white,
+    return AnimatedScale(
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOutCubic,
+      scale: _pressed ? .97 : 1,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withValues(alpha: .10),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+
+          splashColor: AppColors.primary.withValues(alpha: .08),
+
+          highlightColor: Colors.transparent,
+
+          onTapDown: (_) {
+            setState(() {
+              _pressed = true;
+            });
+          },
+
+          onTapCancel: () {
+            setState(() {
+              _pressed = false;
+            });
+          },
+
+          onTap: () {
+            setState(() {
+              _pressed = false;
+            });
+
+            Navigator.push(
+              context,
+              _buildSlideRoute(
+                PropertyDetailScreen(propertyId: widget.data.id),
+              ),
+            );
+          },
+
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+
+            margin: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenPadding,
+              vertical: AppSpacing.sm,
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            //==============================================================
-            //! TOP SECTION
-            //==============================================================
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PropertyCardVerticalPreview(data: data),
 
-                const SizedBox(width: AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.cardPadding),
 
-                PropertyCardVerticalInfo(data: data),
-              ],
-            ),
+            decoration: BoxDecoration(
+              color: AppColors.white,
 
-            //==============================================================
-            //! BOTTOM SECTION
-            //==============================================================
-            Row(
-              children: [
-                Expanded(child: PropertyCardStatsRow(data: data)),
+              borderRadius: BorderRadius.circular(12),
 
-                const SizedBox(width: AppSpacing.sm),
-
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  size: 26,
-                  color: AppColors.tertiary,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.black.withValues(alpha: .10),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-          ],
+
+            child: Column(
+              children: [
+                //==========================================================
+                //! TOP SECTION
+                //==========================================================
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PropertyCardVerticalPreview(data: widget.data),
+
+                    const SizedBox(width: AppSpacing.md),
+
+                    PropertyCardVerticalInfo(data: widget.data),
+                  ],
+                ),
+
+                //==========================================================
+                //! BOTTOM SECTION
+                //==========================================================
+                Row(
+                  children: [
+                    Expanded(child: PropertyCardStatsRow(data: widget.data)),
+
+                    const SizedBox(width: AppSpacing.sm),
+
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 26,
+                      color: AppColors.tertiary,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

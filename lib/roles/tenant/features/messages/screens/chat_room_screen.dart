@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
 import 'package:bh_finder/core/models/chat_model.dart';
@@ -131,8 +132,8 @@ class _ChatScreenState extends State<ChatRoomScreen> {
       return InquiryCard(
         inquiry: const InquiryModel(
           id: "inq_1",
-          boardingHouseId: "bh_1",
-          boardingHouseName: "Green Haven Boarding House",
+          propertyId: "bh_1",
+          propertyName: "Green Haven Boarding House",
           roomId: "room_1",
           roomName: "Room 1A",
           price: "₱2,700 / month",

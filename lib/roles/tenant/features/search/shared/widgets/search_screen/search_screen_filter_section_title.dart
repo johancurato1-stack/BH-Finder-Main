@@ -2,15 +2,39 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! SEARCH SCREEN FILTER SECTION TITLE
+//============================================================================
+
 class SearchScreenFilterSectionTitle extends StatelessWidget {
-  final String title;
-  final Widget? trailing;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenFilterSectionTitle({
     super.key,
     required this.title,
     this.trailing,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final String title;
+
+  final Widget? trailing;
+
+  //============================================================================
+  //! TEXT STYLE
+  //============================================================================
+
+  static const TextStyle _titleStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Roboto',
+    color: AppColors.secondary,
+  );
 
   //============================================================================
   //! BUILD
@@ -25,22 +49,14 @@ class SearchScreenFilterSectionTitle extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
         children: [
-          //============================================================================
+          //====================================================================
           //! SECTION TITLE
-          //============================================================================
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Roboto',
-              color: AppColors.secondary,
-            ),
-          ),
+          //====================================================================
+          Text(title, style: _titleStyle),
 
-          //============================================================================
-          //! OPTIONAL TRAILING WIDGET
-          //============================================================================
+          //====================================================================
+          //! TRAILING
+          //====================================================================
           if (trailing != null) trailing!,
         ],
       ),

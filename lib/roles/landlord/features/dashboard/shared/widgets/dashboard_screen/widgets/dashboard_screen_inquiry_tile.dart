@@ -4,6 +4,10 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
+//==========================================================================
+//! DASHBOARD SCREEN INQUIRY TILE
+//==========================================================================
+
 class DashboardScreenInquiryTile extends StatelessWidget {
   //==========================================================================
   //! CONSTRUCTOR

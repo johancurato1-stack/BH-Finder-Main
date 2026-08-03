@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'search_screen_filter_section_title.dart';
 
+//============================================================================
+//! SEARCH SCREEN FILTER SECTION
+//============================================================================
+
 class SearchScreenFilterSection extends StatelessWidget {
-  final String title;
-  final Widget child;
-  final Widget? trailing;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenFilterSection({
     super.key,
@@ -13,6 +17,16 @@ class SearchScreenFilterSection extends StatelessWidget {
     required this.child,
     this.trailing,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final String title;
+
+  final Widget child;
+
+  final Widget? trailing;
 
   //============================================================================
   //! BUILD
@@ -24,14 +38,14 @@ class SearchScreenFilterSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        //============================================================================
+        //======================================================================
         //! SECTION HEADER
-        //============================================================================
+        //======================================================================
         SearchScreenFilterSectionTitle(title: title, trailing: trailing),
 
-        //============================================================================
+        //======================================================================
         //! SECTION CONTENT
-        //============================================================================
+        //======================================================================
         child,
       ],
     );

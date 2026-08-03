@@ -2,83 +2,106 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! HOME SCREEN SEARCH BAR
+//============================================================================
+
 class HomeScreenSearchBar extends StatelessWidget {
-  final VoidCallback onTap;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const HomeScreenSearchBar({super.key, required this.onTap});
+
+  //============================================================================
+  //! CALLBACKS
+  //============================================================================
+
+  final VoidCallback onTap;
+
+  //============================================================================
+  //! BUILD
+  //============================================================================
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Open the search screen when the search bar is tapped.
       onTap: onTap,
 
       child: Container(
         height: 63,
+
         decoration: BoxDecoration(
           color: AppColors.white,
+
           borderRadius: BorderRadius.circular(12),
+
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: Colors.black.withValues(alpha: .06),
               blurRadius: 15,
               offset: const Offset(0, 4),
             ),
           ],
         ),
 
-        child: Row(
+        child: const Row(
           children: [
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
 
-            //============================================================================
+            //==============================================================
             //! SEARCH ICON
-            //============================================================================
-            const Icon(
-              Icons.search_rounded,
-              color: AppColors.tertiary,
-              size: 18,
-            ),
+            //==============================================================
+            Icon(Icons.search_rounded, color: AppColors.tertiary, size: 18),
 
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
 
-            //============================================================================
-            //! SEARCH PLACEHOLDER
-            //============================================================================
-            const Text(
-              'Search by location, school,\nor area..',
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'Inter',
-                color: AppColors.tertiary,
-              ),
-            ),
-
-            const Spacer(),
-
-            //============================================================================
-            //! SEARCH ACTION BUTTON
-            //============================================================================
-            Center(
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.search_rounded,
-                  color: AppColors.white,
-                  size: 22,
+            //==============================================================
+            //! PLACEHOLDER
+            //==============================================================
+            Expanded(
+              child: Text(
+                'Search by location, school,\nor area..',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  color: AppColors.tertiary,
                 ),
               ),
             ),
 
-            const SizedBox(width: 10),
+            //==============================================================
+            //! ACTION BUTTON
+            //==============================================================
+            _SearchButton(),
+
+            SizedBox(width: 10),
           ],
         ),
       ),
+    );
+  }
+}
+
+//============================================================================
+//! SEARCH BUTTON
+//============================================================================
+
+class _SearchButton extends StatelessWidget {
+  const _SearchButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 44,
+      height: 44,
+
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+
+      child: const Icon(Icons.search_rounded, color: AppColors.white, size: 22),
     );
   }
 }

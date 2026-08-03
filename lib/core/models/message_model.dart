@@ -1,21 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:bh_finder/core/enums/enums.dart';
 
-enum MessageType { text, inquiry, system }
-
-enum MessageStatus { sending, sent, delivered, seen }
+//============================================================================
+//! MESSAGE MODEL
+//============================================================================
 
 class MessageModel {
   //============================================================================
-  //! VARIABLES
+  //! FIELDS
   //============================================================================
 
   final String id;
+
   final String chatId;
+
   final String senderId;
+
   final String text;
+
   final bool isMe;
 
   final MessageType type;
+
   final MessageStatus status;
 
   final DateTime sentAt;
@@ -35,7 +40,6 @@ class MessageModel {
     required this.type,
     required this.status,
     required this.sentAt,
-
     this.inquiryId,
   });
 
@@ -48,35 +52,8 @@ class MessageModel {
     final minute = sentAt.minute.toString().padLeft(2, '0');
 
     final suffix = hour >= 12 ? 'PM' : 'AM';
-
     final displayHour = hour % 12 == 0 ? 12 : hour % 12;
 
     return '$displayHour:$minute $suffix';
-  }
-
-  IconData get statusIcon {
-    switch (status) {
-      case MessageStatus.sending:
-        return Icons.access_time;
-
-      case MessageStatus.sent:
-        return Icons.check;
-
-      case MessageStatus.delivered:
-        return Icons.done_all;
-
-      case MessageStatus.seen:
-        return Icons.done_all;
-    }
-  }
-
-  Color get statusColor {
-    switch (status) {
-      case MessageStatus.seen:
-        return Colors.blue;
-
-      default:
-        return Colors.grey;
-    }
   }
 }

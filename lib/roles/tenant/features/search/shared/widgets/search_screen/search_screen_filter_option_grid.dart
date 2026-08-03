@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/filters/shared/widgets/filters/filter_buttons/filter_button.dart';
 
+//============================================================================
+//! SEARCH SCREEN FILTER OPTION GRID
+//============================================================================
+
 class SearchScreenFilterOptionGrid extends StatelessWidget {
-  final List<String> options;
-  final String selectedValue;
-  final ValueChanged<String> onSelected;
+  //============================================================================
+  //! CONSTRUCTOR
+  //============================================================================
 
   const SearchScreenFilterOptionGrid({
     super.key,
@@ -13,6 +17,16 @@ class SearchScreenFilterOptionGrid extends StatelessWidget {
     required this.selectedValue,
     required this.onSelected,
   });
+
+  //============================================================================
+  //! VARIABLES
+  //============================================================================
+
+  final List<String> options;
+
+  final String selectedValue;
+
+  final ValueChanged<String> onSelected;
 
   //============================================================================
   //! BUILD
@@ -24,13 +38,15 @@ class SearchScreenFilterOptionGrid extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
 
-      children: options.map((option) {
+      children: List.generate(options.length, (index) {
+        final option = options[index];
+
         return FilterButton(
           label: option,
           isSelected: option == selectedValue,
           onTap: () => onSelected(option),
         );
-      }).toList(),
+      }),
     );
   }
 }
