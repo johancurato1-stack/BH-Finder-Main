@@ -110,32 +110,12 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
 
     if (shouldDelete != true) return;
 
-    if (_images.length == 1) {
-      if (!mounted) return;
-
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return PrimaryDialog(
-            icon: Icons.photo_library_rounded,
-            iconColor: Colors.orange,
-            title: 'Room Photo Required',
-            message: 'A room must have at least one photo.',
-            buttonText: 'OK',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          );
-        },
-      );
-
-      return;
-    }
-
     setState(() {
       _images.removeAt(_selectedImage);
 
-      if (_selectedImage >= _images.length) {
+      if (_images.isEmpty) {
+        _selectedImage = 0;
+      } else if (_selectedImage >= _images.length) {
         _selectedImage = _images.length - 1;
       }
     });
@@ -184,7 +164,9 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
 
     final capacity = int.tryParse(_capacityController.text.trim()) ?? 0;
 
-    final description = _descriptionController.text.trim();
+    final description = _descriptionController.text.trim().isEmpty
+        ? 'No description provided.'
+        : _descriptionController.text.trim();
 
     final validation = _viewModel.validate(
       photoCount: _images.length,
@@ -253,18 +235,7 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         return;
 
       case AddRoomValidationResult.description:
-        await showDialog(
-          context: context,
-          builder: (_) => PrimaryDialog(
-            icon: Icons.description_rounded,
-            iconColor: Colors.orange,
-            title: 'Description Required',
-            message: 'Please enter a room description.',
-            buttonText: 'OK',
-            onPressed: () => Navigator.pop(context),
-          ),
-        );
-        return;
+        break;
 
       case AddRoomValidationResult.gender:
         await showDialog(
@@ -458,7 +429,12 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
               onPressed: _saveRoom,
             ),
 
-            const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
+            if (_isEditing)
+              const Divider(
+                height: 32,
+                thickness: .5,
+                color: AppColors.tertiary,
+              ),
 
             //==============================================================
             //! DELETE ROOM

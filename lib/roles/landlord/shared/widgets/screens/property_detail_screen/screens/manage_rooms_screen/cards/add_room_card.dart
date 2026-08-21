@@ -30,7 +30,7 @@ class AddRoomCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
 
-        height: 108,
+        height: 104,
 
         decoration: BoxDecoration(
           color: AppColors.white,

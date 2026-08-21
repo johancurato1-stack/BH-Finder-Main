@@ -72,6 +72,7 @@ class PropertyRoomInfo extends StatelessWidget {
         //! DETAILS
         //======================================================================
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(
               Icons.person_outline,
@@ -83,7 +84,7 @@ class PropertyRoomInfo extends StatelessWidget {
 
             Text(
               _getGenderLabel(room.genderPreference),
-              style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
+              style: const TextStyle(fontSize: 10, color: AppColors.tertiary),
             ),
 
             const SizedBox(width: 10),
@@ -98,7 +99,7 @@ class PropertyRoomInfo extends StatelessWidget {
 
             Text(
               '${room.capacity} Person${room.capacity > 1 ? 's' : ''}',
-              style: const TextStyle(fontSize: 12, color: AppColors.tertiary),
+              style: const TextStyle(fontSize: 10, color: AppColors.tertiary),
             ),
           ],
         ),

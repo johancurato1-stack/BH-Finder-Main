@@ -87,7 +87,6 @@ class PropertyDetailOwnerCard extends StatelessWidget {
               backgroundImage: hasAvatar
                   ? NetworkImage(landlord.profileImageUrl)
                   : null,
-              onBackgroundImageError: (_, __) {},
               child: !hasAvatar
                   ? const Icon(
                       Icons.person,

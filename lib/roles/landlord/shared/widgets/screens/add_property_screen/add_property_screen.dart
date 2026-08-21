@@ -177,18 +177,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
     if (shouldDelete != true) return;
 
-    if (_images.length == 1) {
-      if (!mounted) return;
-
-      await _showMessageDialog(
-        icon: Icons.photo_library_rounded,
-        iconColor: Colors.orange,
-        title: 'Property Photo Required',
-        message: 'A property must have at least one photo.',
-      );
-
-      return;
-    }
+    if (_images.isEmpty) return;
 
     setState(() {
       _images.removeAt(_selectedImage);
@@ -358,7 +347,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       await _showMessageDialog(
         icon: Icons.photo_library_rounded,
         iconColor: Colors.orange,
-        title: 'Property Photos Required',
+        title: 'Property Photo Required',
         message: 'Please add at least one photo of your property.',
       );
 
@@ -375,17 +364,6 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         iconColor: Colors.orange,
         title: 'Property Title Required',
         message: 'Please enter a title for your property.',
-      );
-
-      return;
-    }
-
-    if (_descriptionController.text.trim().isEmpty) {
-      await _showMessageDialog(
-        icon: Icons.description_rounded,
-        iconColor: Colors.orange,
-        title: 'Property Description Required',
-        message: 'Please enter a description for your property.',
       );
 
       return;
@@ -428,7 +406,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
     final request = AddPropertyRequest(
       title: _titleController.text.trim(),
-      description: _descriptionController.text.trim(),
+      description: _descriptionController.text.trim().isEmpty
+          ? 'No description provided.'
+          : _descriptionController.text.trim(),
       address: _detectedAddress!,
       latitude: _latitude!,
       longitude: _longitude!,

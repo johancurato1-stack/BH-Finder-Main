@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/models/room_model.dart';
 
+import 'package:bh_finder/shared/widgets/images/app_network_image.dart';
+
 //============================================================================
 //! PROPERTY ROOM IMAGE
 //============================================================================
@@ -25,35 +27,26 @@ class PropertyRoomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (room.images.isEmpty) {
-      return const SizedBox(
-        width: 80,
-        height: 80,
-        child: Center(child: Icon(Icons.image_not_supported_outlined)),
-      );
-    }
+    return SizedBox(
+      width: 80,
+      height: 80,
 
-    return ClipRRect(
-      //======================================================================
-      //! ROUNDED IMAGE
-      //======================================================================
-      borderRadius: BorderRadius.circular(16),
+      child: ClipRRect(
+        //======================================================================
+        //! ROUNDED IMAGE
+        //======================================================================
+        borderRadius: BorderRadius.circular(16),
 
-      child: Image.network(
-        room.images.first.path,
-
-        width: 80,
-        height: 80,
-
-        fit: BoxFit.cover,
-
-        errorBuilder: (context, error, stackTrace) {
-          return const SizedBox(
-            width: 80,
-            height: 80,
-            child: Center(child: Icon(Icons.broken_image_outlined)),
-          );
-        },
+        child: room.images.isEmpty
+            ? Container(
+                color: Colors.grey.shade100,
+                alignment: Alignment.center,
+                child: const Icon(Icons.image_not_supported_outlined),
+              )
+            : AppNetworkImage(
+                imageUrl: room.images.first.path,
+                fit: BoxFit.cover,
+              ),
       ),
     );
   }
