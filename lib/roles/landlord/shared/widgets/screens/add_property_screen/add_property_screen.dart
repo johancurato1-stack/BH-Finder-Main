@@ -24,6 +24,10 @@ import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 import 'package:bh_finder/core/ui_models/property_detail_data.dart';
 import 'package:bh_finder/core/models/image_model.dart';
 
+import 'package:bh_finder/shared/widgets/loading/publishing_loading_screen.dart';
+
+import 'package:bh_finder/roles/landlord/shared/models/landlord_property_origin.dart';
+
 //============================================================================
 //! LOCATION STATUS
 //============================================================================
@@ -43,12 +47,11 @@ enum LocationStatus {
 //============================================================================
 
 class AddPropertyScreen extends StatefulWidget {
-  //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-  const AddPropertyScreen({super.key, this.property});
+  const AddPropertyScreen({super.key, this.property, this.origin});
 
   final PropertyDetailData? property;
+
+  final LandlordPropertyOrigin? origin;
 
   @override
   State<AddPropertyScreen> createState() => _AddPropertyScreenState();
@@ -127,10 +130,6 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   //! DIALOG HELPER
   //============================================================================
 
-  /// Shows a single-button informational dialog.
-  ///
-  /// Used for the many validation/error messages in this screen that only
-  /// need an icon, title, message, and a single "OK" button.
   Future<void> _showMessageDialog({
     required IconData icon,
     required Color iconColor,
@@ -150,6 +149,10 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     );
   }
 
+  //============================================================================
+  //! PHOTO METHODS
+  //============================================================================
+
   Future<void> _deleteSelectedPhoto() async {
     final shouldDelete = await showDialog<bool>(
       context: context,
@@ -157,16 +160,12 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         return PrimaryDialog(
           icon: Icons.delete_rounded,
           iconColor: Colors.red,
-
           title: 'Delete Photo',
-
           message: 'Are you sure you want to delete this photo?',
-
           secondaryButtonText: 'Cancel',
           onSecondaryPressed: () {
             Navigator.pop(context, false);
           },
-
           buttonText: 'Delete',
           onPressed: () {
             Navigator.pop(context, true);
@@ -182,22 +181,10 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     setState(() {
       _images.removeAt(_selectedImage);
 
-      if (_selectedImage >= _images.length) {
+      if (_images.isEmpty) {
+        _selectedImage = 0;
+      } else if (_selectedImage >= _images.length) {
         _selectedImage = _images.length - 1;
-      }
-    });
-  }
-
-  //============================================================================
-  //! METHODS
-  //============================================================================
-
-  void _toggleAmenity(Amenity amenity) {
-    setState(() {
-      if (_selectedAmenities.contains(amenity)) {
-        _selectedAmenities.remove(amenity);
-      } else {
-        _selectedAmenities.add(amenity);
       }
     });
   }
@@ -214,6 +201,24 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     });
   }
 
+  //============================================================================
+  //! AMENITIES
+  //============================================================================
+
+  void _toggleAmenity(Amenity amenity) {
+    setState(() {
+      if (_selectedAmenities.contains(amenity)) {
+        _selectedAmenities.remove(amenity);
+      } else {
+        _selectedAmenities.add(amenity);
+      }
+    });
+  }
+
+  //============================================================================
+  //! LOCATION
+  //============================================================================
+
   Future<void> _detectCurrentLocation() async {
     if (_locationStatus == LocationStatus.gpsDetecting) {
       return;
@@ -225,6 +230,8 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
     try {
       final result = await _locationService.detectCurrentLocation();
+
+      if (!mounted) return;
 
       setState(() {
         _detectedAddress = result.address;
@@ -288,6 +295,8 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         landmark: _landmarkController.text.trim(),
       );
 
+      if (!mounted) return;
+
       setState(() {
         _detectedAddress = result.address;
         _latitude = result.latitude;
@@ -337,6 +346,24 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       _landmarkController.clear();
     });
   }
+
+  //============================================================================
+  //! RETURN TO PREVIOUS SCREEN
+  //============================================================================
+
+  void _returnWithResult() {
+    if (!mounted) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      Navigator.of(context).pop(true);
+    });
+  }
+
+  //============================================================================
+  //! PUBLISH / UPDATE PROPERTY
+  //============================================================================
 
   Future<void> _publishProperty() async {
     //==============================================================
@@ -417,21 +444,53 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       status: _selectedStatus,
     );
 
-    bool success;
+    //==============================================================
+    //! PUBLISH / UPDATE
+    //==============================================================
 
-    if (_isEditing) {
-      success = await _viewModel.updateProperty(
-        propertyId: widget.property!.id,
-        request: request,
-      );
-    } else {
-      success = await _viewModel.createProperty(request);
-    }
+    final success = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PublishingLoadingScreen(
+          title: _isEditing ? 'Updating Property' : 'Publishing Property',
+          subtitle: _isEditing
+              ? 'Updating your property information and photos.'
+              : 'Publishing your property and photos.',
+          operation: _isEditing
+              ? PublishingOperation.update
+              : PublishingOperation.publish,
+          steps: [
+            const PublishingLoadingStep(
+              title: 'Saving property information',
+              status: PublishingStepStatus.current,
+            ),
+            const PublishingLoadingStep(
+              title: 'Uploading property photos',
+              status: PublishingStepStatus.pending,
+            ),
+            const PublishingLoadingStep(
+              title: 'Finalizing property',
+              status: PublishingStepStatus.pending,
+            ),
+          ],
+          onPublish: () {
+            if (_isEditing) {
+              return _viewModel.updateProperty(
+                propertyId: widget.property!.id,
+                request: request,
+              );
+            }
+
+            return _viewModel.createProperty(request);
+          },
+        ),
+      ),
+    );
 
     if (!mounted) return;
 
-    if (success) {
-      Navigator.pop(context, true);
+    if (success == true) {
+      _returnWithResult();
     }
   }
 
@@ -440,42 +499,39 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   //============================================================================
 
   Future<void> _deleteProperty() async {
-    final shouldDelete = await showDialog<bool>(
-      context: context,
-      builder: (_) => PrimaryDialog(
-        icon: Icons.delete_rounded,
-        iconColor: Colors.red,
-        title: 'Delete Property?',
-        message:
-            'This will permanently delete:\n\n'
-            '• Property\n'
-            '• Rooms\n'
-            '• Images\n\n'
-            'This action cannot be undone.',
-        secondaryButtonText: 'Cancel',
-        onSecondaryPressed: () => Navigator.pop(context, false),
-        buttonText: 'Delete',
-        onPressed: () => Navigator.pop(context, true),
+    final success = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PublishingLoadingScreen(
+          title: 'Deleting Property',
+          subtitle: 'Deleting your property and associated data.',
+          operation: PublishingOperation.delete,
+          steps: const [
+            PublishingLoadingStep(
+              title: 'Deleting property information',
+              status: PublishingStepStatus.current,
+            ),
+            PublishingLoadingStep(
+              title: 'Deleting rooms and images',
+              status: PublishingStepStatus.pending,
+            ),
+            PublishingLoadingStep(
+              title: 'Finalizing deletion',
+              status: PublishingStepStatus.pending,
+            ),
+          ],
+          onPublish: () {
+            return _viewModel.deleteProperty(widget.property!.id);
+          },
+        ),
       ),
     );
 
-    if (shouldDelete != true) return;
-
-    final success = await _viewModel.deleteProperty(widget.property!.id);
-
     if (!mounted) return;
 
-    if (success) {
-      Navigator.pop(context, true);
-      return;
+    if (success == true) {
+      _returnWithResult();
     }
-
-    await _showMessageDialog(
-      icon: Icons.error_rounded,
-      iconColor: Colors.red,
-      title: 'Delete Failed',
-      message: 'Failed to delete property. Please try again.',
-    );
   }
 
   //============================================================================
@@ -505,6 +561,19 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
     _locationOption = LocationOption.gps;
     _locationStatus = LocationStatus.gpsSelected;
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _provinceController.dispose();
+    _cityController.dispose();
+    _barangayController.dispose();
+    _streetController.dispose();
+    _landmarkController.dispose();
+
+    super.dispose();
   }
 
   //============================================================================
@@ -547,7 +616,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               images: _images,
               selectedImage: _selectedImage,
               onImageSelected: (index) {
-                setState(() => _selectedImage = index);
+                setState(() {
+                  _selectedImage = index;
+                });
               },
               onAddPhoto: _pickImages,
               onDeletePhoto: _deleteSelectedPhoto,
@@ -605,19 +676,16 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   }
                 });
               },
-
               isGpsLoading: _isGpsLoading,
               isGpsSelected: _isGpsSelected,
               isGpsLocked: _isGpsLocked,
               isManualLoading: _isManualLoading,
               isManualSelected: _isManualSelected,
               isManualLocked: _isManualLocked,
-
               detectedAddress: _detectedAddress,
               onDetectLocation: _detectCurrentLocation,
               onCancelDetection: _cancelLocationDetection,
               onRemoveLocation: _removeLocation,
-
               provinceController: _provinceController,
               cityController: _cityController,
               barangayController: _barangayController,
@@ -637,6 +705,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             ),
 
             const SizedBox(height: 20),
+
             if (_isEditing) const SizedBox(height: 30),
 
             //==============================================================
@@ -654,7 +723,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
             if (!_isEditing) const SizedBox(height: 20),
 
             //==============================================================
-            //! PUBLISH/UPDATE PROPERTY
+            //! PUBLISH / UPDATE PROPERTY
             //==============================================================
             PrimaryButton(
               text: _isEditing ? 'Update Property' : 'Publish Property',

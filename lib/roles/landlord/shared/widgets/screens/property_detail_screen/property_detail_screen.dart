@@ -5,6 +5,8 @@ import 'package:bh_finder/core/repositories/repositories/property_repository.dar
 import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+import 'package:bh_finder/roles/landlord/shared/models/landlord_property_origin.dart';
+
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/screens/manage_rooms_screen/manage_rooms_screen.dart';
 
@@ -25,17 +27,15 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 //============================================================================
 
 class PropertyDetailScreen extends StatefulWidget {
-  //==========================================================================
-  //! CONSTRUCTOR
-  //==========================================================================
-
-  const PropertyDetailScreen({super.key, required this.propertyId});
-
-  //==========================================================================
-  //! PROPERTIES
-  //==========================================================================
+  const PropertyDetailScreen({
+    super.key,
+    required this.propertyId,
+    required this.origin,
+  });
 
   final String propertyId;
+
+  final LandlordPropertyOrigin origin;
 
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
@@ -47,7 +47,7 @@ class PropertyDetailScreen extends StatefulWidget {
 
 class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //==========================================================================
-  //! REPOSITORIES
+  //! REPOSITORY
   //==========================================================================
 
   final PropertyRepository _propertyRepository =
@@ -79,26 +79,35 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   //==========================================================================
 
   Future<void> _loadProperty() async {
-    final data = await _propertyRepository.getPropertyDetail(widget.propertyId);
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
 
-    for (var i = 0; i < data.images.length; i++) {}
+    final data = await _propertyRepository.getPropertyDetail(widget.propertyId);
 
     if (!mounted) return;
 
     setState(() {
       _data = data;
+
+      if (_selectedImage >= data.images.length) {
+        _selectedImage = 0;
+      }
+
       _loading = false;
     });
   }
 
   //==========================================================================
-  //! METHODS
+  //! VIEW ROOMS
   //==========================================================================
 
-  void _viewRooms() {
+  Future<void> _viewRooms() async {
     if (_data == null) return;
 
-    Navigator.push(
+    final updated = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
         builder: (_) => ManageRoomsScreen(
@@ -108,6 +117,43 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
         ),
       ),
     );
+
+    if (!mounted || updated != true) {
+      return;
+    }
+
+    await _loadProperty();
+
+    if (!mounted) return;
+
+    Navigator.pop(context, true);
+  }
+
+  //==========================================================================
+  //! EDIT PROPERTY
+  //==========================================================================
+
+  Future<void> _editProperty() async {
+    if (_data == null) return;
+
+    final updated = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => AddPropertyScreen(property: _data)),
+    );
+
+    if (!mounted || updated != true) {
+      return;
+    }
+
+    //========================================================================
+    //! RETURN TO THE PREVIOUS SCREEN
+    //!
+    //! The AddPropertyScreen can return true after either updating OR
+    //! deleting the property. Reloading here is unsafe because the property
+    //! may have just been deleted.
+    //========================================================================
+
+    Navigator.pop(context, true);
   }
 
   //==========================================================================
@@ -124,6 +170,13 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     }
 
     final data = _data!;
+
+    if (data.images.isEmpty) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(child: Text('No property images available.')),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -237,24 +290,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //==========================================================
                   //! ACTION BUTTONS
                   //==========================================================
-                  PropertyDetailActionButtons(
-                    onEditPressed: () async {
-                      final updated = await Navigator.push<bool>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => AddPropertyScreen(property: data),
-                        ),
-                      );
+                  PropertyDetailActionButtons(onEditPressed: _editProperty),
 
-                      if (updated == true) {
-                        await _loadProperty();
-
-                        if (!mounted) return;
-
-                        Navigator.pop(context, true);
-                      }
-                    },
-                  ),
                   const SizedBox(height: 20),
                 ],
               ),

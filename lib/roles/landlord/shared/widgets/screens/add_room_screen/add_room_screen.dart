@@ -20,6 +20,7 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/widgets/add_room_gender_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/widgets/add_room_information_section.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_room_screen/widgets/add_room_photos_section.dart';
+import 'package:bh_finder/shared/widgets/loading/publishing_loading_screen.dart';
 
 //============================================================================
 //! ADD ROOM SCREEN
@@ -84,10 +85,16 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
       _images.addAll(
         images.map((image) => ImageModel(path: image.path, isLocal: true)),
       );
+
+      if (_images.isNotEmpty && _selectedImage >= _images.length) {
+        _selectedImage = _images.length - 1;
+      }
     });
   }
 
   Future<void> _deleteSelectedPhoto() async {
+    if (_images.isEmpty) return;
+
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -178,6 +185,10 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
     );
 
     switch (validation) {
+      //==============================================================
+      //! ROOM PHOTOS
+      //==============================================================
+
       case AddRoomValidationResult.photos:
         await showDialog(
           context: context,
@@ -191,6 +202,10 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
           ),
         );
         return;
+
+      //==============================================================
+      //! ROOM TITLE
+      //==============================================================
 
       case AddRoomValidationResult.title:
         await showDialog(
@@ -206,6 +221,10 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         );
         return;
 
+      //==============================================================
+      //! ROOM PRICE
+      //==============================================================
+
       case AddRoomValidationResult.price:
         await showDialog(
           context: context,
@@ -219,6 +238,10 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
           ),
         );
         return;
+
+      //==============================================================
+      //! ROOM CAPACITY
+      //==============================================================
 
       case AddRoomValidationResult.capacity:
         await showDialog(
@@ -234,8 +257,16 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         );
         return;
 
+      //==============================================================
+      //! DESCRIPTION
+      //==============================================================
+
       case AddRoomValidationResult.description:
         break;
+
+      //==============================================================
+      //! GENDER PREFERENCE
+      //==============================================================
 
       case AddRoomValidationResult.gender:
         await showDialog(
@@ -251,9 +282,17 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         );
         return;
 
+      //==============================================================
+      //! VALID
+      //==============================================================
+
       case AddRoomValidationResult.success:
         break;
     }
+
+    //==============================================================
+    //! CREATE REQUEST
+    //==============================================================
 
     final request = AddRoomRequest(
       propertyId: widget.propertyId,
@@ -265,37 +304,54 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
       images: _images,
     );
 
-    bool success;
+    //==============================================================
+    //! PUBLISH / UPDATE
+    //==============================================================
 
-    if (_isEditing) {
-      success = await _viewModel.updateRoom(
-        roomId: widget.room!.id,
-        request: request,
-      );
-    } else {
-      success = await _viewModel.createRoom(request);
-    }
+    final success = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PublishingLoadingScreen(
+          title: _isEditing ? 'Updating Room' : 'Publishing Room',
+          subtitle: _isEditing
+              ? 'Updating your room information and photos.'
+              : 'Publishing your room and photos.',
+          operation: _isEditing
+              ? PublishingOperation.update
+              : PublishingOperation.publish,
+          steps: [
+            const PublishingLoadingStep(
+              title: 'Saving room information',
+              status: PublishingStepStatus.current,
+            ),
+            const PublishingLoadingStep(
+              title: 'Uploading room photos',
+              status: PublishingStepStatus.pending,
+            ),
+            const PublishingLoadingStep(
+              title: 'Finalizing room',
+              status: PublishingStepStatus.pending,
+            ),
+          ],
+          onPublish: () {
+            if (_isEditing) {
+              return _viewModel.updateRoom(
+                roomId: widget.room!.id,
+                request: request,
+              );
+            }
+
+            return _viewModel.createRoom(request);
+          },
+        ),
+      ),
+    );
 
     if (!mounted) return;
 
-    if (success) {
+    if (success == true) {
       Navigator.pop(context, true);
-      return;
     }
-
-    await showDialog(
-      context: context,
-      builder: (_) => PrimaryDialog(
-        icon: Icons.error_rounded,
-        iconColor: Colors.red,
-        title: _isEditing ? 'Update Failed' : 'Publish Failed',
-        message: _isEditing
-            ? 'Failed to update room. Please try again.'
-            : 'Failed to publish room. Please try again.',
-        buttonText: 'OK',
-        onPressed: () => Navigator.pop(context),
-      ),
-    );
   }
 
   //============================================================================
@@ -303,46 +359,39 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
   //============================================================================
 
   Future<void> _deleteRoom() async {
-    final shouldDelete = await showDialog<bool>(
-      context: context,
-      builder: (_) => PrimaryDialog(
-        icon: Icons.delete_rounded,
-        iconColor: Colors.red,
-        title: 'Delete Room?',
-        message:
-            'This will permanently delete:\n\n'
-            '• Room\n'
-            '• Images\n\n'
-            'This action cannot be undone.',
-        secondaryButtonText: 'Cancel',
-        onSecondaryPressed: () => Navigator.pop(context, false),
-        buttonText: 'Delete',
-        onPressed: () => Navigator.pop(context, true),
+    final success = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PublishingLoadingScreen(
+          title: 'Deleting Room',
+          subtitle: 'Permanently deleting your room and its images.',
+          operation: PublishingOperation.delete,
+          steps: [
+            const PublishingLoadingStep(
+              title: 'Deleting room information',
+              status: PublishingStepStatus.current,
+            ),
+            const PublishingLoadingStep(
+              title: 'Deleting room photos',
+              status: PublishingStepStatus.pending,
+            ),
+            const PublishingLoadingStep(
+              title: 'Finalizing deletion',
+              status: PublishingStepStatus.pending,
+            ),
+          ],
+          onPublish: () {
+            return _viewModel.deleteRoom(widget.room!.id);
+          },
+        ),
       ),
     );
-
-    if (shouldDelete != true) return;
-
-    final success = await _viewModel.deleteRoom(widget.room!.id);
 
     if (!mounted) return;
 
-    if (success) {
+    if (success == true) {
       Navigator.pop(context, true);
-      return;
     }
-
-    await showDialog(
-      context: context,
-      builder: (_) => PrimaryDialog(
-        icon: Icons.error_rounded,
-        iconColor: Colors.red,
-        title: 'Delete Failed',
-        message: 'Failed to delete room. Please try again.',
-        buttonText: 'OK',
-        onPressed: () => Navigator.pop(context),
-      ),
-    );
   }
 
   //============================================================================
@@ -385,6 +434,8 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
               images: _images,
               selectedImage: _selectedImage,
               onImageSelected: (index) {
+                if (index < 0 || index >= _images.length) return;
+
                 setState(() {
                   _selectedImage = index;
                 });

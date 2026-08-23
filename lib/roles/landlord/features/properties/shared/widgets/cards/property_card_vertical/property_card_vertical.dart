@@ -9,8 +9,6 @@ import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/cards
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_info.dart';
 import 'package:bh_finder/roles/landlord/features/properties/shared/widgets/cards/property_card_vertical/widgets/property_card_vertical_preview.dart';
 
-import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
-
 //============================================================================
 //! PROPERTY CARD VERTICAL
 //============================================================================
@@ -20,13 +18,19 @@ class PropertyCardVertical extends StatefulWidget {
   //! CONSTRUCTOR
   //==========================================================================
 
-  const PropertyCardVertical({super.key, required this.data});
+  const PropertyCardVertical({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   //==========================================================================
   //! PROPERTIES
   //==========================================================================
 
   final LandlordPropertyCardData data;
+
+  final VoidCallback onTap;
 
   @override
   State<PropertyCardVertical> createState() => _PropertyCardVerticalState();
@@ -42,27 +46,6 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical> {
   //==========================================================================
 
   bool _pressed = false;
-
-  //==========================================================================
-  //! NAVIGATION
-  //==========================================================================
-
-  Route<T> _buildSlideRoute<T>(Widget page) {
-    return PageRouteBuilder<T>(
-      pageBuilder: (_, __, ___) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0, 1);
-        const end = Offset.zero;
-        const curve = Curves.easeOutCubic;
-
-        final offsetAnimation = animation.drive(
-          Tween(begin: begin, end: end).chain(CurveTween(curve: curve)),
-        );
-
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
-    );
-  }
 
   //==========================================================================
   //! BUILD
@@ -96,17 +79,15 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical> {
             });
           },
 
+          //==================================================================
+          //! TAP
+          //==================================================================
           onTap: () {
             setState(() {
               _pressed = false;
             });
 
-            Navigator.push(
-              context,
-              _buildSlideRoute(
-                PropertyDetailScreen(propertyId: widget.data.id),
-              ),
-            );
+            widget.onTap();
           },
 
           child: AnimatedContainer(

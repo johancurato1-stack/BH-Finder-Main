@@ -23,17 +23,16 @@ import 'package:bh_finder/roles/landlord/features/dashboard/shared/widgets/dashb
 
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/add_property_screen/add_property_screen.dart';
 import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_screen/property_detail_screen.dart';
+import 'package:bh_finder/roles/landlord/shared/models/landlord_property_origin.dart';
 
 //============================================================================
 //! DASHBOARD SCREEN
 //============================================================================
 
 class DashboardScreen extends StatefulWidget {
-  //==========================================================================
-  //! CONSTRUCTOR
-  //==========================================================================
+  const DashboardScreen({super.key, required this.propertyRefreshNotifier});
 
-  const DashboardScreen({super.key});
+  final ValueNotifier<int> propertyRefreshNotifier;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -82,8 +81,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
+    widget.propertyRefreshNotifier.addListener(_onPropertyRefresh);
+
     _profileViewModel.loadProfile();
 
+    _loadProperties();
+  }
+
+  @override
+  void dispose() {
+    widget.propertyRefreshNotifier.removeListener(_onPropertyRefresh);
+
+    _profileViewModel.dispose();
+
+    super.dispose();
+  }
+
+  //==========================================================================
+  //! PROPERTY REFRESH
+  //==========================================================================
+
+  void _onPropertyRefresh() {
     _loadProperties();
   }
 
@@ -104,6 +122,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     setState(() {
       _properties = properties;
+
+      if (_currentPage >= _properties.length + 1) {
+        _currentPage = 0;
+      }
+
       _loading = false;
     });
   }
@@ -206,7 +229,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         final updated = await Navigator.push<bool>(
                           context,
                           _buildSlideRoute(
-                            PropertyDetailScreen(propertyId: property.id),
+                            PropertyDetailScreen(
+                              propertyId: property.id,
+                              origin: LandlordPropertyOrigin.dashboard,
+                            ),
                           ),
                         );
 
@@ -215,12 +241,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
 
                         await _refreshProperties();
+
+                        widget.propertyRefreshNotifier.value++;
                       },
 
                       onAddProperty: () async {
                         final created = await Navigator.push<bool>(
                           context,
-                          _buildSlideRoute(const AddPropertyScreen()),
+                          _buildSlideRoute(
+                            const AddPropertyScreen(
+                              origin: LandlordPropertyOrigin.dashboard,
+                            ),
+                          ),
                         );
 
                         if (!mounted || created != true) {
@@ -228,6 +260,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
 
                         await _refreshProperties();
+
+                        widget.propertyRefreshNotifier.value++;
                       },
                     ),
                   ),

@@ -175,7 +175,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             //==============================================================
             RoomDetailDescriptionSection(description: data.description),
 
-            const SizedBox(height: 32),
+            const Divider(height: 32, thickness: .5, color: AppColors.tertiary),
 
             //==============================================================
             //! ACTION BUTTONS

@@ -48,6 +48,12 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
   int _currentIndex = 0;
 
   //==========================================================================
+  //! PROPERTY REFRESH
+  //==========================================================================
+
+  final ValueNotifier<int> _propertyRefreshNotifier = ValueNotifier<int>(0);
+
+  //==========================================================================
   //! NAVIGATION
   //==========================================================================
 
@@ -64,17 +70,29 @@ class _LandlordNavigationScreenState extends State<LandlordNavigationScreen> {
   void _goToDashboard() => _navigateTo(0);
 
   //==========================================================================
+  //! DISPOSE
+  //==========================================================================
+
+  @override
+  void dispose() {
+    _propertyRefreshNotifier.dispose();
+
+    super.dispose();
+  }
+
+  //==========================================================================
   //! BUILD
   //==========================================================================
 
   @override
   Widget build(BuildContext context) {
     final screens = <Widget>[
-      const DashboardScreen(),
+      DashboardScreen(propertyRefreshNotifier: _propertyRefreshNotifier),
 
       PropertiesScreen(
         onBackPressed: _goToDashboard,
         propertyRepository: _propertyRepository,
+        propertyRefreshNotifier: _propertyRefreshNotifier,
       ),
 
       MessagesScreen(onBackPressed: _goToDashboard),

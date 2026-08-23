@@ -20,6 +20,7 @@ class PropertiesScreen extends StatelessWidget {
     super.key,
     required this.onBackPressed,
     required this.propertyRepository,
+    required this.propertyRefreshNotifier,
   });
 
   //==========================================================================
@@ -29,6 +30,8 @@ class PropertiesScreen extends StatelessWidget {
   final VoidCallback onBackPressed;
 
   final PropertyRepository propertyRepository;
+
+  final ValueNotifier<int> propertyRefreshNotifier;
 
   //==========================================================================
   //! BUILD
@@ -52,6 +55,7 @@ class PropertiesScreen extends StatelessWidget {
             Expanded(
               child: PropertiesScreenListView(
                 propertyRepository: propertyRepository,
+                propertyRefreshNotifier: propertyRefreshNotifier,
               ),
             ),
           ],

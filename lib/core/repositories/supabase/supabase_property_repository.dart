@@ -104,6 +104,7 @@ class SupabasePropertyRepository implements PropertyRepository {
     if (userId == null) {
       throw Exception('User is not authenticated.');
     }
+
     //----------------------------------------------------------
     // Insert Property
     //----------------------------------------------------------
@@ -175,7 +176,6 @@ class SupabasePropertyRepository implements PropertyRepository {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
 
-      // Images are loaded separately from property_images.
       images: const [],
 
       amenities: (json['amenities'] as List)
@@ -325,18 +325,26 @@ class SupabasePropertyRepository implements PropertyRepository {
         .toList();
 
     //----------------------------------------------------------
-    // Delete Storage Files
-    //----------------------------------------------------------
-
-    if (storagePaths.isNotEmpty) {
-      await _storageRepository.deleteFiles(storagePaths);
-    }
-
-    //----------------------------------------------------------
     // Delete Property
     //----------------------------------------------------------
 
     await _supabase.from('properties').delete().eq('id', propertyId);
+
+    //----------------------------------------------------------
+    // Delete Storage Files
+    //----------------------------------------------------------
+
+    if (storagePaths.isNotEmpty) {
+      _deleteStorageFilesInBackground(storagePaths);
+    }
+  }
+
+  //============================================================================
+  //! BACKGROUND STORAGE CLEANUP
+  //============================================================================
+
+  void _deleteStorageFilesInBackground(List<String> storagePaths) {
+    _storageRepository.deleteFiles(storagePaths).catchError((_) {});
   }
 
   //============================================================================
@@ -644,18 +652,14 @@ class SupabasePropertyRepository implements PropertyRepository {
 
       landlord = LandlordModel(
         id: profile['id'] as String,
-
         fullName: '${profile['first_name']} ${profile['last_name']}'.trim(),
-
         phoneNumber: profile['phone'] ?? '',
-
         profileImageUrl: avatarPath == null || avatarPath.isEmpty
             ? ''
             : _storageRepository.getPublicUrl(
                 'avatars',
                 avatarPath.replaceFirst('avatars/', ''),
               ),
-
         verificationStatus: switch (profile['verification_status']) {
           'not_submitted' => VerificationStatus.notSubmitted,
           'pending' => VerificationStatus.pending,
@@ -663,7 +667,6 @@ class SupabasePropertyRepository implements PropertyRepository {
           'rejected' => VerificationStatus.rejected,
           _ => VerificationStatus.pending,
         },
-
         lastSeenAt: profile['last_seen_at'] == null
             ? null
             : DateTime.parse(profile['last_seen_at'] as String),

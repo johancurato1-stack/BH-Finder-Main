@@ -16,20 +16,12 @@ import 'package:bh_finder/roles/landlord/shared/widgets/screens/property_detail_
 //============================================================================
 
 class ManageRoomsScreen extends StatefulWidget {
-  //============================================================================
-  //! CONSTRUCTOR
-  //============================================================================
-
   const ManageRoomsScreen({
     super.key,
     required this.propertyId,
     required this.propertyName,
     required this.rooms,
   });
-
-  //============================================================================
-  //! PROPERTIES
-  //============================================================================
 
   final String propertyName;
 
@@ -40,6 +32,10 @@ class ManageRoomsScreen extends StatefulWidget {
   @override
   State<ManageRoomsScreen> createState() => _ManageRoomsScreenState();
 }
+
+//============================================================================
+//! STATE
+//============================================================================
 
 class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
   //============================================================================
@@ -93,23 +89,35 @@ class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
       ),
     );
 
-    if (created == true) {
-      await _loadRooms();
+    if (!mounted || created != true) {
+      return;
     }
+
+    await _loadRooms();
   }
 
   //============================================================================
   //! OPEN ROOM
   //============================================================================
 
-  void _openRoom(RoomModel room) {
-    Navigator.push(
+  Future<void> _openRoom(RoomModel room) async {
+    final updated = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
         builder: (_) =>
             RoomDetailScreen(roomId: room.id, repository: _roomRepository),
       ),
     );
+
+    if (!mounted || updated != true) {
+      return;
+    }
+
+    await _loadRooms();
+
+    if (!mounted) return;
+
+    Navigator.pop(context, true);
   }
 
   //============================================================================
