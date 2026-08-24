@@ -98,13 +98,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
       ),
     );
 
-    if (updated == true) {
-      await _loadRoom();
-
-      if (!mounted) return;
-
-      Navigator.pop(context, true);
+    if (!mounted || updated != true) {
+      return;
     }
+
+    Navigator.pop(context, true);
   }
 
   //==========================================================================
@@ -121,6 +119,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     }
 
     final data = _data!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(

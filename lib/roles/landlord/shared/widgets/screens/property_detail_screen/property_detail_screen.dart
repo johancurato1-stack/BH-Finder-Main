@@ -61,6 +61,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   bool _loading = true;
 
+  bool _hasChanges = false;
+
   int _selectedImage = 0;
 
   //==========================================================================
@@ -122,11 +124,9 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       return;
     }
 
+    _hasChanges = true;
+
     await _loadProperty();
-
-    if (!mounted) return;
-
-    Navigator.pop(context, true);
   }
 
   //==========================================================================
@@ -145,15 +145,15 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       return;
     }
 
-    //========================================================================
-    //! RETURN TO THE PREVIOUS SCREEN
-    //!
-    //! The AddPropertyScreen can return true after either updating OR
-    //! deleting the property. Reloading here is unsafe because the property
-    //! may have just been deleted.
-    //========================================================================
-
     Navigator.pop(context, true);
+  }
+
+  //==========================================================================
+  //! RETURN
+  //==========================================================================
+
+  void _returnFromPropertyDetail() {
+    Navigator.pop(context, _hasChanges);
   }
 
   //==========================================================================
@@ -191,7 +191,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   //! TOP BAR
                   //==========================================================
                   BackButtonHeader(
-                    onBackPressed: () => Navigator.pop(context),
+                    onBackPressed: _returnFromPropertyDetail,
                     onSharePressed: () {
                       // TODO: Share Property
                     },

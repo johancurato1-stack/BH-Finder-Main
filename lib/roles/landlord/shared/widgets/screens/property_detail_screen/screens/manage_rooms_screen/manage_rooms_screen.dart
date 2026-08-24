@@ -114,8 +114,16 @@ class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
     }
 
     await _loadRooms();
+  }
 
-    if (!mounted) return;
+  //============================================================================
+  //! RETURN TO PROPERTY DETAILS
+  //============================================================================
+
+  void _returnToPropertyDetails() {
+    if (!mounted) {
+      return;
+    }
 
     Navigator.pop(context, true);
   }
@@ -136,7 +144,7 @@ class _ManageRoomsScreenState extends State<ManageRoomsScreen> {
             //==================================================================
             ManageRoomsHeader(
               title: widget.propertyName,
-              onBack: () => Navigator.pop(context),
+              onBack: _returnToPropertyDetails,
               onAddRoom: _openAddRoom,
             ),
 
