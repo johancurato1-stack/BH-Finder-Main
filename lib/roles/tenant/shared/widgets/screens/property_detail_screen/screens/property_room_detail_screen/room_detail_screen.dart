@@ -7,6 +7,8 @@ import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/ui_models/room_detail_data.dart';
 
+import 'package:bh_finder/roles/tenant/features/messages/screens/inquiry_screen.dart';
+
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/date_info.dart';
 import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
 import 'package:bh_finder/shared/widgets/others/page_indicator.dart';
@@ -152,6 +154,21 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   }
 
   //============================================================================
+  //! OPEN INQUIRY
+  //============================================================================
+
+  void _openInquiry() {
+    final data = _data;
+
+    if (data == null) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => InquiryScreen(data: data)),
+    );
+  }
+
+  //============================================================================
   //! BUILD
   //============================================================================
 
@@ -282,11 +299,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             ),
           ),
 
-          RoomDetailBottomButton(
-            onPressed: () {
-              // TODO: Implement inquiry action.
-            },
-          ),
+          RoomDetailBottomButton(onPressed: _openInquiry),
         ],
       ),
     );

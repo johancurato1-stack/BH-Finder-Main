@@ -7,7 +7,7 @@ import 'package:bh_finder/core/models/image_model.dart';
 
 class RoomDetailData {
   //============================================================================
-  //! FIELDS
+  //! ROOM FIELDS
   //============================================================================
 
   final String id;
@@ -31,6 +31,22 @@ class RoomDetailData {
   final DateTime updatedAt;
 
   //============================================================================
+  //! PROPERTY FIELDS
+  //============================================================================
+
+  final String propertyTitle;
+
+  final String propertyAddress;
+
+  final String propertyImageUrl;
+
+  //============================================================================
+  //! LANDLORD FIELDS
+  //============================================================================
+
+  final String landlordName;
+
+  //============================================================================
   //! CONSTRUCTOR
   //============================================================================
 
@@ -45,5 +61,9 @@ class RoomDetailData {
     required this.images,
     required this.createdAt,
     required this.updatedAt,
+    required this.propertyTitle,
+    required this.propertyAddress,
+    required this.propertyImageUrl,
+    required this.landlordName,
   });
 }

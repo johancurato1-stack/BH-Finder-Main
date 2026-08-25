@@ -257,7 +257,7 @@ class SupabaseRoomRepository implements RoomRepository {
     }
 
     //----------------------------------------------------------
-    // Images
+    // Room Images
     //----------------------------------------------------------
 
     final imageRows = await _supabase
@@ -280,6 +280,64 @@ class SupabaseRoomRepository implements RoomRepository {
     }).toList();
 
     //----------------------------------------------------------
+    // Property
+    //----------------------------------------------------------
+
+    final property = await _supabase
+        .from('properties')
+        .select('id, title, address, owner_id')
+        .eq('id', room.propertyId)
+        .maybeSingle();
+
+    if (property == null) {
+      throw Exception('Property not found.');
+    }
+
+    final propertyId = property['id'] as String;
+
+    //----------------------------------------------------------
+    // Property Hero Image
+    //----------------------------------------------------------
+
+    final propertyImage = await _supabase
+        .from('property_images')
+        .select('storage_path')
+        .eq('property_id', propertyId)
+        .order('display_order', ascending: true)
+        .limit(1)
+        .maybeSingle();
+
+    String propertyImageUrl = '';
+
+    if (propertyImage != null) {
+      final storagePath = propertyImage['storage_path'] as String;
+
+      propertyImageUrl = _storageRepository.getPublicUrl(
+        'properties',
+        storagePath.replaceFirst('properties/', ''),
+      );
+    }
+
+    //----------------------------------------------------------
+    // Landlord
+    //----------------------------------------------------------
+
+    final landlordId = property['owner_id'] as String;
+
+    final profile = await _supabase
+        .from('profiles')
+        .select('first_name, last_name')
+        .eq('id', landlordId)
+        .maybeSingle();
+
+    String landlordName = '';
+
+    if (profile != null) {
+      landlordName =
+          '${profile['first_name'] ?? ''} ${profile['last_name'] ?? ''}'.trim();
+    }
+
+    //----------------------------------------------------------
     // Room Detail
     //----------------------------------------------------------
 
@@ -294,6 +352,12 @@ class SupabaseRoomRepository implements RoomRepository {
       images: images,
       createdAt: room.createdAt,
       updatedAt: room.updatedAt,
+
+      propertyTitle: property['title'] as String,
+      propertyAddress: property['address'] as String,
+      propertyImageUrl: propertyImageUrl,
+
+      landlordName: landlordName,
     );
   }
 
