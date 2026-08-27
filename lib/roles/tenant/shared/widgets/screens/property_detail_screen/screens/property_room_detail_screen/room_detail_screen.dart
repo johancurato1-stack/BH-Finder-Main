@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:bh_finder/core/models/image_model.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 import 'package:bh_finder/core/repositories/repositories/room_repository.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/ui_models/room_detail_data.dart';
+import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
-import 'package:bh_finder/roles/tenant/features/messages/screens/inquiry_screen.dart';
+import 'package:bh_finder/roles/tenant/shared/widgets/screens/property_detail_screen/screens/property_room_detail_screen/screens/inquiry_screen.dart';
 
 import 'package:bh_finder/roles/tenant/shared/widgets/screens/shared/widgets/date_info.dart';
 import 'package:bh_finder/shared/widgets/others/image_carousel.dart';
@@ -164,7 +167,17 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => InquiryScreen(data: data)),
+      MaterialPageRoute(
+        builder: (_) {
+          return ChangeNotifierProvider<ChatViewModel>(
+            create: (_) => ChatViewModel(
+              repository: Repositories.instance.chatRepository,
+              inquiryRepository: Repositories.instance.inquiryRepository,
+            ),
+            child: InquiryScreen(data: data),
+          );
+        },
+      ),
     );
   }
 
@@ -299,6 +312,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             ),
           ),
 
+          //====================================================================
+          //! INQUIRY BUTTON
+          //====================================================================
           RoomDetailBottomButton(onPressed: _openInquiry),
         ],
       ),

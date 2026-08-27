@@ -5,7 +5,10 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/core/models/chat_model.dart';
-import 'package:bh_finder/roles/landlord/features/messages/repositories/chat_repository.dart';
+
+import 'package:bh_finder/core/repositories/supabase/supabase_inquiry_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_chat_repository.dart';
+import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
 import 'package:bh_finder/roles/landlord/features/messages/screens/chat_room_screen.dart';
 import 'package:bh_finder/roles/landlord/features/messages/screens/new_message_screen.dart';
@@ -33,16 +36,10 @@ class MessagesScreen extends StatefulWidget {
 
 class _MessagesScreenState extends State<MessagesScreen> {
   //============================================================================
-  //! REPOSITORY
+  //! VIEW MODEL
   //============================================================================
 
-  final ChatRepository _repository = ChatRepository();
-
-  //============================================================================
-  //! STATE
-  //============================================================================
-
-  late Future<List<ChatModel>> _conversationsFuture;
+  late final ChatViewModel _viewModel;
 
   //============================================================================
   //! LIFECYCLE
@@ -52,7 +49,19 @@ class _MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
 
-    _conversationsFuture = _repository.fetchConversations();
+    _viewModel = ChatViewModel(
+      repository: SupabaseChatRepository(),
+      inquiryRepository: SupabaseInquiryRepository(),
+    );
+
+    _viewModel.fetchConversations();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+
+    super.dispose();
   }
 
   //============================================================================
@@ -191,25 +200,27 @@ class _MessagesScreenState extends State<MessagesScreen> {
             //! CONVERSATIONS
             //==========================================================================
             Expanded(
-              child: FutureBuilder<List<ChatModel>>(
-                future: _conversationsFuture,
+              child: AnimatedBuilder(
+                animation: _viewModel,
 
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (context, _) {
+                  if (_viewModel.isLoadingConversations) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  if (snapshot.hasError) {
+                  if (_viewModel.error != null) {
                     return Center(
-                      child: Text('Error loading messages:\n${snapshot.error}'),
+                      child: Text(
+                        'Error loading messages:\n${_viewModel.error}',
+                      ),
                     );
                   }
 
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  final conversations = _viewModel.conversations;
+
+                  if (conversations.isEmpty) {
                     return const Center(child: Text('No conversations found.'));
                   }
-
-                  final conversations = snapshot.data!;
 
                   return ListView.separated(
                     itemCount: conversations.length + 1,

@@ -11,21 +11,31 @@ class InquiryModel {
 
   final String id;
 
-  final String propertyId;
+  final String chatId;
 
-  final String propertyName;
+  final String tenantId;
+
+  final String landlordId;
+
+  final String propertyId;
 
   final String roomId;
 
-  final String price;
+  final String roomTitle;
 
-  final String genderRule;
+  final double roomPrice;
 
-  final String distance;
+  final int roomCapacity;
+
+  final GenderPreference genderPreference;
+
+  final String message;
 
   final InquiryStatus status;
 
-  final String? roomName;
+  final DateTime createdAt;
+
+  final DateTime updatedAt;
 
   //============================================================================
   //! CONSTRUCTOR
@@ -33,13 +43,18 @@ class InquiryModel {
 
   const InquiryModel({
     required this.id,
+    required this.chatId,
+    required this.tenantId,
+    required this.landlordId,
     required this.propertyId,
-    required this.propertyName,
     required this.roomId,
-    required this.price,
-    required this.genderRule,
-    required this.distance,
+    required this.roomTitle,
+    required this.roomPrice,
+    required this.roomCapacity,
+    required this.genderPreference,
+    required this.message,
     required this.status,
-    this.roomName,
+    required this.createdAt,
+    required this.updatedAt,
   });
 }

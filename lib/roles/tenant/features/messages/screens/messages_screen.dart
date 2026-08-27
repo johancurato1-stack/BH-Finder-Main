@@ -5,7 +5,10 @@ import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/core/models/chat_model.dart';
-import 'package:bh_finder/roles/tenant/features/messages/repositories/chat_repository.dart';
+
+import 'package:bh_finder/core/repositories/supabase/supabase_inquiry_repository.dart';
+import 'package:bh_finder/core/repositories/supabase/supabase_chat_repository.dart';
+import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/messages/screens/chat_room_screen.dart';
 import 'package:bh_finder/roles/tenant/features/messages/screens/new_message_screen.dart';
@@ -13,6 +16,10 @@ import 'package:bh_finder/roles/tenant/features/messages/screens/notification_ch
 
 import 'package:bh_finder/shared/widgets/messages/chat/chat_tile.dart';
 import 'package:bh_finder/shared/widgets/messages/notification/notification_tile.dart';
+
+//============================================================================
+//! MESSAGES SCREEN
+//============================================================================
 
 class MessagesScreen extends StatefulWidget {
   //============================================================================
@@ -31,18 +38,16 @@ class MessagesScreen extends StatefulWidget {
   State<MessagesScreen> createState() => _MessagesScreenState();
 }
 
+//============================================================================
+//! STATE
+//============================================================================
+
 class _MessagesScreenState extends State<MessagesScreen> {
   //============================================================================
-  //! REPOSITORY
+  //! VIEW MODEL
   //============================================================================
 
-  final ChatRepository _repository = ChatRepository();
-
-  //============================================================================
-  //! STATE
-  //============================================================================
-
-  late Future<List<ChatModel>> _conversationsFuture;
+  late final ChatViewModel _viewModel;
 
   //============================================================================
   //! LIFECYCLE
@@ -52,7 +57,19 @@ class _MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
 
-    _conversationsFuture = _repository.fetchConversations();
+    _viewModel = ChatViewModel(
+      repository: SupabaseChatRepository(),
+      inquiryRepository: SupabaseInquiryRepository(),
+    );
+
+    _viewModel.fetchConversations();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+
+    super.dispose();
   }
 
   //============================================================================
@@ -90,163 +107,173 @@ class _MessagesScreenState extends State<MessagesScreen> {
       backgroundColor: AppColors.background,
 
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: AnimatedBuilder(
+          animation: _viewModel,
 
-          children: [
-            //==========================================================================
-            //! HEADER
-            //==========================================================================
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          builder: (context, _) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-                  IconButton(
-                    onPressed: widget.onBackPressed,
-
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.secondary,
-                      size: 24,
-                    ),
+              children: [
+                //================================================================
+                //! HEADER
+                //================================================================
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
                   ),
 
-                  Text(
-                    'Messages',
-                    style: AppTextStyles.heading2.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                  IconButton(
-                    onPressed: _openNewMessage,
+                    children: [
+                      IconButton(
+                        onPressed: widget.onBackPressed,
 
-                    icon: const Icon(
-                      Icons.add_to_photos_outlined,
-                      color: AppColors.primary,
-                      size: 26,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            //==========================================================================
-            //! SEARCH BAR
-            //==========================================================================
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.screenPadding,
-                vertical: AppSpacing.sm,
-              ),
-
-              child: Container(
-                height: 48,
-
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-
-                  borderRadius: BorderRadius.circular(24),
-
-                  border: Border.all(
-                    color: AppColors.tertiary.withValues(alpha: .30),
-                    width: .5,
-                  ),
-                ),
-
-                child: const Row(
-                  children: [
-                    Icon(Icons.search, color: AppColors.tertiary, size: 20),
-
-                    SizedBox(width: 10),
-
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search messages',
-
-                          hintStyle: TextStyle(
-                            color: AppColors.tertiary,
-                            fontSize: 14,
-                          ),
-
-                          border: InputBorder.none,
-                          isDense: true,
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.secondary,
+                          size: 24,
                         ),
                       ),
-                    ),
-                  ],
+
+                      Text(
+                        'Messages',
+                        style: AppTextStyles.heading2.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+
+                      IconButton(
+                        onPressed: _openNewMessage,
+
+                        icon: const Icon(
+                          Icons.add_to_photos_outlined,
+                          color: AppColors.primary,
+                          size: 26,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
 
-            const SizedBox(height: 1),
+                //================================================================
+                //! SEARCH BAR
+                //================================================================
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                    vertical: AppSpacing.sm,
+                  ),
 
-            //==========================================================================
-            //! CONVERSATIONS
-            //==========================================================================
-            Expanded(
-              child: FutureBuilder<List<ChatModel>>(
-                future: _conversationsFuture,
+                  child: Container(
+                    height: 48,
 
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
 
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error loading messages:\n${snapshot.error}'),
-                    );
-                  }
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
 
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No conversations found.'));
-                  }
+                      borderRadius: BorderRadius.circular(24),
 
-                  final conversations = snapshot.data!;
-
-                  return ListView.separated(
-                    itemCount: conversations.length + 1,
-
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-
-                    physics: const BouncingScrollPhysics(),
-
-                    separatorBuilder: (_, __) => Divider(
-                      color: AppColors.tertiary.withValues(alpha: .10),
-                      height: 1,
+                      border: Border.all(
+                        color: AppColors.tertiary.withValues(alpha: .30),
+                        width: .5,
+                      ),
                     ),
 
-                    itemBuilder: (context, index) {
-                      //==========================================================
-                      //! NOTIFICATION CHANNEL
-                      //==========================================================
+                    child: const Row(
+                      children: [
+                        Icon(Icons.search, color: AppColors.tertiary, size: 20),
 
-                      if (index == 0) {
-                        return NotificationTile(onTap: _openNotifications);
-                      }
+                        SizedBox(width: 10),
 
-                      //==========================================================
-                      //! CHAT TILE
-                      //==========================================================
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search messages',
 
-                      final chat = conversations[index - 1];
+                              hintStyle: TextStyle(
+                                color: AppColors.tertiary,
+                                fontSize: 14,
+                              ),
 
-                      return ChatTile(chat: chat, onTap: () => _openChat(chat));
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 1),
+
+                //================================================================
+                //! CONVERSATIONS
+                //================================================================
+                Expanded(child: _buildConversations()),
+              ],
+            );
+          },
         ),
       ),
+    );
+  }
+
+  //============================================================================
+  //! BUILD CONVERSATIONS
+  //============================================================================
+
+  Widget _buildConversations() {
+    if (_viewModel.isLoadingConversations) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_viewModel.error != null) {
+      return Center(
+        child: Text(
+          'Error loading messages:\n${_viewModel.error}',
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    if (_viewModel.conversations.isEmpty) {
+      return const Center(child: Text('No conversations found.'));
+    }
+
+    final conversations = _viewModel.conversations;
+
+    return ListView.separated(
+      itemCount: conversations.length + 1,
+
+      padding: const EdgeInsets.symmetric(vertical: 2),
+
+      physics: const BouncingScrollPhysics(),
+
+      separatorBuilder: (_, __) =>
+          Divider(color: AppColors.tertiary.withValues(alpha: .10), height: 1),
+
+      itemBuilder: (context, index) {
+        //======================================================================
+        //! NOTIFICATION CHANNEL
+        //======================================================================
+
+        if (index == 0) {
+          return NotificationTile(onTap: _openNotifications);
+        }
+
+        //======================================================================
+        //! CHAT TILE
+        //======================================================================
+
+        final chat = conversations[index - 1];
+
+        return ChatTile(chat: chat, onTap: () => _openChat(chat));
+      },
     );
   }
 }

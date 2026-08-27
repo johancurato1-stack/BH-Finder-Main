@@ -357,6 +357,7 @@ class SupabaseRoomRepository implements RoomRepository {
       propertyAddress: property['address'] as String,
       propertyImageUrl: propertyImageUrl,
 
+      landlordId: landlordId,
       landlordName: landlordName,
     );
   }

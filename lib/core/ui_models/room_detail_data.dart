@@ -44,6 +44,8 @@ class RoomDetailData {
   //! LANDLORD FIELDS
   //============================================================================
 
+  final String landlordId;
+
   final String landlordName;
 
   //============================================================================
@@ -64,6 +66,7 @@ class RoomDetailData {
     required this.propertyTitle,
     required this.propertyAddress,
     required this.propertyImageUrl,
+    required this.landlordId,
     required this.landlordName,
   });
 }

@@ -14,13 +14,13 @@ class SplashService {
     required Widget destination,
     Duration duration = const Duration(seconds: 3),
   }) async {
-    // Simulate app initialization
     await Future.delayed(duration);
 
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      return;
+    }
 
-    Navigator.pushAndRemoveUntil(
-      context,
+    Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => destination),
       (route) => false,
     );

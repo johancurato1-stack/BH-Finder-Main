@@ -11,18 +11,14 @@ class ChatModel {
 
   // Landlord
   final String landlordId;
-  final String landlordName;
-  final String avatarUrl;
-  final String responseTime;
-  final bool isOnline;
 
-  // Property
-  final String propertyId;
-  final String propertyTitle;
+  final String landlordName;
+
+  final String avatarUrl;
 
   // Conversation
   final String lastMessage;
-  final String timeStamp;
+
   final bool isUnread;
 
   //============================================================================
@@ -34,12 +30,7 @@ class ChatModel {
     required this.landlordId,
     required this.landlordName,
     required this.avatarUrl,
-    required this.responseTime,
-    required this.isOnline,
-    required this.propertyId,
-    required this.propertyTitle,
     required this.lastMessage,
-    required this.timeStamp,
     required this.isUnread,
   });
 
@@ -53,12 +44,7 @@ class ChatModel {
       landlordId: map['landlordId'] ?? '',
       landlordName: map['landlordName'] ?? '',
       avatarUrl: map['avatarUrl'] ?? '',
-      responseTime: map['responseTime'] ?? '',
-      isOnline: map['isOnline'] ?? false,
-      propertyId: map['propertyId'] ?? '',
-      propertyTitle: map['propertyTitle'] ?? '',
       lastMessage: map['lastMessage'] ?? '',
-      timeStamp: map['timeStamp'] ?? '',
       isUnread: map['isUnread'] ?? false,
     );
   }
@@ -73,12 +59,7 @@ class ChatModel {
       'landlordId': landlordId,
       'landlordName': landlordName,
       'avatarUrl': avatarUrl,
-      'responseTime': responseTime,
-      'isOnline': isOnline,
-      'propertyId': propertyId,
-      'propertyTitle': propertyTitle,
       'lastMessage': lastMessage,
-      'timeStamp': timeStamp,
       'isUnread': isUnread,
     };
   }

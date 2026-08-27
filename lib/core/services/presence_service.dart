@@ -39,7 +39,9 @@ class PresenceService with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
 
-    await _profileRepository.updateLastSeen();
+    try {
+      await _profileRepository.updateLastSeen();
+    } catch (_) {}
 
     _startHeartbeat();
   }

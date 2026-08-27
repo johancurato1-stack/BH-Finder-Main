@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
@@ -6,6 +7,8 @@ import 'package:bh_finder/core/theme/app_radius.dart';
 import 'package:bh_finder/core/theme/app_spacing.dart';
 import 'package:bh_finder/core/theme/app_text_styles.dart';
 import 'package:bh_finder/core/ui_models/room_detail_data.dart';
+
+import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
 import 'package:bh_finder/shared/widgets/buttons/primary_button.dart';
 import 'package:bh_finder/shared/widgets/textfields/primary_form_text_field.dart';
@@ -51,6 +54,67 @@ class _InquiryScreenState extends State<InquiryScreen> {
     _messageController.dispose();
 
     super.dispose();
+  }
+
+  //============================================================================
+  //! SEND INQUIRY
+  //============================================================================
+
+  Future<void> _sendInquiry() async {
+    final chatViewModel = context.read<ChatViewModel>();
+
+    //==========================================================================
+    //! SPAM PROTECTION
+    //==========================================================================
+
+    if (chatViewModel.isSending) {
+      return;
+    }
+
+    //==========================================================================
+    //! SEND
+    //==========================================================================
+
+    await chatViewModel.sendInquiry(
+      landlordId: widget.data.landlordId,
+      propertyId: widget.data.propertyId,
+      roomId: widget.data.id,
+      roomTitle: widget.data.title,
+      roomPrice: widget.data.price,
+      roomCapacity: widget.data.capacity,
+      genderPreference: widget.data.genderPreference,
+      message: _messageController.text,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    //==========================================================================
+    //! ERROR
+    //==========================================================================
+
+    if (chatViewModel.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to send inquiry: ${chatViewModel.error}'),
+        ),
+      );
+
+      chatViewModel.clearError();
+
+      return;
+    }
+
+    //==========================================================================
+    //! SUCCESS
+    //==========================================================================
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Inquiry sent successfully.')));
+
+    Navigator.pop(context);
   }
 
   //============================================================================
@@ -135,7 +199,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
 
                     _buildPropertyCard(data),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 18),
 
                     //==========================================================
                     //! ROOM DETAILS
@@ -193,10 +257,16 @@ class _InquiryScreenState extends State<InquiryScreen> {
                 MediaQuery.of(context).padding.bottom + AppSpacing.sm,
               ),
 
-              child: PrimaryButton(
-                text: 'Send Inquiry',
-                onPressed: () {
-                  // TODO: Send inquiry.
+              child: Consumer<ChatViewModel>(
+                builder: (context, viewModel, _) {
+                  return PrimaryButton(
+                    text: viewModel.isSending ? 'Sending...' : 'Send Inquiry',
+
+                    //================================================================
+                    //! SPAM PROTECTION
+                    //================================================================
+                    onPressed: _sendInquiry,
+                  );
                 },
               ),
             ),
@@ -219,6 +289,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppRadius.xl),
+
         border: Border.all(
           color: AppColors.tertiary.withValues(alpha: .20),
           width: .5,
@@ -313,6 +384,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppRadius.xl),
+
         border: Border.all(
           color: AppColors.tertiary.withValues(alpha: .20),
           width: .5,

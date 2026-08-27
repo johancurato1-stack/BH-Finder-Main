@@ -5,6 +5,10 @@ import 'package:bh_finder/core/models/inquiry_model.dart';
 import 'package:bh_finder/core/models/message_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! INQUIRY CARD
+//============================================================================
+
 class InquiryCard extends StatelessWidget {
   //============================================================================
   //! FIELDS
@@ -44,6 +48,7 @@ class InquiryCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(18),
+
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: .04),
@@ -60,6 +65,9 @@ class InquiryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
+                    //==========================================================
+                    //! TITLE
+                    //==========================================================
                     Center(
                       child: Text(
                         'INQUIRY',
@@ -74,28 +82,50 @@ class InquiryCard extends StatelessWidget {
 
                     const SizedBox(height: 18),
 
-                    _buildInfoRow(
-                      Icons.home_work_rounded,
-                      inquiry.propertyName,
-                    ),
-
-                    const SizedBox(height: 12),
-
+                    //==========================================================
+                    //! ROOM
+                    //==========================================================
                     _buildInfoRow(
                       Icons.meeting_room_rounded,
-                      inquiry.roomName ?? 'Room',
+                      inquiry.roomTitle,
                     ),
 
                     const SizedBox(height: 12),
 
-                    _buildInfoRow(Icons.payments_rounded, inquiry.price),
+                    //==========================================================
+                    //! PRICE
+                    //==========================================================
+                    _buildInfoRow(
+                      Icons.payments_rounded,
+                      '₱${inquiry.roomPrice.toStringAsFixed(0)} / month',
+                    ),
 
                     const SizedBox(height: 12),
 
-                    _buildInfoRow(Icons.people_alt_rounded, inquiry.genderRule),
+                    //==========================================================
+                    //! CAPACITY
+                    //==========================================================
+                    _buildInfoRow(
+                      Icons.people_alt_rounded,
+                      '${inquiry.roomCapacity} person'
+                      '${inquiry.roomCapacity == 1 ? '' : 's'}',
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    //==========================================================
+                    //! GENDER
+                    //==========================================================
+                    _buildInfoRow(
+                      Icons.wc_outlined,
+                      _formatGender(inquiry.genderPreference),
+                    ),
 
                     const SizedBox(height: 18),
 
+                    //==========================================================
+                    //! STATUS
+                    //==========================================================
                     _buildStatusChip(),
                   ],
                 ),
@@ -104,6 +134,9 @@ class InquiryCard extends StatelessWidget {
 
             const SizedBox(height: 4),
 
+            //==================================================================
+            //! MESSAGE TIME
+            //==================================================================
             Row(
               mainAxisSize: MainAxisSize.min,
 
@@ -202,6 +235,23 @@ class InquiryCard extends StatelessWidget {
         style: TextStyle(color: color, fontWeight: FontWeight.w600),
       ),
     );
+  }
+
+  //============================================================================
+  //! FORMAT GENDER
+  //============================================================================
+
+  String _formatGender(GenderPreference gender) {
+    switch (gender) {
+      case GenderPreference.male:
+        return 'Male Only';
+
+      case GenderPreference.female:
+        return 'Female Only';
+
+      case GenderPreference.mixed:
+        return 'Mixed';
+    }
   }
 
   //============================================================================
