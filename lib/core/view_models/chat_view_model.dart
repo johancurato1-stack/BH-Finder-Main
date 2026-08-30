@@ -46,6 +46,10 @@ class ChatViewModel extends ChangeNotifier {
 
   String? _error;
 
+  String? _accessStatus;
+
+  String? _pendingUserId;
+
   //============================================================================
   //! GETTERS
   //============================================================================
@@ -61,6 +65,31 @@ class ChatViewModel extends ChangeNotifier {
   bool get isSending => _isSending;
 
   String? get error => _error;
+
+  String? get accessStatus => _accessStatus;
+
+  String? get pendingUserId => _pendingUserId;
+
+  //============================================================================
+  //! ACCESS STATUS
+  //============================================================================
+
+  bool get isLocked => _accessStatus == 'locked';
+
+  bool get isPending =>
+      _accessStatus == 'pending' || _accessStatus == 'pending_sender';
+
+  bool get isUnlocked => _accessStatus == 'unlocked';
+
+  bool get isBlocked => _accessStatus == 'blocked';
+
+  //============================================================================
+  //! PENDING REQUEST ROLE
+  //============================================================================
+
+  bool get isPendingSender => _accessStatus == 'pending_sender';
+
+  bool get isPendingRecipient => _accessStatus == 'pending';
 
   //============================================================================
   //! GET INQUIRY
@@ -93,6 +122,166 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   //============================================================================
+  //! CHAT ACCESS
+  //============================================================================
+
+  Future<void> fetchChatAccessStatus(String chatId) async {
+    _error = null;
+
+    try {
+      //========================================================================
+      //! ACCESS STATUS
+      //========================================================================
+
+      _accessStatus = await repository.getChatAccessStatus(chatId);
+
+      //========================================================================
+      //! PENDING USER
+      //========================================================================
+
+      _pendingUserId = await repository.getPendingUserId(chatId);
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
+  //! ACCEPT CHAT
+  //============================================================================
+
+  Future<void> acceptChat(String chatId) async {
+    _error = null;
+
+    try {
+      //========================================================================
+      //! ONLY RECIPIENT CAN ACCEPT
+      //========================================================================
+
+      if (!isPendingRecipient) {
+        throw Exception('Only the recipient can accept this chat request.');
+      }
+
+      await repository.acceptChat(chatId);
+
+      _accessStatus = 'unlocked';
+
+      _pendingUserId = null;
+
+      await fetchConversations();
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
+  //! DECLINE CHAT
+  //============================================================================
+
+  Future<void> declineChat(String chatId) async {
+    _error = null;
+
+    try {
+      //========================================================================
+      //! ONLY RECIPIENT CAN DECLINE
+      //========================================================================
+
+      if (!isPendingRecipient) {
+        throw Exception('Only the recipient can delete this chat request.');
+      }
+
+      await repository.declineChat(chatId);
+
+      _accessStatus = 'locked';
+
+      _pendingUserId = null;
+
+      await fetchConversations();
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
+  //! BLOCK CHAT
+  //============================================================================
+
+  Future<void> blockChat(String chatId) async {
+    _error = null;
+
+    try {
+      //========================================================================
+      //! ONLY RECIPIENT CAN BLOCK PENDING REQUEST
+      //========================================================================
+
+      if (isPending && !isPendingRecipient) {
+        throw Exception('Only the recipient can block this chat request.');
+      }
+
+      await repository.blockChat(chatId);
+
+      _accessStatus = 'blocked';
+
+      _pendingUserId = null;
+
+      await fetchConversations();
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
+  //! UNBLOCK CHAT
+  //============================================================================
+
+  Future<void> unblockChat(String chatId) async {
+    _error = null;
+
+    try {
+      await repository.unblockChat(chatId);
+
+      //========================================================================
+      //! UNBLOCK RETURNS TO LOCKED
+      //========================================================================
+
+      _accessStatus = 'locked';
+
+      _pendingUserId = null;
+
+      await fetchConversations();
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
+  //! DELETE CHAT
+  //============================================================================
+
+  Future<void> deleteChat(String chatId) async {
+    _error = null;
+
+    try {
+      await repository.deleteChat(chatId);
+
+      await fetchConversations();
+    } catch (e) {
+      _error = e.toString();
+    }
+
+    notifyListeners();
+  }
+
+  //============================================================================
   //! FETCH MESSAGES
   //============================================================================
 
@@ -104,7 +293,15 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      //========================================================================
+      //! FETCH MESSAGES
+      //========================================================================
+
       _messages = await repository.fetchMessages(chatId);
+
+      //========================================================================
+      //! FETCH INQUIRIES
+      //========================================================================
 
       for (final message in _messages) {
         if (message.type != MessageType.inquiry) {
@@ -175,11 +372,13 @@ class ChatViewModel extends ChangeNotifier {
   Future<void> sendInquiry({
     required String landlordId,
     required String propertyId,
+    required String propertyName,
     required String roomId,
+    required String roomImageUrl,
     required String roomTitle,
     required double roomPrice,
     required int roomCapacity,
-    required GenderPreference genderPreference,
+    required String roomGenderPreference,
     required String message,
   }) async {
     if (_isSending) {
@@ -195,30 +394,86 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final chatId = await repository.getOrCreateChat(landlordId: landlordId);
+      //========================================================================
+      //! GET OR CREATE CHAT
+      //========================================================================
 
-      final now = DateTime.now();
+      final chatId = await repository.getOrCreateChat(
+        user2Id: landlordId,
+        propertyId: propertyId,
+      );
+
+      //========================================================================
+      //! CREATE INQUIRY SNAPSHOT
+      //========================================================================
 
       final inquiry = InquiryModel(
         id: '',
         chatId: chatId,
-        tenantId: repository.currentUserId,
-        landlordId: landlordId,
-        propertyId: propertyId,
+
+        //======================================================================
+        //! PROPERTY SNAPSHOT
+        //======================================================================
+        propertyName: propertyName,
+
+        //======================================================================
+        //! ROOM REFERENCE
+        //======================================================================
         roomId: roomId,
+
+        //======================================================================
+        //! ROOM SNAPSHOT
+        //======================================================================
+        roomImageUrl: roomImageUrl,
         roomTitle: roomTitle,
         roomPrice: roomPrice,
         roomCapacity: roomCapacity,
-        genderPreference: genderPreference,
+        roomGenderPreference: roomGenderPreference,
+
+        //======================================================================
+        //! INQUIRY
+        //======================================================================
         message: trimmedMessage,
         status: InquiryStatus.pending,
-        createdAt: now,
-        updatedAt: now,
+
+        createdAt: DateTime.now(),
       );
 
-      final messageModel = await repository.sendInquiry(inquiry: inquiry);
+      //========================================================================
+      //! SAVE INQUIRY
+      //========================================================================
+
+      final createdInquiry = await inquiryRepository.create(inquiry);
+
+      //========================================================================
+      //! STORE INQUIRY LOCALLY
+      //========================================================================
+
+      _inquiries[createdInquiry.id] = createdInquiry;
+
+      //========================================================================
+      //! CREATE INQUIRY MESSAGE
+      //========================================================================
+
+      final messageModel = await repository.sendInquiryMessage(
+        chatId: chatId,
+        inquiryId: createdInquiry.id,
+        text: trimmedMessage.isEmpty ? 'Inquiry' : trimmedMessage,
+      );
 
       _messages.insert(0, messageModel);
+
+      //========================================================================
+      //! UPDATE ACCESS STATUS
+      //========================================================================
+
+      _accessStatus = await repository.getChatAccessStatus(chatId);
+
+      //========================================================================
+      //! UPDATE PENDING USER
+      //========================================================================
+
+      _pendingUserId = await repository.getPendingUserId(chatId);
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -244,6 +499,10 @@ class ChatViewModel extends ChangeNotifier {
 
   void clearMessages() {
     _messages = [];
+
+    _accessStatus = null;
+
+    _pendingUserId = null;
 
     notifyListeners();
   }

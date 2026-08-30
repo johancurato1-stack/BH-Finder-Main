@@ -71,7 +71,7 @@ enum MessageStatus { sending, sent, delivered, seen }
 //! INQUIRY STATUS
 //============================================================================
 
-enum InquiryStatus { pending, accepted, rejected, reserved, completed }
+enum InquiryStatus { pending, accepted, declined, expired }
 
 //============================================================================
 //! VALIDATION STATE

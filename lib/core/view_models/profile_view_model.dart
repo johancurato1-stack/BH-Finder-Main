@@ -29,6 +29,8 @@ class ProfileViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
 
+  String? _error;
+
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
@@ -55,6 +57,8 @@ class ProfileViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  String? get error => _error;
+
   //============================================================================
   //! COMMANDS
   //============================================================================
@@ -62,15 +66,43 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> loadProfile() async {
     _setLoading(true);
 
-    _profile = await _repository.getCurrentProfile();
+    _error = null;
 
-    _favoritesCount = await _repository.getFavoritesCount();
+    try {
+      //========================================================================
+      //! PROFILE
+      //========================================================================
 
-    _inquiriesCount = await _repository.getInquiriesCount();
+      _profile = await _repository.getCurrentProfile();
 
-    _propertiesCount = await _repository.getPropertiesCount();
+      //========================================================================
+      //! FAVORITES
+      //========================================================================
 
-    _setLoading(false);
+      _favoritesCount = await _repository.getFavoritesCount();
+
+      //========================================================================
+      //! INQUIRIES
+      //========================================================================
+
+      _inquiriesCount = await _repository.getInquiriesCount();
+
+      //========================================================================
+      //! PROPERTIES
+      //========================================================================
+
+      _propertiesCount = await _repository.getPropertiesCount();
+    } catch (e) {
+      _error = e.toString();
+
+      debugPrint('ProfileViewModel.loadProfile error: $e');
+    } finally {
+      //========================================================================
+      //! ALWAYS STOP LOADING
+      //========================================================================
+
+      _setLoading(false);
+    }
   }
 
   Future<void> updateAvatar({required String localPath}) async {
@@ -91,10 +123,18 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> updateLastActiveRole(String role) async {
-    await _repository.updateLastActiveRole(role);
+    try {
+      await _repository.updateLastActiveRole(role);
 
-    if (_profile != null) {
-      _profile!['last_active_role'] = role;
+      if (_profile != null) {
+        _profile!['last_active_role'] = role;
+
+        _notify();
+      }
+    } catch (e) {
+      _error = e.toString();
+
+      debugPrint('ProfileViewModel.updateLastActiveRole error: $e');
 
       _notify();
     }

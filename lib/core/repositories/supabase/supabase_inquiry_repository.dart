@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
+
 import 'package:bh_finder/core/models/inquiry_model.dart';
 
 import 'package:bh_finder/core/repositories/repositories/inquiry_repository.dart';
@@ -15,20 +16,6 @@ class SupabaseInquiryRepository implements InquiryRepository {
   //============================================================================
 
   final SupabaseClient _supabase = Supabase.instance.client;
-
-  //============================================================================
-  //! CURRENT USER
-  //============================================================================
-
-  String get _currentUserId {
-    final userId = _supabase.auth.currentUser?.id;
-
-    if (userId == null) {
-      throw Exception('User is not authenticated.');
-    }
-
-    return userId;
-  }
 
   //============================================================================
   //! GET BY ID
@@ -50,58 +37,18 @@ class SupabaseInquiryRepository implements InquiryRepository {
   }
 
   //============================================================================
-  //! GET TENANT INQUIRIES
-  //============================================================================
-
-  @override
-  Future<List<InquiryModel>> getTenantInquiries() async {
-    final userId = _currentUserId;
-
-    final response = await _supabase
-        .from('inquiries')
-        .select()
-        .eq('tenant_id', userId)
-        .order('created_at', ascending: false);
-
-    return Future.wait(response.map<Future<InquiryModel>>(_mapInquiry));
-  }
-
-  //============================================================================
-  //! GET LANDLORD INQUIRIES
-  //============================================================================
-
-  @override
-  Future<List<InquiryModel>> getLandlordInquiries() async {
-    final userId = _currentUserId;
-
-    final response = await _supabase
-        .from('inquiries')
-        .select()
-        .eq('landlord_id', userId)
-        .order('created_at', ascending: false);
-
-    return Future.wait(response.map<Future<InquiryModel>>(_mapInquiry));
-  }
-
-  //============================================================================
   //! GET BY CHAT ID
   //============================================================================
 
   @override
-  Future<InquiryModel?> getByChatId(String chatId) async {
+  Future<List<InquiryModel>> getByChatId(String chatId) async {
     final response = await _supabase
         .from('inquiries')
         .select()
         .eq('chat_id', chatId)
-        .order('created_at', ascending: false)
-        .limit(1)
-        .maybeSingle();
+        .order('created_at', ascending: false);
 
-    if (response == null) {
-      return null;
-    }
-
-    return _mapInquiry(response);
+    return response.map<InquiryModel>(_mapInquiry).toList();
   }
 
   //============================================================================
@@ -110,24 +57,41 @@ class SupabaseInquiryRepository implements InquiryRepository {
 
   @override
   Future<InquiryModel> create(InquiryModel inquiry) async {
-    final userId = _currentUserId;
-
-    if (inquiry.tenantId != userId) {
-      throw Exception('Inquiry does not belong to the current user.');
-    }
-
     final response = await _supabase
         .from('inquiries')
         .insert({
+          //====================================================================
+          //! CHAT REFERENCE
+          //====================================================================
           'chat_id': inquiry.chatId,
-          'tenant_id': inquiry.tenantId,
-          'landlord_id': inquiry.landlordId,
+
+          //====================================================================
+          //! ROOM REFERENCE
+          //====================================================================
           'room_id': inquiry.roomId,
+
+          //====================================================================
+          //! PROPERTY SNAPSHOT
+          //====================================================================
+          'property_name': inquiry.propertyName,
+
+          //====================================================================
+          //! ROOM SNAPSHOT
+          //====================================================================
+          'room_image_url': inquiry.roomImageUrl,
           'room_title': inquiry.roomTitle,
           'room_price': inquiry.roomPrice,
           'room_capacity': inquiry.roomCapacity,
-          'gender_preference': inquiry.genderPreference.name,
+          'room_gender_preference': inquiry.roomGenderPreference,
+
+          //====================================================================
+          //! INQUIRY
+          //====================================================================
           'message': inquiry.message,
+
+          //====================================================================
+          //! STATUS
+          //====================================================================
           'status': inquiry.status.name,
         })
         .select()
@@ -137,20 +101,38 @@ class SupabaseInquiryRepository implements InquiryRepository {
   }
 
   //============================================================================
-  //! UPDATE STATUS
+  //! ACCEPT INQUIRY
   //============================================================================
 
   @override
-  Future<void> updateStatus({
-    required String inquiryId,
-    required String status,
-  }) async {
+  Future<void> acceptInquiry(String inquiryId) async {
     await _supabase
         .from('inquiries')
-        .update({
-          'status': status,
-          'updated_at': DateTime.now().toUtc().toIso8601String(),
-        })
+        .update({'status': InquiryStatus.accepted.name})
+        .eq('id', inquiryId);
+  }
+
+  //============================================================================
+  //! DECLINE INQUIRY
+  //============================================================================
+
+  @override
+  Future<void> declineInquiry(String inquiryId) async {
+    await _supabase
+        .from('inquiries')
+        .update({'status': InquiryStatus.declined.name})
+        .eq('id', inquiryId);
+  }
+
+  //============================================================================
+  //! EXPIRE INQUIRY
+  //============================================================================
+
+  @override
+  Future<void> expireInquiry(String inquiryId) async {
+    await _supabase
+        .from('inquiries')
+        .update({'status': InquiryStatus.expired.name})
         .eq('id', inquiryId);
   }
 
@@ -158,49 +140,52 @@ class SupabaseInquiryRepository implements InquiryRepository {
   //! MAP INQUIRY
   //============================================================================
 
-  Future<InquiryModel> _mapInquiry(Map<String, dynamic> row) async {
-    final roomId = row['room_id'] as String;
-
-    final room = await _supabase
-        .from('rooms')
-        .select('property_id')
-        .eq('id', roomId)
-        .maybeSingle();
-
-    if (room == null) {
-      throw Exception('Room not found for inquiry.');
-    }
-
+  InquiryModel _mapInquiry(Map<String, dynamic> row) {
     return InquiryModel(
       id: row['id'] as String,
 
-      chatId: row['chat_id'] as String,
+      //======================================================================
+      //! CHAT REFERENCE
+      //======================================================================
+      chatId: row['chat_id'] as String?,
 
-      tenantId: row['tenant_id'] as String,
+      //======================================================================
+      //! ROOM REFERENCE
+      //======================================================================
+      roomId: row['room_id'] as String?,
 
-      landlordId: row['landlord_id'] as String,
+      //======================================================================
+      //! PROPERTY SNAPSHOT
+      //======================================================================
+      propertyName: row['property_name'] as String? ?? '',
 
-      propertyId: room['property_id'] as String,
+      //======================================================================
+      //! ROOM SNAPSHOT
+      //======================================================================
+      roomImageUrl: row['room_image_url'] as String? ?? '',
 
-      roomId: roomId,
+      roomTitle: row['room_title'] as String? ?? '',
 
-      roomTitle: row['room_title'] as String,
+      roomPrice: (row['room_price'] as num?)?.toDouble() ?? 0,
 
-      roomPrice: (row['room_price'] as num).toDouble(),
+      roomCapacity: (row['room_capacity'] as num?)?.toInt() ?? 0,
 
-      roomCapacity: row['room_capacity'] as int,
+      roomGenderPreference: row['room_gender_preference'] as String? ?? '',
 
-      genderPreference: GenderPreference.values.firstWhere(
-        (e) => e.name == row['gender_preference'],
-      ),
-
+      //======================================================================
+      //! INQUIRY
+      //======================================================================
       message: row['message'] as String? ?? '',
 
-      status: InquiryStatus.values.firstWhere((e) => e.name == row['status']),
+      //======================================================================
+      //! STATUS
+      //======================================================================
+      status: InquiryStatus.values.firstWhere(
+        (status) => status.name == row['status'],
+        orElse: () => InquiryStatus.pending,
+      ),
 
       createdAt: DateTime.parse(row['created_at'] as String),
-
-      updatedAt: DateTime.parse(row['updated_at'] as String),
     );
   }
 }

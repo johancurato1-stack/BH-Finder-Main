@@ -1,3 +1,7 @@
+//============================================================================
+//! INQUIRY MODEL
+//============================================================================
+
 import 'package:bh_finder/core/enums/enums.dart';
 
 //============================================================================
@@ -11,15 +15,19 @@ class InquiryModel {
 
   final String id;
 
-  final String chatId;
+  final String? chatId;
 
-  final String tenantId;
+  // Property Snapshot
 
-  final String landlordId;
+  final String propertyName;
 
-  final String propertyId;
+  // Room Reference
 
-  final String roomId;
+  final String? roomId;
+
+  // Room Snapshot
+
+  final String roomImageUrl;
 
   final String roomTitle;
 
@@ -27,15 +35,15 @@ class InquiryModel {
 
   final int roomCapacity;
 
-  final GenderPreference genderPreference;
+  final String roomGenderPreference;
+
+  // Inquiry
 
   final String message;
 
   final InquiryStatus status;
 
   final DateTime createdAt;
-
-  final DateTime updatedAt;
 
   //============================================================================
   //! CONSTRUCTOR
@@ -44,17 +52,65 @@ class InquiryModel {
   const InquiryModel({
     required this.id,
     required this.chatId,
-    required this.tenantId,
-    required this.landlordId,
-    required this.propertyId,
+    required this.propertyName,
     required this.roomId,
+    required this.roomImageUrl,
     required this.roomTitle,
     required this.roomPrice,
     required this.roomCapacity,
-    required this.genderPreference,
+    required this.roomGenderPreference,
     required this.message,
     required this.status,
     required this.createdAt,
-    required this.updatedAt,
   });
+
+  //============================================================================
+  //! FROM MAP
+  //============================================================================
+
+  factory InquiryModel.fromMap(Map<String, dynamic> map) {
+    return InquiryModel(
+      id: map['id'] ?? '',
+      chatId: map['chatId'],
+      propertyName: map['propertyName'] ?? '',
+      roomId: map['roomId'],
+      roomImageUrl: map['roomImageUrl'] ?? '',
+      roomTitle: map['roomTitle'] ?? '',
+      roomPrice: (map['roomPrice'] as num?)?.toDouble() ?? 0,
+      roomCapacity: map['roomCapacity'] ?? 0,
+      roomGenderPreference: map['roomGenderPreference'] ?? '',
+
+      message: map['message'] ?? '',
+
+      status: InquiryStatus.values.firstWhere(
+        (status) => status.name == map['status'],
+        orElse: () => InquiryStatus.pending,
+      ),
+
+      createdAt: map['createdAt'] != null
+          ? DateTime.tryParse(map['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+    );
+  }
+
+  //============================================================================
+  //! TO MAP
+  //============================================================================
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'chatId': chatId,
+      'propertyName': propertyName,
+      'roomId': roomId,
+      'roomImageUrl': roomImageUrl,
+      'roomTitle': roomTitle,
+      'roomPrice': roomPrice,
+      'roomCapacity': roomCapacity,
+      'roomGenderPreference': roomGenderPreference,
+      'message': message,
+      'status': status.name,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
 }

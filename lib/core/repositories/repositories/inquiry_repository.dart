@@ -11,11 +11,7 @@ abstract class InquiryRepository {
 
   Future<InquiryModel?> getById(String inquiryId);
 
-  Future<List<InquiryModel>> getTenantInquiries();
-
-  Future<List<InquiryModel>> getLandlordInquiries();
-
-  Future<InquiryModel?> getByChatId(String chatId);
+  Future<List<InquiryModel>> getByChatId(String chatId);
 
   //============================================================================
   //! COMMANDS
@@ -23,8 +19,13 @@ abstract class InquiryRepository {
 
   Future<InquiryModel> create(InquiryModel inquiry);
 
-  Future<void> updateStatus({
-    required String inquiryId,
-    required String status,
-  });
+  //============================================================================
+  //! INQUIRY ACTIONS
+  //============================================================================
+
+  Future<void> acceptInquiry(String inquiryId);
+
+  Future<void> declineInquiry(String inquiryId);
+
+  Future<void> expireInquiry(String inquiryId);
 }

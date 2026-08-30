@@ -59,7 +59,9 @@ class Repositories {
   //! CHAT REPOSITORY
   //============================================================================
 
-  late final ChatRepository chatRepository = SupabaseChatRepository();
+  late final ChatRepository chatRepository = SupabaseChatRepository(
+    storageRepository: storageRepository,
+  );
 
   //============================================================================
   //! INQUIRY REPOSITORY

@@ -6,8 +6,7 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/core/models/chat_model.dart';
 
-import 'package:bh_finder/core/repositories/supabase/supabase_inquiry_repository.dart';
-import 'package:bh_finder/core/repositories/supabase/supabase_chat_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
 import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
 import 'package:bh_finder/roles/landlord/features/messages/screens/chat_room_screen.dart';
@@ -16,6 +15,10 @@ import 'package:bh_finder/roles/landlord/features/messages/screens/notification_
 
 import 'package:bh_finder/shared/widgets/messages/chat/chat_tile.dart';
 import 'package:bh_finder/shared/widgets/messages/notification/notification_tile.dart';
+
+//============================================================================
+//! MESSAGES SCREEN
+//============================================================================
 
 class MessagesScreen extends StatefulWidget {
   //============================================================================
@@ -34,6 +37,10 @@ class MessagesScreen extends StatefulWidget {
   State<MessagesScreen> createState() => _MessagesScreenState();
 }
 
+//============================================================================
+//! STATE
+//============================================================================
+
 class _MessagesScreenState extends State<MessagesScreen> {
   //============================================================================
   //! VIEW MODEL
@@ -49,9 +56,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
 
+    final repositories = Repositories.instance;
+
     _viewModel = ChatViewModel(
-      repository: SupabaseChatRepository(),
-      inquiryRepository: SupabaseInquiryRepository(),
+      repository: repositories.chatRepository,
+      inquiryRepository: repositories.inquiryRepository,
     );
 
     _viewModel.fetchConversations();
@@ -68,25 +77,35 @@ class _MessagesScreenState extends State<MessagesScreen> {
   //! METHODS
   //============================================================================
 
+  Future<void> _refreshConversations() async {
+    await _viewModel.fetchConversations();
+  }
+
   void _openNewMessage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const NewMessageScreen()),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   void _openNotifications() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const NotificationChatScreen()),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   void _openChat(ChatModel chat) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => ChatRoomScreen(chat: chat)),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   //============================================================================
@@ -103,9 +122,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-            //==========================================================================
+            //====================================================================
             //! HEADER
-            //==========================================================================
+            //====================================================================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
 
@@ -143,9 +162,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
               ),
             ),
 
-            //==========================================================================
+            //====================================================================
             //! SEARCH BAR
-            //==========================================================================
+            //====================================================================
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.screenPadding,
@@ -196,9 +215,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
             const SizedBox(height: 1),
 
-            //==========================================================================
+            //====================================================================
             //! CONVERSATIONS
-            //==========================================================================
+            //====================================================================
             Expanded(
               child: AnimatedBuilder(
                 animation: _viewModel,
@@ -212,6 +231,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     return Center(
                       child: Text(
                         'Error loading messages:\n${_viewModel.error}',
+                        textAlign: TextAlign.center,
                       ),
                     );
                   }

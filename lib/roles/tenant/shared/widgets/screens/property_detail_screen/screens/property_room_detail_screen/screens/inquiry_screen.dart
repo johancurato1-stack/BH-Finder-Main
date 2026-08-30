@@ -72,17 +72,39 @@ class _InquiryScreenState extends State<InquiryScreen> {
     }
 
     //==========================================================================
+    //! ROOM IMAGE
+    //==========================================================================
+
+    final roomImageUrl = widget.data.images.isEmpty
+        ? ''
+        : widget.data.images.first.path;
+
+    //==========================================================================
     //! SEND
     //==========================================================================
 
     await chatViewModel.sendInquiry(
       landlordId: widget.data.landlordId,
       propertyId: widget.data.propertyId,
+
+      //======================================================================
+      //! PROPERTY
+      //======================================================================
+      propertyName: widget.data.propertyTitle,
+
+      //======================================================================
+      //! ROOM
+      //======================================================================
       roomId: widget.data.id,
+      roomImageUrl: roomImageUrl,
       roomTitle: widget.data.title,
       roomPrice: widget.data.price,
       roomCapacity: widget.data.capacity,
-      genderPreference: widget.data.genderPreference,
+      roomGenderPreference: widget.data.genderPreference.name,
+
+      //======================================================================
+      //! MESSAGE
+      //======================================================================
       message: _messageController.text,
     );
 
@@ -262,9 +284,9 @@ class _InquiryScreenState extends State<InquiryScreen> {
                   return PrimaryButton(
                     text: viewModel.isSending ? 'Sending...' : 'Send Inquiry',
 
-                    //================================================================
+                    //==========================================================
                     //! SPAM PROTECTION
-                    //================================================================
+                    //==========================================================
                     onPressed: _sendInquiry,
                   );
                 },
@@ -301,7 +323,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
 
         children: [
           //====================================================================
-          //! HERO IMAGE
+          //! PROPERTY IMAGE
           //====================================================================
           _buildHeroImage(imageUrl: data.propertyImageUrl, size: 62),
 
@@ -396,7 +418,7 @@ class _InquiryScreenState extends State<InquiryScreen> {
 
         children: [
           //====================================================================
-          //! HERO IMAGE
+          //! ROOM IMAGE
           //====================================================================
           _buildHeroImage(
             imageUrl: data.images.isEmpty ? '' : data.images.first.path,

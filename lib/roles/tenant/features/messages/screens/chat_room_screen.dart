@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:bh_finder/core/enums/enums.dart';
@@ -6,10 +8,11 @@ import 'package:bh_finder/core/theme/app_colors.dart';
 import 'package:bh_finder/core/models/chat_model.dart';
 import 'package:bh_finder/core/models/message_model.dart';
 
-import 'package:bh_finder/core/repositories/supabase/supabase_inquiry_repository.dart';
-import 'package:bh_finder/core/repositories/supabase/supabase_chat_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
+
 import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
+import 'package:bh_finder/shared/widgets/messages/chat/chat_access_bar.dart';
 import 'package:bh_finder/shared/widgets/messages/chat/chat_app_bar.dart';
 import 'package:bh_finder/shared/widgets/messages/cards/inquiry_card.dart';
 import 'package:bh_finder/shared/widgets/messages/widgets/message_bubble.dart';
@@ -54,6 +57,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final TextEditingController _controller = TextEditingController();
 
   //============================================================================
+  //! REALTIME
+  //============================================================================
+
+  StreamSubscription<MessageModel>? _messageSubscription;
+
+  //============================================================================
   //! LIFECYCLE
   //============================================================================
 
@@ -62,19 +71,74 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     super.initState();
 
     _viewModel = ChatViewModel(
-      repository: SupabaseChatRepository(),
-      inquiryRepository: SupabaseInquiryRepository(),
+      repository: Repositories.instance.chatRepository,
+      inquiryRepository: Repositories.instance.inquiryRepository,
     );
 
-    _viewModel.fetchMessages(widget.chat.id);
+    _loadChat();
   }
 
   @override
   void dispose() {
+    _messageSubscription?.cancel();
+
+    _viewModel.repository.unsubscribeFromMessages();
+
     _controller.dispose();
+
     _viewModel.dispose();
 
     super.dispose();
+  }
+
+  //============================================================================
+  //! LOAD CHAT
+  //============================================================================
+
+  Future<void> _loadChat() async {
+    await _viewModel.fetchChatAccessStatus(widget.chat.id);
+
+    await _viewModel.fetchMessages(widget.chat.id);
+
+    if (!mounted) {
+      return;
+    }
+
+    await _viewModel.repository.markMessagesAsRead(widget.chat.id);
+
+    _subscribeToMessages();
+  }
+
+  //============================================================================
+  //! REALTIME MESSAGES
+  //============================================================================
+
+  void _subscribeToMessages() {
+    _messageSubscription?.cancel();
+
+    _messageSubscription = _viewModel.repository
+        .subscribeToMessages(widget.chat.id)
+        .listen((message) async {
+          if (!mounted) {
+            return;
+          }
+
+          final existingMessage = _viewModel.messages.any(
+            (existing) => existing.id == message.id,
+          );
+
+          if (!existingMessage) {
+            _viewModel.messages.insert(0, message);
+          }
+
+          if (!message.isMe) {
+            await _viewModel.repository.markMessagesAsRead(widget.chat.id);
+          }
+
+          if (mounted) {
+            setState(() {});
+          }
+        });
   }
 
   //============================================================================
@@ -88,11 +152,111 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       return;
     }
 
+    if (!_viewModel.isUnlocked) {
+      return;
+    }
+
     await _viewModel.sendMessage(chatId: widget.chat.id, text: text);
 
-    if (_viewModel.error == null) {
-      _controller.clear();
+    if (!mounted) {
+      return;
     }
+
+    if (_viewModel.error != null) {
+      _showError(_viewModel.error!);
+
+      _viewModel.clearError();
+
+      return;
+    }
+
+    _controller.clear();
+  }
+
+  //============================================================================
+  //! ACCEPT CHAT
+  //============================================================================
+
+  Future<void> _acceptChat() async {
+    await _viewModel.acceptChat(widget.chat.id);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (_viewModel.error != null) {
+      _showError(_viewModel.error!);
+
+      _viewModel.clearError();
+    }
+  }
+
+  //============================================================================
+  //! BLOCK CHAT
+  //============================================================================
+
+  Future<void> _blockChat() async {
+    await _viewModel.blockChat(widget.chat.id);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (_viewModel.error != null) {
+      _showError(_viewModel.error!);
+
+      _viewModel.clearError();
+    }
+  }
+
+  //============================================================================
+  //! UNBLOCK CHAT
+  //============================================================================
+
+  Future<void> _unblockChat() async {
+    await _viewModel.unblockChat(widget.chat.id);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (_viewModel.error != null) {
+      _showError(_viewModel.error!);
+
+      _viewModel.clearError();
+    }
+  }
+
+  //============================================================================
+  //! DELETE CHAT
+  //============================================================================
+
+  Future<void> _deleteChat() async {
+    await _viewModel.deleteChat(widget.chat.id);
+
+    if (!mounted) {
+      return;
+    }
+
+    if (_viewModel.error != null) {
+      _showError(_viewModel.error!);
+
+      _viewModel.clearError();
+
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  //============================================================================
+  //! ERROR
+  //============================================================================
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   //============================================================================
@@ -134,17 +298,17 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   //============================================================================
 
   Widget _buildMessage(MessageModel message) {
-    //---------------------------------------------------------------------------
+    //==========================================================================
     //! TEXT MESSAGE
-    //---------------------------------------------------------------------------
+    //==========================================================================
 
     if (message.type == MessageType.text) {
       return MessageBubble(message: message);
     }
 
-    //---------------------------------------------------------------------------
+    //==========================================================================
     //! INQUIRY MESSAGE
-    //---------------------------------------------------------------------------
+    //==========================================================================
 
     if (message.type == MessageType.inquiry) {
       final inquiryId = message.inquiryId;
@@ -160,6 +324,134 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       }
 
       return InquiryCard(inquiry: inquiry, message: message);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  //============================================================================
+  //! BUILD PENDING SENDER BAR
+  //============================================================================
+
+  Widget _buildPendingSenderBar() {
+    return Container(
+      width: double.infinity,
+
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 30),
+
+      color: AppColors.white,
+
+      child: const Text(
+        'Your inquiry is pending. You can message once the chat is unlocked.',
+        textAlign: TextAlign.center,
+
+        style: TextStyle(
+          color: AppColors.secondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Roboto',
+        ),
+      ),
+    );
+  }
+
+  //============================================================================
+  //! BUILD LOCKED BAR
+  //============================================================================
+
+  Widget _buildLockedBar() {
+    return Container(
+      width: double.infinity,
+
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+
+      color: AppColors.white,
+
+      child: const Text(
+        'This chat is locked. Send an inquiry to request access.',
+        textAlign: TextAlign.center,
+
+        style: TextStyle(
+          color: AppColors.secondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Roboto',
+        ),
+      ),
+    );
+  }
+
+  //============================================================================
+  //! BUILD ACCESS BAR
+  //============================================================================
+
+  Widget _buildBottomBar() {
+    //==========================================================================
+    //! ACCESS STATUS LOADING
+    //==========================================================================
+
+    if (_viewModel.accessStatus == null) {
+      return Container(
+        width: double.infinity,
+
+        height: 60,
+
+        color: AppColors.white,
+
+        child: const Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    //==========================================================================
+    //! UNLOCKED
+    //==========================================================================
+
+    if (_viewModel.isUnlocked) {
+      return MessageInput(controller: _controller, onSend: _sendMessage);
+    }
+
+    //==========================================================================
+    //! PENDING — RECIPIENT
+    //==========================================================================
+
+    if (_viewModel.isPendingRecipient) {
+      return ChatAccessBar(
+        accessStatus: 'pending',
+        onBlock: _blockChat,
+        onDelete: _deleteChat,
+        onAccept: _acceptChat,
+      );
+    }
+
+    //==========================================================================
+    //! PENDING — SENDER
+    //==========================================================================
+
+    if (_viewModel.isPendingSender) {
+      return _buildPendingSenderBar();
+    }
+
+    //==========================================================================
+    //! BLOCKED
+    //==========================================================================
+
+    if (_viewModel.isBlocked) {
+      return ChatAccessBar(accessStatus: 'blocked', onUnblock: _unblockChat);
+    }
+
+    //==========================================================================
+    //! LOCKED
+    //==========================================================================
+
+    if (_viewModel.isLocked) {
+      return _buildLockedBar();
     }
 
     return const SizedBox.shrink();
@@ -182,9 +474,15 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         builder: (context, _) {
           return Column(
             children: [
+              //================================================================
+              //! MESSAGES
+              //================================================================
               Expanded(child: _buildMessages()),
 
-              MessageInput(controller: _controller, onSend: _sendMessage),
+              //================================================================
+              //! ACCESS BAR / MESSAGE INPUT
+              //================================================================
+              _buildBottomBar(),
             ],
           );
         },

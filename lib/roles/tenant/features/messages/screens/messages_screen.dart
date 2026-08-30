@@ -6,8 +6,8 @@ import 'package:bh_finder/core/theme/app_text_styles.dart';
 
 import 'package:bh_finder/core/models/chat_model.dart';
 
-import 'package:bh_finder/core/repositories/supabase/supabase_inquiry_repository.dart';
-import 'package:bh_finder/core/repositories/supabase/supabase_chat_repository.dart';
+import 'package:bh_finder/core/repositories/repositories/repositories.dart';
+
 import 'package:bh_finder/core/view_models/chat_view_model.dart';
 
 import 'package:bh_finder/roles/tenant/features/messages/screens/chat_room_screen.dart';
@@ -58,8 +58,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
     super.initState();
 
     _viewModel = ChatViewModel(
-      repository: SupabaseChatRepository(),
-      inquiryRepository: SupabaseInquiryRepository(),
+      repository: Repositories.instance.chatRepository,
+      inquiryRepository: Repositories.instance.inquiryRepository,
     );
 
     _viewModel.fetchConversations();
@@ -76,25 +76,35 @@ class _MessagesScreenState extends State<MessagesScreen> {
   //! METHODS
   //============================================================================
 
+  Future<void> _refreshConversations() async {
+    await _viewModel.fetchConversations();
+  }
+
   void _openNewMessage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const NewMessageScreen()),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   void _openNotifications() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const NotificationChatScreen()),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   void _openChat(ChatModel chat) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => ChatRoomScreen(chat: chat)),
-    );
+    ).then((_) {
+      _refreshConversations();
+    });
   }
 
   //============================================================================

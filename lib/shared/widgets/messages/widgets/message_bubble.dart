@@ -4,6 +4,10 @@ import 'package:bh_finder/core/enums/enums.dart';
 import 'package:bh_finder/core/models/message_model.dart';
 import 'package:bh_finder/core/theme/app_colors.dart';
 
+//============================================================================
+//! MESSAGE BUBBLE
+//============================================================================
+
 class MessageBubble extends StatelessWidget {
   //============================================================================
   //! FIELDS
@@ -27,34 +31,53 @@ class MessageBubble extends StatelessWidget {
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        padding: EdgeInsets.only(
+          top: 3,
+          bottom: 3,
+          left: isMe ? 56 : 0,
+          right: isMe ? 0 : 56,
+        ),
+
         child: Column(
           crossAxisAlignment: isMe
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
+
           children: [
+            //==================================================================
+            //! MESSAGE
+            //==================================================================
             Container(
               constraints: const BoxConstraints(maxWidth: 290),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+
               decoration: BoxDecoration(
                 color: isMe ? AppColors.primary : AppColors.white,
+
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),
-                  bottomLeft: Radius.circular(isMe ? 18 : 4),
-                  bottomRight: Radius.circular(isMe ? 4 : 18),
+
+                  bottomLeft: Radius.circular(isMe ? 18 : 5),
+
+                  bottomRight: Radius.circular(isMe ? 5 : 18),
                 ),
+
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    color: Colors.black.withValues(alpha: .035),
+                    blurRadius: 6,
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
+
               child: Text(
                 message.text,
+
                 style: TextStyle(
                   color: isMe ? Colors.white : AppColors.secondary,
                   fontSize: 14,
@@ -63,23 +86,32 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 4),
+
+            const SizedBox(height: 3),
+
+            //==================================================================
+            //! TIME + STATUS
+            //==================================================================
             Row(
               mainAxisSize: MainAxisSize.min,
+
               children: [
                 Text(
                   message.formattedTime,
+
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 10.5,
                     color: AppColors.tertiary,
                     fontFamily: 'Roboto',
                   ),
                 ),
+
                 if (isMe) ...[
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 5),
+
                   Icon(
                     _getMessageStatusIcon(),
-                    size: 15,
+                    size: 14,
                     color: _getMessageStatusColor(),
                   ),
                 ],
@@ -98,16 +130,16 @@ class MessageBubble extends StatelessWidget {
   IconData _getMessageStatusIcon() {
     switch (message.status) {
       case MessageStatus.sending:
-        return Icons.access_time;
+        return Icons.access_time_rounded;
 
       case MessageStatus.sent:
-        return Icons.check;
+        return Icons.check_rounded;
 
       case MessageStatus.delivered:
-        return Icons.done_all;
+        return Icons.done_all_rounded;
 
       case MessageStatus.seen:
-        return Icons.done_all;
+        return Icons.done_all_rounded;
     }
   }
 
@@ -123,7 +155,7 @@ class MessageBubble extends StatelessWidget {
       case MessageStatus.sending:
       case MessageStatus.sent:
       case MessageStatus.delivered:
-        return Colors.grey;
+        return AppColors.tertiary;
     }
   }
 }
