@@ -104,9 +104,27 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       return;
     }
 
-    await _viewModel.repository.markMessagesAsRead(widget.chat.id);
+    //==========================================================================
+    //! SUBSCRIBE BEFORE MARKING AS READ
+    //==========================================================================
 
     _subscribeToMessages();
+
+    //==========================================================================
+    //! MARK INCOMING MESSAGES AS READ
+    //==========================================================================
+
+    await _viewModel.repository.markMessagesAsRead(widget.chat.id);
+
+    //==========================================================================
+    //! REFRESH LOCAL MESSAGE STATUS
+    //==========================================================================
+
+    await _viewModel.fetchMessages(widget.chat.id);
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   //============================================================================
@@ -116,29 +134,47 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void _subscribeToMessages() {
     _messageSubscription?.cancel();
 
-    _messageSubscription = _viewModel.repository
-        .subscribeToMessages(widget.chat.id)
-        .listen((message) async {
-          if (!mounted) {
-            return;
-          }
+    _messageSubscription = _viewModel.repository.subscribeToMessages(widget.chat.id).listen((
+      message,
+    ) async {
+      if (!mounted) {
+        return;
+      }
 
-          final existingMessage = _viewModel.messages.any(
-            (existing) => existing.id == message.id,
-          );
+      //========================================================================
+      //! FIND EXISTING MESSAGE
+      //========================================================================
 
-          if (!existingMessage) {
-            _viewModel.messages.insert(0, message);
-          }
+      final existingIndex = _viewModel.messages.indexWhere(
+        (existing) => existing.id == message.id,
+      );
 
-          if (!message.isMe) {
-            await _viewModel.repository.markMessagesAsRead(widget.chat.id);
-          }
+      //========================================================================
+      //! UPDATE EXISTING MESSAGE
+      //========================================================================
 
-          if (mounted) {
-            setState(() {});
-          }
-        });
+      if (existingIndex != -1) {
+        _viewModel.messages[existingIndex] = message;
+      }
+      //========================================================================
+      //! ADD NEW MESSAGE
+      //========================================================================
+      else {
+        _viewModel.messages.insert(0, message);
+      }
+
+      //========================================================================
+      //! MARK INCOMING MESSAGE AS READ
+      //========================================================================
+
+      if (!message.isMe) {
+        await _viewModel.repository.markMessagesAsRead(widget.chat.id);
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   //============================================================================

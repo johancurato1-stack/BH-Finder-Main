@@ -14,7 +14,7 @@ import 'package:bh_finder/roles/tenant/features/home/shared/widgets/cards/proper
 //! HOME SCREEN PROPERTY HORIZONTAL LIST
 //============================================================================
 
-class HomeScreenPropertyHorizontalList extends StatelessWidget {
+class HomeScreenPropertyHorizontalList extends StatefulWidget {
   //============================================================================
   //! CONSTRUCTOR
   //============================================================================
@@ -43,6 +43,23 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
 
   final List<TenantPropertyCardData> properties;
 
+  @override
+  State<HomeScreenPropertyHorizontalList> createState() =>
+      _HomeScreenPropertyHorizontalListState();
+}
+
+//============================================================================
+//! STATE
+//============================================================================
+
+class _HomeScreenPropertyHorizontalListState
+    extends State<HomeScreenPropertyHorizontalList> {
+  //============================================================================
+  //! ANIMATED PROPERTIES
+  //============================================================================
+
+  final Set<String> _animatedPropertyIds = {};
+
   //============================================================================
   //! BUILD
   //============================================================================
@@ -59,26 +76,39 @@ class HomeScreenPropertyHorizontalList extends StatelessWidget {
 
         padding: const EdgeInsets.symmetric(horizontal: 16),
 
-        itemCount: properties.length,
+        itemCount: widget.properties.length,
 
         separatorBuilder: (_, __) => const SizedBox(width: 16),
 
         itemBuilder: (context, index) {
-          final property = properties[index];
+          final property = widget.properties[index];
+
+          final shouldAnimate = !_animatedPropertyIds.contains(property.id);
+
+          if (shouldAnimate) {
+            _animatedPropertyIds.add(property.id);
+          }
+
+          final card = SizedBox(
+            width: 160,
+
+            child: PropertyCardHorizontal(
+              key: ValueKey(property.id),
+              data: property,
+              repository: widget.repository,
+              roomRepository: widget.roomRepository,
+              favoriteRepository: widget.favoriteRepository,
+            ),
+          );
+
+          if (!shouldAnimate) {
+            return card;
+          }
 
           return AnimatedEntrance(
+            key: ValueKey('animation_${property.id}'),
             order: index + 4,
-
-            child: SizedBox(
-              width: 160,
-
-              child: PropertyCardHorizontal(
-                data: property,
-                repository: repository,
-                roomRepository: roomRepository,
-                favoriteRepository: favoriteRepository,
-              ),
-            ),
+            child: card,
           );
         },
       ),

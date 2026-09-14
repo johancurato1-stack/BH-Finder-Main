@@ -119,18 +119,19 @@ class _NotificationButton extends StatelessWidget {
           },
         ),
 
-        AnimatedScale(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutBack,
-          scale: hasNotification ? 1 : 0,
+        Positioned(
+          right: 8,
+          top: 8,
 
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 180),
-            opacity: hasNotification ? 1 : 0,
+          child: AnimatedScale(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
+            scale: hasNotification ? 1 : 0,
 
-            child: Positioned(
-              right: 8,
-              top: 8,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 180),
+              opacity: hasNotification ? 1 : 0,
+
               child: Container(
                 width: 9,
                 height: 9,

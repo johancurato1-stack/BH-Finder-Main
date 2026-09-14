@@ -15,42 +15,36 @@ abstract class PropertyRepository {
   //! GETTERS
   //============================================================================
 
-  /// Returns all properties.
   Future<List<PropertyModel>> getAll();
 
-  /// Returns a property by its ID.
   Future<PropertyModel?> getById(String propertyId);
 
-  /// Returns all properties owned by a landlord.
   Future<List<PropertyModel>> getByLandlord(String landlordId);
 
   //============================================================================
   //! COMMANDS
   //============================================================================
 
-  /// Creates a new property.
   Future<String> create(PropertyModel property);
 
-  /// Updates an existing property.
   Future<void> update(PropertyModel property);
 
-  /// Deletes a property.
   Future<void> delete(String propertyId);
 
   //============================================================================
   //! PROPERTY CARDS
   //============================================================================
 
-  /// Returns property cards for tenants.
   Future<List<TenantPropertyCardData>> getPropertyCards();
 
-  /// Returns property cards for landlords.
+  Future<List<TenantPropertyCardData>> getNewPropertyCards(
+    Set<String> existingPropertyIds,
+  );
+
   Future<List<LandlordPropertyCardData>> getLandlordPropertyCards();
 
-  /// Returns the current user's favorite property cards.
   Future<List<TenantPropertyCardData>> getFavoritePropertyCards();
 
-  /// Searches the current user's favorite property cards.
   Future<List<TenantPropertyCardData>> searchFavoritePropertyCards(
     SearchFilterModel filter,
   );
@@ -59,7 +53,6 @@ abstract class PropertyRepository {
   //! SEARCH
   //============================================================================
 
-  /// Returns property cards matching the search filter.
   Future<List<TenantPropertyCardData>> searchProperties(
     SearchFilterModel filter,
   );
@@ -68,13 +61,11 @@ abstract class PropertyRepository {
   //! PROPERTY DETAIL
   //============================================================================
 
-  /// Returns the data used by the property detail screen.
   Future<PropertyDetailData> getPropertyDetail(String propertyId);
 
   //============================================================================
   //! PROPERTY VIEWS
   //============================================================================
 
-  /// Records a property view.
   Future<void> recordView({required String propertyId});
 }

@@ -114,16 +114,26 @@ class _ChatScreenState extends State<ChatRoomScreen> {
     }
 
     //==========================================================================
+    //! REALTIME
+    //==========================================================================
+
+    _subscribeToMessages();
+
+    //==========================================================================
     //! MARK MESSAGES AS READ
     //==========================================================================
 
     await _viewModel.repository.markMessagesAsRead(widget.chat.id);
 
     //==========================================================================
-    //! REALTIME
+    //! REFRESH LOCAL MESSAGE STATUS
     //==========================================================================
 
-    _subscribeToMessages();
+    await _viewModel.fetchMessages(widget.chat.id);
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   //============================================================================
@@ -141,14 +151,24 @@ class _ChatScreenState extends State<ChatRoomScreen> {
       }
 
       //========================================================================
-      //! PREVENT DUPLICATE MESSAGE
+      //! FIND EXISTING MESSAGE
       //========================================================================
 
-      final existingMessage = _viewModel.messages.any(
+      final existingIndex = _viewModel.messages.indexWhere(
         (existing) => existing.id == message.id,
       );
 
-      if (!existingMessage) {
+      //========================================================================
+      //! UPDATE EXISTING MESSAGE
+      //========================================================================
+
+      if (existingIndex != -1) {
+        _viewModel.messages[existingIndex] = message;
+      }
+      //========================================================================
+      //! ADD NEW MESSAGE
+      //========================================================================
+      else {
         _viewModel.messages.insert(0, message);
       }
 

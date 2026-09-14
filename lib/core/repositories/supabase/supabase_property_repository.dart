@@ -359,6 +359,49 @@ class SupabasePropertyRepository implements PropertyRepository {
 
     final properties = await getAll();
 
+    return _buildPropertyCardsForProperties(properties);
+  }
+
+  //============================================================================
+  //! NEW TENANT PROPERTY CARDS
+  //============================================================================
+
+  @override
+  Future<List<TenantPropertyCardData>> getNewPropertyCards(
+    Set<String> existingPropertyIds,
+  ) async {
+    //----------------------------------------------------------
+    // Properties
+    //----------------------------------------------------------
+
+    final properties = await getAll();
+
+    //----------------------------------------------------------
+    // Keep New Properties Only
+    //----------------------------------------------------------
+
+    final newProperties = properties
+        .where((property) => !existingPropertyIds.contains(property.id))
+        .toList();
+
+    if (newProperties.isEmpty) {
+      return [];
+    }
+
+    //----------------------------------------------------------
+    // Build New Cards Only
+    //----------------------------------------------------------
+
+    return _buildPropertyCardsForProperties(newProperties);
+  }
+
+  //============================================================================
+  //! BUILD PROPERTY CARDS
+  //============================================================================
+
+  Future<List<TenantPropertyCardData>> _buildPropertyCardsForProperties(
+    List<PropertyModel> properties,
+  ) async {
     //----------------------------------------------------------
     // Current User Favorites
     //----------------------------------------------------------
@@ -391,6 +434,10 @@ class SupabasePropertyRepository implements PropertyRepository {
 
       favoriteCounts[propertyId] = (favoriteCounts[propertyId] ?? 0) + 1;
     }
+
+    //----------------------------------------------------------
+    // Build Cards
+    //----------------------------------------------------------
 
     return _buildTenantPropertyCards(
       properties: properties,

@@ -11,6 +11,8 @@ import 'package:bh_finder/core/ui_models/tenant_property_card_data.dart';
 
 import 'package:bh_finder/shared/widgets/animations/animated_entrance.dart';
 
+import 'package:bh_finder/core/view_models/home_view_model.dart';
+
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_header.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_hero_section.dart';
 import 'package:bh_finder/roles/tenant/features/home/shared/widgets/home_screen/home_screen_search_bar.dart';
@@ -68,12 +70,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //============================================================================
-  //! STATE
+  //! VIEW MODEL
   //============================================================================
 
-  List<TenantPropertyCardData> _properties = [];
+  late final HomeViewModel _viewModel;
 
-  bool _loading = true;
+  //============================================================================
+  //! REFRESH KEY
+  //============================================================================
+
+  int _refreshVersion = 0;
 
   //============================================================================
   //! LIFECYCLE
@@ -83,23 +89,46 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _loadProperties();
+    _viewModel = HomeViewModel(propertyRepository: widget.propertyRepository);
+
+    _viewModel.addListener(_onViewModelChanged);
+
+    _viewModel.loadProperties();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.removeListener(_onViewModelChanged);
+    _viewModel.dispose();
+
+    super.dispose();
   }
 
   //============================================================================
-  //! LOAD PROPERTIES
+  //! VIEW MODEL LISTENER
   //============================================================================
 
-  Future<void> _loadProperties() async {
-    final properties = await widget.propertyRepository.getPropertyCards();
+  void _onViewModelChanged() {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
+  //============================================================================
+  //! REFRESH
+  //============================================================================
+
+  Future<void> _refreshProperties() async {
+    await _viewModel.refreshProperties();
 
     if (!mounted) {
       return;
     }
 
     setState(() {
-      _properties = properties;
-      _loading = false;
+      _refreshVersion++;
     });
   }
 
@@ -138,95 +167,125 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    final List<TenantPropertyCardData> properties = _viewModel.properties;
+
+    if (_viewModel.isLoading && properties.isEmpty) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2.5,
+            color: AppColors.primary,
+          ),
+        ),
       );
     }
 
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        onRefresh: _refreshProperties,
 
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+        color: AppColors.primary,
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: AppColors.white,
 
-                  children: [
-                    const SizedBox(height: AppSpacing.xl),
+        strokeWidth: 2.5,
 
-                    //==========================================================
-                    //! HOME HEADER
-                    //==========================================================
-                    AnimatedEntrance(
-                      order: 0,
-                      child: HomeScreenHeader(
-                        hasNotification: widget.hasNotification,
-                        onNotificationsRead: widget.onNotificationsRead,
+        displacement: 40,
+
+        child: SafeArea(
+          child: SingleChildScrollView(
+            key: ValueKey(_refreshVersion),
+
+            physics: const AlwaysScrollableScrollPhysics(),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+                      const SizedBox(height: AppSpacing.xl),
+
+                      //========================================================
+                      //! HOME HEADER
+                      //========================================================
+                      AnimatedEntrance(
+                        order: 0,
+
+                        child: HomeScreenHeader(
+                          hasNotification: widget.hasNotification,
+                          onNotificationsRead: widget.onNotificationsRead,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: AppSpacing.xxl),
+                      const SizedBox(height: AppSpacing.xxl),
 
-                    //==========================================================
-                    //! HERO SECTION
-                    //==========================================================
-                    const AnimatedEntrance(
-                      order: 1,
-                      child: HomeScreenHeroSection(),
-                    ),
+                      //========================================================
+                      //! HERO SECTION
+                      //========================================================
+                      const AnimatedEntrance(
+                        order: 1,
 
-                    const SizedBox(height: AppSpacing.xl),
-
-                    //==========================================================
-                    //! SEARCH BAR
-                    //==========================================================
-                    AnimatedEntrance(
-                      order: 2,
-                      child: HomeScreenSearchBar(onTap: widget.onSearchPressed),
-                    ),
-
-                    const SizedBox(height: AppSpacing.xxl),
-
-                    //==========================================================
-                    //! NEAR YOU
-                    //==========================================================
-                    AnimatedEntrance(
-                      order: 3,
-                      child: HomeScreenSectionHeader(
-                        title: 'Near You',
-                        onSeeAll: _openSeeAll,
+                        child: HomeScreenHeroSection(),
                       ),
-                    ),
 
-                    const SizedBox(height: AppSpacing.md),
-                  ],
+                      const SizedBox(height: AppSpacing.xl),
+
+                      //========================================================
+                      //! SEARCH BAR
+                      //========================================================
+                      AnimatedEntrance(
+                        order: 2,
+
+                        child: HomeScreenSearchBar(
+                          onTap: widget.onSearchPressed,
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.xxl),
+
+                      //========================================================
+                      //! NEAR YOU
+                      //========================================================
+                      AnimatedEntrance(
+                        order: 3,
+
+                        child: HomeScreenSectionHeader(
+                          title: 'Near You',
+                          onSeeAll: _openSeeAll,
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                  ),
                 ),
-              ),
 
-              //==============================================================
-              //! PROPERTY LIST
-              //==============================================================
-              AnimatedEntrance(
-                order: 4,
-                child: HomeScreenPropertyHorizontalList(
-                  properties: _properties,
-                  repository: widget.propertyRepository,
-                  roomRepository: widget.roomRepository,
-                  favoriteRepository: widget.favoriteRepository,
+                //==============================================================
+                //! PROPERTY LIST
+                //==============================================================
+                AnimatedEntrance(
+                  order: 4,
+
+                  child: HomeScreenPropertyHorizontalList(
+                    properties: properties,
+                    repository: widget.propertyRepository,
+                    roomRepository: widget.roomRepository,
+                    favoriteRepository: widget.favoriteRepository,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: AppSpacing.xxxl),
-            ],
+                const SizedBox(height: AppSpacing.xxxl),
+              ],
+            ),
           ),
         ),
       ),
