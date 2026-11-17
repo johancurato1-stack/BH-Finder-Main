@@ -1,6 +1,6 @@
 BH FINDER — RESTRICTED SOURCE-AVAILABLE LICENSE
 
-Copyright (c) 2026 Johan Curato
+Copyright (c) 2026 Johan Garcia
 
 All rights reserved.
 

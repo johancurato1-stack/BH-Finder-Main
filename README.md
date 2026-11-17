@@ -174,6 +174,6 @@ See [LICENSE.md](LICENSE.md) for the complete terms.
 
 ## Author
 
-**Johan Curato**
+**Johan Garcia**
 
 GitHub: [@johancurato1-stack](https://github.com/johancurato1-stack)
