@@ -1,71 +1,44 @@
-# 🏠 BH Finder
+# BH Finder
 
-A modern boarding house finder application built with Flutter and Supabase.
+A boarding-house discovery and management platform built with Flutter and Supabase, designed to help students find accommodation and help landlords manage their properties.
 
-BH Finder helps students discover nearby boarding houses, explore available rooms, save favorite properties, and communicate with landlords through a clean and intuitive mobile experience.
+BH Finder provides mobile experiences for tenants and landlords, with features for property discovery, room management, favorites, property analytics, and backend integration.
 
-This project was built as a learning experience in Flutter architecture, backend development, and full-stack mobile application development.
+This project was developed as an independent software development project, with an emphasis on clean architecture, maintainable code, and practical application development.
 
----
+## Features
 
-## ✨ Features
+### Tenant
 
-### 👤 Tenant
-
-- Browse boarding houses
+- Browse boarding-house properties
 - Search and filter properties
 - View detailed property information
-- Save favorite properties
-- View available rooms
-- Landlord profiles
-- Property analytics (favorites & views)
-- Authentication
-- Responsive modern UI
+- Browse available rooms and room details
+- Save properties to favorites
+- View landlord information
+- View property details and analytics where available
+- User authentication
 
-### 🏠 Landlord
+### Landlord
 
-- Manage boarding houses
-- Add and edit rooms
-- Upload property images
-- View property performance
-- Monitor:
-  - Total Views
-  - Total Favorites
-  - Total Rooms
-  - Total Inquiries *(coming soon)*
+- Manage boarding-house properties
+- Add and manage rooms
+- Upload property and room images
+- View property performance statistics
+- Monitor property views and favorites
 
-### 🛡️ Admin
+### Application Architecture
 
-- Dashboard
-- User management
-- Property management
-- Landlord verification
-- Reports
-- Feedback
+BH Finder follows a layered architecture using the Repository Pattern and Provider for state management.
 
----
+The application separates presentation, application logic, and data access to improve maintainability and make the codebase easier to extend.
 
-## 🛠 Tech Stack
+**Data flow:**
 
-### Frontend
-
-- Flutter
-- Dart
-
-### Backend
-
-- Supabase
-- PostgreSQL
-- Row Level Security (RLS)
-- Supabase Storage
-- Authentication
-
-### Architecture
-
-Repository Pattern
-
-```
+```text
 UI
+ ↓
+ViewModel
  ↓
 Repository Interface
  ↓
@@ -74,115 +47,115 @@ Supabase Repository
 Supabase
 ```
 
----
+## Technology Stack
 
-## 📂 Project Structure
+| Category           | Technologies             |
+| ------------------ | ------------------------ |
+| Mobile Development | Flutter, Dart            |
+| State Management   | Provider                 |
+| Backend            | Supabase                 |
+| Database           | PostgreSQL               |
+| Authentication     | Supabase Auth            |
+| Storage            | Supabase Storage         |
+| Database Security  | Row Level Security (RLS) |
+| Version Control    | Git, GitHub              |
 
-```
+## Project Structure
+
+```text
 lib/
-
-core/
-roles/
-shared/
-
+├── core/
+│   ├── config/
+│   ├── models/
+│   └── ...
+├── roles/
+│   ├── tenant/
+│   └── landlord/
+├── shared/
+└── ...
+assets/
+android/
+ios/
+web/
+windows/
+linux/
+macos/
 ```
 
-The project separates:
+The project is organized around core application components, role-specific functionality, and shared resources.
 
-- Core business logic
-- Tenant features
-- Landlord features
-- Shared widgets
-- Repositories
-- View models
+## Getting Started
 
-to keep the codebase maintainable and scalable.
+### Prerequisites
 
----
-
-## 🚀 Getting Started
-
-### Requirements
+Before running the application, make sure you have:
 
 - Flutter SDK
 - Dart SDK
-- Android Studio / VS Code
-- Supabase Project
+- Android Studio or Visual Studio Code
+- Git
+- A Supabase project
 
 ### Installation
 
+1. Clone the repository:
+
 ```bash
-git clone https://github.com/yourusername/bh_finder.git
+git clone https://github.com/johancurato1-stack/BH-Finder-Main.git
+```
 
-cd bh_finder
+2. Navigate to the project directory:
 
+```bash
+cd BH-Finder-Main
+```
+
+3. Install dependencies:
+
+```bash
 flutter pub get
 ```
 
-Run:
+4. Configure your Supabase project.
+
+Open:
+
+```text
+lib/core/config/supabase_config.dart
+```
+
+Configure the Supabase project URL and publishable key for your own Supabase project.
+
+5. Run the application:
 
 ```bash
 flutter run
 ```
 
----
+### Supabase Configuration
 
-## 🔐 Environment Variables
+BH Finder uses Supabase for authentication, database operations, and file storage.
 
-Create a `.env` file.
+To run your own instance, you will need to configure the required Supabase tables, storage buckets, authentication settings, and Row Level Security policies.
 
-Example:
+**Security note:** Only use a Supabase publishable key in client-side application code. Never expose a Supabase secret or service-role key. Ensure that appropriate Row Level Security policies are configured before using the application.
 
-```env
-SUPABASE_URL=YOUR_SUPABASE_URL
-SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
-```
+## Project Status
 
-Never commit your real keys.
+BH Finder is an independently developed project. Its features and implementation may continue to evolve as development progresses.
 
----
+Some functionality may require additional configuration or further development before production use.
 
-## 📸 Screenshots
+## License
 
-Coming soon.
+BH Finder is distributed under a custom restricted, source-available license.
 
----
+The repository is publicly accessible for educational and evaluation purposes. Viewing and studying the source code is permitted, but copying, modifying, redistributing, or incorporating the code into other projects requires prior written permission.
 
-## 📌 Roadmap
+See [LICENSE.md](LICENSE.md) for the complete terms.
 
-- [x] Tenant application
-- [x] Landlord application
-- [x] Admin panel
-- [x] Favorites
-- [x] Property analytics
-- [x] Supabase backend
-- [ ] Inquiry system
-- [ ] Push notifications
-- [ ] Maps improvements
-- [ ] Production deployment
+## Author
 
----
+**Johan Curato**
 
-## 🤝 Contributing
-
-Contributions are welcome.
-
-Feel free to fork the repository, submit issues, or open pull requests.
-
----
-
-## 📄 License
-
-This project is licensed under the BH Finder Source-Available License.
-
-The source code is provided for educational and evaluation purposes only. You may view the code and submit suggestions or pull requests, but you may not copy, modify, redistribute, or use this code in your own projects without prior written permission.
-
-See the LICENSE file for full terms.
-
----
-
-## 👨‍💻 Author
-
-Johan Curato
-
-Built with Flutter ❤️
+GitHub: [@johancurato1-stack](https://github.com/johancurato1-stack)
