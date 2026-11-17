@@ -6,6 +6,24 @@ BH Finder provides mobile experiences for tenants and landlords, with features f
 
 This project was developed as an independent software development project, with an emphasis on clean architecture, maintainable code, and practical application development.
 
+## Application Screenshots
+
+### Tenant Application
+
+|                    Home                     |                     Search                      |
+| :-----------------------------------------: | :---------------------------------------------: |
+| ![Tenant Home](screenshots/tenant-home.png) | ![Tenant Search](screenshots/tenant-search.png) |
+
+|                   Property Details                    |                 Room Details                  |
+| :---------------------------------------------------: | :-------------------------------------------: |
+| ![Property Details](screenshots/property-details.png) | ![Room Details](screenshots/room-details.png) |
+
+### Landlord Application
+
+|                         Dashboard                         |                         Properties                          |
+| :-------------------------------------------------------: | :---------------------------------------------------------: |
+| ![Landlord Dashboard](screenshots/landlord-dashboard.png) | ![Landlord Properties](screenshots/landlord-properties.png) |
+
 ## Features
 
 ### Tenant
@@ -142,9 +160,9 @@ To run your own instance, you will need to configure the required Supabase table
 
 ## Project Status
 
-BH Finder is an independently developed project. Its features and implementation may continue to evolve as development progresses.
+BH Finder is an actively developed project. Its tenant application, landlord application, and web-based admin panel have been implemented, with Supabase providing backend services and data management.
 
-Some functionality may require additional configuration or further development before production use.
+Some features and refinements may still be ongoing.
 
 ## License
 
