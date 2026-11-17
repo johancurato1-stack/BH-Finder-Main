@@ -55,3 +55,6 @@ app.*.map.json
 *.key
 *.p12
 *.pfx
+
+# Generated Android build files
+**/build/
