@@ -12,17 +12,17 @@ This project was developed as an independent software development project, with 
 
 |                    Home                     |                     Search                      |
 | :-----------------------------------------: | :---------------------------------------------: |
-| ![Tenant Home](screenshots/tenant-home.png) | ![Tenant Search](screenshots/tenant-search.png) |
+| ![Tenant Home](screenshots/tenant-home.jpg) | ![Tenant Search](screenshots/tenant-search.jpg) |
 
 |                   Property Details                    |                 Room Details                  |
 | :---------------------------------------------------: | :-------------------------------------------: |
-| ![Property Details](screenshots/property-details.png) | ![Room Details](screenshots/room-details.png) |
+| ![Property Details](screenshots/property-details.jpg) | ![Room Details](screenshots/room-details.jpg) |
 
 ### Landlord Application
 
 |                         Dashboard                         |                         Properties                          |
 | :-------------------------------------------------------: | :---------------------------------------------------------: |
-| ![Landlord Dashboard](screenshots/landlord-dashboard.png) | ![Landlord Properties](screenshots/landlord-properties.png) |
+| ![Landlord Dashboard](screenshots/landlord-dashboard.jpg) | ![Landlord Properties](screenshots/landlord-properties.jpg) |
 
 ## Features
 
