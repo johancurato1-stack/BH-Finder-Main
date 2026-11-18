@@ -160,9 +160,11 @@ To run your own instance, you will need to configure the required Supabase table
 
 ## Project Status
 
-BH Finder is an actively developed project. Its tenant application, landlord application, and web-based admin panel have been implemented, with Supabase providing backend services and data management.
+BH Finder is currently **On Hiatus**. Active development has been temporarily paused as I shift my focus toward other development projects.
 
-Some features and refinements may still be ongoing.
+The tenant application, landlord application, and web-based admin panel have been implemented, with Supabase and PostgreSQL powering backend services and data management.
+
+Despite the pause in development, BH Finder remains an important project in my development journey and serves as a demonstration of my experience in Flutter development, backend integration, database design, and software architecture.
 
 ## License
 
